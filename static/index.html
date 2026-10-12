@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Session Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="masthead">
+    <div class="brand">
+      <span class="eyebrow">Devin IDE · local</span>
+      <h1>Session <em>Ledger</em></h1>
+      <p class="dbpath" id="dbpath"></p>
+    </div>
+    <div class="sync">
+      <div class="sync-line"><span class="dot" id="sync-dot"></span><span id="sync-text">Connecting…</span></div>
+      <div class="progress"><div class="progress-fill" id="progress"></div></div>
+      <button id="refresh" class="btn">Rescan database</button>
+    </div>
+  </header>
+
+  <section class="totals" id="totals"></section>
+
+  <section class="filters">
+    <input id="q" type="search" placeholder="Search title, id, workspace, model…" autocomplete="off">
+    <select id="f-model"><option value="">All models</option></select>
+    <select id="f-ws"><option value="">All workspaces</option></select>
+    <label class="field">From <input id="f-from" type="date"></label>
+    <label class="field">To <input id="f-to" type="date"></label>
+    <label class="toggle"><input id="f-hidden" type="checkbox"><span></span>Show hidden</label>
+    <button id="clear" class="btn ghost">Clear</button>
+  </section>
+
+  <main class="table-wrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th data-k="created">Created</th>
+          <th data-k="last_activity">Last activity</th>
+          <th data-k="title">Session</th>
+          <th data-k="workspace">Workspace</th>
+          <th data-k="model">Model</th>
+          <th data-k="messages" class="num">Msgs</th>
+          <th data-k="input" class="num">Input</th>
+          <th data-k="output" class="num">Output</th>
+          <th data-k="cached" class="num">Cached</th>
+          <th class="mix">Mix</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="empty" id="empty" hidden>No sessions match these filters.</p>
+  </main>
+
+  <footer class="foot">
+    <span><i class="sw in"></i>Input = input + cache write</span>
+    <span><i class="sw out"></i>Output</span>
+    <span><i class="sw ca"></i>Cached = cache read</span>
+    <span class="muted">One row per model used in a session · duplicate forked responses counted once</span>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
