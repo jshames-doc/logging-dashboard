@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 const state = { rows: [], sortKey: "created", asc: false, multi: new Set() };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
+const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const base = (p) => (p || "").split(/[\\/]/).filter(Boolean).pop() || p || "—";
 const dt = (s) => {
@@ -27,14 +28,14 @@ function sorted(rows) {
   const k = state.sortKey, dir = state.asc ? 1 : -1;
   return rows.sort((a, b) => {
     const x = a[k], y = b[k];
-    const c = typeof x === "number" ? x - y : String(x).localeCompare(String(y));
+    const c = x == null ? (y == null ? 0 : 1) : y == null ? -1 : typeof x === "number" ? x - y : String(x).localeCompare(String(y));
     return (c || a.created - b.created) * dir;
   });
 }
 
 function renderTotals(rows) {
-  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages }),
-    { input: 0, output: 0, cached: 0, messages: 0 });
+  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0) }),
+    { input: 0, output: 0, cached: 0, messages: 0, price: 0 });
   const sessions = new Set(rows.map((r) => r.id)).size;
   const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
   const card = (lbl, val, sub, sw = "", i = 0) =>
@@ -46,6 +47,7 @@ function renderTotals(rows) {
     card("Output", compact.format(t.output), fmt.format(t.output), "out", 3),
     card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 4),
     card("Cache hit", `${hit.toFixed(1)}%`, "cached ÷ (input + cached)", "", 5),
+    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "Enterprise SaaS rates", "", 6),
   ].join("");
 }
 
@@ -71,6 +73,7 @@ function render() {
       <td class="num in">${fmt.format(r.input)}</td>
       <td class="num out">${fmt.format(r.output)}</td>
       <td class="num ca">${fmt.format(r.cached)}</td>
+      <td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>
       <td>${mix(r)}</td>
     </tr>`).join("");
   document.querySelectorAll("thead th[data-k]").forEach((th) => {
@@ -137,5 +140,50 @@ $("refresh").addEventListener("click", async () => {
   setStatus(await (await fetch("/api/refresh", { method: "POST" })).json());
   poll();
 });
+
+const prices = { data: null, key: "label", asc: true };
+const rate = (v) => (v ? "$" + (v < 0.1 ? v.toFixed(3) : v.toFixed(2)) : "—");
+
+function renderPrices() {
+  if (!prices.data) return;
+  const q = $("pq").value.trim().toLowerCase(), usedOnly = $("p-used").checked;
+  const used = new Set(state.rows.map((r) => r.price_model).filter(Boolean));
+  const k = prices.key, dir = prices.asc ? 1 : -1;
+  const list = prices.data.models
+    .filter((m) => (!q || m.label.toLowerCase().includes(q)) && (!usedOnly || used.has(m.label)))
+    .sort((a, b) => (k === "label" ? a.label.localeCompare(b.label) : a[k] - b[k] || a.label.localeCompare(b.label)) * dir);
+  $("prices-rows").innerHTML = list.map((m) => `
+    <tr class="${used.has(m.label) ? "used" : ""}">
+      <td title="${esc((m.uids || [m.uid]).join(", "))}">${esc(m.label)}${m.tier && m.tier !== prices.data.tier ? `<span class="tag" title="${m.tier === "Manual" ? `Not published by Devin; entered in pricing_manual.json from ${esc(m.source || "?")}` : `Not published for ${esc(prices.data.tier)}; using ${esc(m.tier)} rate`}">${esc(m.tier)}</span>` : ""}${m.long_prompt ? `<span class="tag" title="Requests with prompts over 100K tokens: ${["input", "output", "cache_write", "cache_read"].map((c) => `${c.replace("_", " ")} ${rate(m.long_prompt[c])}`).join(" · ")}">&gt;100K tier</span>` : ""}</td>
+      <td class="num">${rate(m.input)}</td>
+      <td class="num">${rate(m.output)}</td>
+      <td class="num">${rate(m.cache_write)}</td>
+      <td class="num">${rate(m.cache_read)}</td>
+    </tr>`).join("");
+  $("prices-count").textContent = `${list.length} of ${prices.data.models.length}`;
+  document.querySelectorAll("#prices th[data-pk]").forEach((th) => {
+    th.classList.toggle("sorted", th.dataset.pk === k);
+    th.classList.toggle("asc", th.dataset.pk === k && prices.asc);
+  });
+}
+
+$("prices-btn").addEventListener("click", async () => {
+  prices.data = await (await fetch("/api/pricing")).json();
+  const src = prices.data.source || "";
+  $("prices-src").innerHTML = `${esc(prices.data.tier)} rates · snapshot ${esc(prices.data.fetched)} · <a href="${esc(src)}" target="_blank" rel="noopener">${esc(src.replace(/^https?:\/\//, ""))}</a> · update with update_prices.bat`;
+  renderPrices();
+  $("prices").showModal();
+  $("pq").focus();
+});
+$("prices-close").addEventListener("click", () => $("prices").close());
+$("prices").addEventListener("click", (e) => e.target === $("prices") && $("prices").close());
+["pq", "p-used"].forEach((id) => $(id).addEventListener("input", renderPrices));
+document.querySelectorAll("#prices th[data-pk]").forEach((th) =>
+  th.addEventListener("click", () => {
+    const k = th.dataset.pk;
+    prices.asc = prices.key === k ? !prices.asc : k === "label";
+    prices.key = k;
+    renderPrices();
+  }));
 
 load().catch((e) => setStatus({ error: e.message }));

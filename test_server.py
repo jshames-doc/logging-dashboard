@@ -1,10 +1,12 @@
 import json
+import os
 import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
 
 import server
+import pricing
 
 SCHEMA = """
 CREATE TABLE sessions (id TEXT PRIMARY KEY, working_directory TEXT, model TEXT, created_at INTEGER,
@@ -22,7 +24,7 @@ def msg(role, rid=None, mid="m", model=None, inp=0, out=0, cw=0, cr=0):
     return json.dumps({"message_id": mid, "role": role, "content": "", "metadata": meta}, separators=(",", ":"))
 
 
-class AggregationTest(unittest.TestCase):
+class DBFixture(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.db = Path(self.tmp.name) / "s.db"
@@ -40,6 +42,12 @@ class AggregationTest(unittest.TestCase):
         ]
         c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s1',?,?,?)",
                       [(i, n, 100 + i) for i, n in enumerate(nodes)])
+        priced = [
+            msg("assistant", "r1", "a1", "claude-sonnet-4-6", inp=4, out=10, cw=100, cr=1000),
+            msg("assistant", "r3", "a3", "claude-sonnet-4-6", inp=2, out=3, cw=0, cr=7),
+        ]
+        c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s2',?,?,?)",
+                      [(i, n, 200 + i) for i, n in enumerate(priced)])
         c.commit()
         c.close()
         self.conn = server.connect(self.db)
@@ -48,6 +56,8 @@ class AggregationTest(unittest.TestCase):
         self.conn.close()
         self.tmp.cleanup()
 
+
+class AggregationTest(DBFixture):
     def test_aggregates_per_model_and_dedupes(self):
         res = {m["model"]: m for m in server.aggregate_session(self.conn, "s1")}
         self.assertEqual(set(res), {"model-a", "model-b"})
@@ -69,6 +79,113 @@ class AggregationTest(unittest.TestCase):
         rows = server.flatten(server.refresh_sessions(self.conn, {}))
         self.assertEqual(len(rows), 2)
         self.assertTrue(all(r["id"] == "s1" and r["workspace"] == "C:\\ws\\a" for r in rows))
+
+
+class PricingTest(DBFixture):
+    def test_resolve_maps_db_slugs_to_labels(self):
+        cases = {
+            "claude-sonnet-4-6": "Claude Sonnet 4.6",
+            "swe-2-high": "SWE-2 High",
+            "gpt-5-6-luna-high": "GPT-5.6 Luna High Thinking",
+            "gpt-6-luna-high-priority": "GPT-6 Luna High Thinking Fast",
+            "gpt-6-luna-none": "GPT-6 Luna No Thinking",
+            "MODEL_GOOGLE_GEMINI_3_0_FLASH_MEDIUM": "Gemini 3 Flash Medium",
+            "glm-5-2": "GLM-5.2 High",
+            "swe-1-7": "SWE-1.7 Medium",
+            "claude-opus-5-5-medium": "Claude Opus 5.5 Medium",
+            "claude-sonnet-5-5-medium": "Claude Sonnet 5.5 Medium",
+            "gpt-5-5-high": "GPT-5.5 High Thinking",
+            "gpt-6-1-sol-medium": "GPT-6.1 Sol Medium Thinking",
+            "gpt-5-3-codex-medium": "GPT-5.3-Codex Medium",
+        }
+        for slug, label in cases.items():
+            self.assertEqual(pricing.resolve(slug), label, slug)
+
+    def test_resolve_unpriced_slugs(self):
+        for slug in ("summarizer", "compactor", "MODEL_SWE_1_5", "model-a"):
+            self.assertIsNone(pricing.resolve(slug), slug)
+
+    def test_manual_price_with_long_prompt_tier(self):
+        self.assertEqual(pricing.resolve("claude-haiku-5-5-high"), "Claude Haiku 5.5")
+        r, lr = pricing.RATES["Claude Haiku 5.5"], pricing.LONG_RATES["Claude Haiku 5.5"]
+        c = sqlite3.connect(self.db)
+        nodes = [  # prompt = input + cache write + cache read; only the second exceeds 100K
+            msg("assistant", "h1", "h1", "claude-haiku-5-5-high", inp=10, out=100, cw=1_000, cr=50_000),
+            msg("assistant", "h2", "h2", "claude-haiku-5-5-high", inp=20, out=200, cw=2_000, cr=150_000),
+        ]
+        c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s3',?,?,?)",
+                      [(i, n, 300 + i) for i, n in enumerate(nodes)])
+        c.commit()
+        c.close()
+        m = server.with_price(server.aggregate_session(self.conn, "s3")[0])
+        short = 10 * r[0] + 100 * r[1] + 1_000 * r[2] + 50_000 * r[3]
+        long = 20 * lr[0] + 200 * lr[1] + 2_000 * lr[2] + 150_000 * lr[3]
+        self.assertAlmostEqual(m["price"], (short + long) / 1e6)
+        self.assertEqual(m["price_model"], "Claude Haiku 5.5")
+
+    def test_long_tier_ignored_for_models_without_it(self):
+        parts = {"input": 10, "output": 10, "cache_write": 0, "cache_read": 200_000}
+        _, flat = pricing.cost("claude-sonnet-4-6", parts)
+        _, tiered = pricing.cost("claude-sonnet-4-6", parts, parts)
+        self.assertAlmostEqual(flat, tiered)
+
+    def test_resolve_prefers_published_uid(self):
+        self.assertEqual(pricing.resolve("claude-5-fable-low"), "Claude Fable 5 Low")
+        self.assertEqual(pricing.resolve("CLAUDE-OPUS-5-5-MEDIUM-FAST"), "Claude Opus 5.5 Medium Fast")
+
+    def test_session_price_from_token_parts(self):
+        res = {m["model"]: server.with_price(m) for m in server.aggregate_session(self.conn, "s2")}
+        m = res["claude-sonnet-4-6"]
+        ir, orr, cwr, crr = pricing.RATES["Claude Sonnet 4.6"]
+        expected = (4 * ir + 100 * cwr + 10 * orr + 1000 * crr + 2 * ir + 0 * cwr + 3 * orr + 7 * crr) / 1e6
+        self.assertAlmostEqual(m["price"], expected)
+        self.assertEqual(m["price_model"], "Claude Sonnet 4.6")
+
+    def test_unpriced_model_has_null_price(self):
+        res = {m["model"]: server.with_price(m) for m in server.aggregate_session(self.conn, "s1")}
+        self.assertIsNone(res["model-a"]["price"])
+        self.assertIsNone(res["model-a"]["price_model"])
+
+
+PAGE = r"""<script>self.__next_f.push([1,"...modelCostData=[{\"tier\":`TEAMS_TIER_ENTERPRISE_SAAS`,\"model_uid\":`m-a`,\"label\":`Model A`,\"model_provider\":`P`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25,\"credit_multiplier\":1,\"is_recommended\":false},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":9,\"output_cost_per_million_usd\":9,\"cache_write_cost_per_million_usd\":9,\"cache_read_cost_per_million_usd\":9},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-b`,\"label\":`Model B`,\"input_cost_per_million_usd\":1,\"output_cost_per_million_usd\":2,\"cache_write_cost_per_million_usd\":3,\"cache_read_cost_per_million_usd\":4}]"])</script>
+<script>modelCostData=[{\"tier\":`TEAMS_TIER_ENTERPRISE_SAAS`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25}]</script>"""
+
+
+class UpdatePricesTest(unittest.TestCase):
+    def test_parse_and_build_with_pro_fallback(self):
+        import update_prices
+        entries = update_prices.parse(PAGE)
+        self.assertEqual(len(entries), 3)  # duplicate page copy de-duplicated
+        data = update_prices.build(entries, fetched="2026-01-01")
+        models = {m["label"]: m for m in data["models"]}
+        self.assertEqual(set(models), {"Model A", "Model B"})
+        a, b = models["Model A"], models["Model B"]
+        self.assertEqual((a["uid"], a["tier"], a["input"], a["output"], a["cache_write"], a["cache_read"]),
+                         ("m-a", "Enterprise SaaS", 2.5, 10.0, 0.0, 0.25))
+        self.assertEqual((b["tier"], b["cache_read"]), ("Pro", 4.0))
+
+    def test_diff_reports_changes(self):
+        import update_prices
+        m = lambda label, i: {"label": label, "input": i, "output": 1, "cache_write": 0, "cache_read": 0}
+        lines = update_prices.diff({"models": [m("A", 1), m("B", 1)]}, {"models": [m("A", 2), m("C", 1)]})
+        self.assertEqual([l[0] for l in lines], ["+", "-", "~"])
+
+    def test_pricing_reloads_when_file_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "p.json"
+            write = lambda rate, mtime: (path.write_text(json.dumps({"models": [
+                {"uid": "x-1", "label": "X 1", "input": rate, "output": 0, "cache_write": 0, "cache_read": 0}]})),
+                os.utime(path, (mtime, mtime)))
+            orig = pricing.DATA_PATH
+            try:
+                pricing.DATA_PATH = path
+                write(1.0, 1000)
+                self.assertEqual(pricing.price_info("x-1"), ("X 1", (1.0, 0, 0, 0)))
+                write(2.0, 2000)
+                self.assertEqual(pricing.price_info("x-1"), ("X 1", (2.0, 0, 0, 0)))
+            finally:
+                pricing.DATA_PATH = orig
+                pricing._load()
 
 
 if __name__ == "__main__":

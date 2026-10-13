@@ -20,9 +20,42 @@
     <div class="sync">
       <div class="sync-line"><span class="dot" id="sync-dot"></span><span id="sync-text">Connecting…</span></div>
       <div class="progress"><div class="progress-fill" id="progress"></div></div>
-      <button id="refresh" class="btn">Rescan database</button>
+      <div class="actions">
+        <button id="prices-btn" class="btn ghost" title="Show per-model API prices">$ Prices</button>
+        <button id="refresh" class="btn">Rescan database</button>
+      </div>
     </div>
   </header>
+
+  <dialog id="prices" class="prices">
+    <div class="prices-head">
+      <div>
+        <h2>Model <em>prices</em></h2>
+        <p class="prices-src" id="prices-src"></p>
+      </div>
+      <button class="btn ghost close" id="prices-close" aria-label="Close">✕</button>
+    </div>
+    <div class="prices-tools">
+      <input id="pq" type="search" placeholder="Filter models…" autocomplete="off">
+      <label class="toggle"><input id="p-used" type="checkbox"><span></span>Used only</label>
+      <span class="prices-count" id="prices-count"></span>
+    </div>
+    <div class="prices-body">
+      <table>
+        <thead>
+          <tr>
+            <th data-pk="label">Model</th>
+            <th data-pk="input" class="num">Input</th>
+            <th data-pk="output" class="num">Output</th>
+            <th data-pk="cache_write" class="num">Cache write</th>
+            <th data-pk="cache_read" class="num">Cache read</th>
+          </tr>
+        </thead>
+        <tbody id="prices-rows"></tbody>
+      </table>
+    </div>
+    <p class="prices-foot">USD per 1M tokens · <span class="used-dot"></span> used in your sessions</p>
+  </dialog>
 
   <section class="totals" id="totals"></section>
 
@@ -49,6 +82,7 @@
           <th data-k="input" class="num">Input</th>
           <th data-k="output" class="num">Output</th>
           <th data-k="cached" class="num">Cached</th>
+          <th data-k="price" class="num">Est. cost</th>
           <th class="mix">Mix</th>
         </tr>
       </thead>
@@ -61,7 +95,7 @@
     <span><i class="sw in"></i>Input = input + cache write</span>
     <span><i class="sw out"></i>Output</span>
     <span><i class="sw ca"></i>Cached = cache read</span>
-    <span class="muted">One row per model used in a session · duplicate forked responses counted once</span>
+    <span class="muted">One row per model used in a session · duplicate forked responses counted once · cost at published Enterprise SaaS rates (docs.devin.ai/desktop/models)</span>
   </footer>
   <script src="app.js"></script>
 </body>

@@ -147,6 +147,37 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 .foot span { display: flex; align-items: center; gap: 6px; }
 .muted { color: var(--ink-3) !important; }
 
+.actions { display: flex; gap: 8px; }
+
+/* prices dialog */
+.prices {
+  width: min(760px, 94vw); max-height: 86vh; padding: 0; display: none; flex-direction: column;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--line-2);
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
+.prices[open] { display: flex; animation: rise .25s ease-out both; }
+.prices::backdrop { background: rgba(10,9,8,.7); backdrop-filter: blur(2px); }
+.prices-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px 8px; }
+.prices h2 { font: 400 26px/1 var(--serif); margin: 0; }
+.prices h2 em { color: var(--in); }
+.prices-src { margin: 6px 0 0; font: 400 11px var(--mono); color: var(--ink-3); }
+.prices-src a { color: var(--ink-2); }
+.close { padding: 4px 9px; }
+.prices-tools { display: flex; align-items: center; gap: 12px; padding: 0 18px 10px; }
+.prices-tools input[type=search] {
+  flex: 1; font: 400 12px var(--mono); color: var(--ink); background: var(--bg-2);
+  border: 1px solid var(--line-2); padding: 5px 8px; outline: none;
+}
+.prices-tools input[type=search]:focus { border-color: var(--in); }
+.prices-count { font: 400 11px var(--mono); color: var(--ink-3); }
+.prices-body { overflow: auto; border-top: 1px solid var(--line-2); flex: 1 1 auto; min-height: 0; }
+.prices-body thead th { background: var(--panel); }
+.prices-body td.num { color: var(--ink-2); }
+.prices-body tr.used td:first-child { color: var(--in); }
+.prices-body tr.used td:first-child::before { content: "● "; font-size: 9px; vertical-align: 2px; }
+.prices-foot { margin: 0; padding: 8px 18px; border-top: 1px solid var(--line); font: 400 11px var(--mono); color: var(--ink-3); }
+.used-dot::before { content: "●"; color: var(--in); }
+
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pulse { 50% { opacity: .3; } }

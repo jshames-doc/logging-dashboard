@@ -1,0 +1,17 @@
+{
+ "_note": "Hand-entered rates (USD per 1M tokens) for models not published on docs.devin.ai/desktop/models. Never overwritten by update_prices.py; published rates take precedence if a model appears there. 'uids' are the sessions.db model slugs to match. Optional 'long_prompt' rates apply to requests whose prompt (input + cache write + cache read) exceeds 100,000 tokens.",
+ "models": [
+  {
+   "label": "Claude Haiku 5.5",
+   "uids": ["claude-haiku-5-5", "claude-haiku-5-5-low", "claude-haiku-5-5-medium", "claude-haiku-5-5-high",
+            "claude-haiku-5-5-xhigh", "claude-haiku-5-5-max"],
+   "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+   "noted": "2026-10-12",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "long_prompt": {"input": 0.5, "output": 2.5, "cache_write": 0.625, "cache_read": 0.05}
+  }
+ ]
+}

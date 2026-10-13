@@ -5,6 +5,7 @@ Reads the IDE's sessions.db read-only, aggregates token metrics per
 """
 import json
 import os
+import socket
 import sqlite3
 import sys
 import threading
@@ -14,11 +15,14 @@ from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+import pricing
+from pricing import LONG_PROMPT_TOKENS, cost
+
 ROOT = Path(__file__).resolve().parent
 DB_PATH = Path(os.environ.get("SESSIONS_DB") or Path(os.environ.get("APPDATA", "")) / "devin" / "cli" / "sessions.db")
 CACHE_PATH = ROOT / ".cache" / "sessions_cache.json"
 HOST, PORT = "127.0.0.1", int(os.environ.get("DASHBOARD_PORT", "8765"))
-CACHE_VERSION = 2
+CACHE_VERSION = 6
 
 ASSISTANT_SQL = """
 SELECT json_extract(chat_message, '$.metadata.request_id'),
@@ -61,13 +65,28 @@ def aggregate_session(conn, session_id, fallback_model=""):
         created = parse_ts(iso, node_ts)
         name = gm or fallback_model or "unknown"
         agg = models.setdefault(name, {"model": name, "first": created, "last": created, "messages": 0,
-                                       "input": 0, "output": 0, "cached": 0})
+                                       "input": 0, "output": 0, "cached": 0, "cache_write": 0,
+                                       "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}})
         agg["first"], agg["last"] = min(agg["first"], created), max(agg["last"], created)
         agg["messages"] += 1
-        agg["input"] += (m.get("input_tokens") or 0) + (m.get("cache_creation_tokens") or 0)
-        agg["output"] += m.get("output_tokens") or 0
-        agg["cached"] += m.get("cache_read_tokens") or 0
+        inp, cw = m.get("input_tokens") or 0, m.get("cache_creation_tokens") or 0
+        out, cr = m.get("output_tokens") or 0, m.get("cache_read_tokens") or 0
+        agg["input"] += inp + cw
+        agg["cache_write"] += cw
+        agg["output"] += out
+        agg["cached"] += cr
+        if inp + cw + cr > LONG_PROMPT_TOKENS:  # long-prompt requests, for models with prompt-size price tiers
+            for k, v in (("input", inp), ("output", out), ("cache_write", cw), ("cache_read", cr)):
+                agg["long"][k] += v
     return sorted(models.values(), key=lambda a: a["first"])
+
+
+def with_price(m):
+    """Price is computed at serve time from the token parts, so price updates need no cache rebuild."""
+    cw = m.get("cache_write", 0)
+    parts = {"input": m["input"] - cw, "output": m["output"], "cache_write": cw, "cache_read": m["cached"]}
+    label, price = cost(m["model"], parts, m.get("long"))
+    return {**m, "price": price, "price_model": label}
 
 
 def load_cache(path=CACHE_PATH):
@@ -109,8 +128,8 @@ def flatten(sessions):
     for s in sessions.values():
         base = {k: s[k] for k in ("id", "title", "workspace", "created", "last_activity", "hidden")}
         for m in s["models"] or [{"model": "—", "first": s["created"], "last": s["last_activity"],
-                                   "messages": 0, "input": 0, "output": 0, "cached": 0}]:
-            rows.append({**base, **m})
+                                   "messages": 0, "input": 0, "output": 0, "cached": 0, "cache_write": 0}]:
+            rows.append({**base, **with_price(m)})
     return rows
 
 
@@ -167,6 +186,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"status": STATE.status, "db": str(DB_PATH), "rows": flatten(STATE.sessions)})
         if self.path.startswith("/api/status"):
             return self._json(STATE.status)
+        if self.path.startswith("/api/pricing"):
+            return self._json(pricing.snapshot())
         return super().do_GET()
 
     def do_POST(self):
@@ -176,12 +197,26 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_error(404)
 
 
+class Server(ThreadingHTTPServer):
+    # Windows SO_REUSEADDR lets a second process bind the same port, leaving a stale server answering requests.
+    allow_reuse_address = False
+
+    def server_bind(self):
+        if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
+
+
 def main():
     if not DB_PATH.exists():
         sys.exit(f"sessions.db not found at {DB_PATH} (set SESSIONS_DB to override)")
-    STATE.refresh_async()
-    server = ThreadingHTTPServer((HOST, PORT), Handler)
     url = f"http://{HOST}:{PORT}/"
+    try:
+        server = Server((HOST, PORT), Handler)
+    except OSError:
+        sys.exit(f"Port {PORT} is already in use - the dashboard may already be running at {url}. "
+                 "Close that window first (or set DASHBOARD_PORT).")
+    STATE.refresh_async()
     print(f"Session dashboard running at {url}  (Ctrl+C to stop)")
     if "--no-browser" not in sys.argv:
         webbrowser.open(url)

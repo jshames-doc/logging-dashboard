@@ -1,0 +1,2645 @@
+{
+ "source": "https://docs.devin.ai/desktop/models",
+ "tier": "Enterprise SaaS",
+ "fallback_tier": "Pro",
+ "fetched": "2026-10-12",
+ "models": [
+  {
+   "uid": "adaptive",
+   "label": "Adaptive",
+   "input": 0.5,
+   "output": 2.0,
+   "cache_write": 0.5,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-5-fable-high",
+   "label": "Claude Fable 5 High",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-5-fable-low",
+   "label": "Claude Fable 5 Low",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-5-fable-max",
+   "label": "Claude Fable 5 Max",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-5-fable-medium",
+   "label": "Claude Fable 5 Medium",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-5-fable-xhigh",
+   "label": "Claude Fable 5 XHigh",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-fable-5-1-high",
+   "label": "Claude Fable 5.1 High",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-fable-5-1-low",
+   "label": "Claude Fable 5.1 Low",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-fable-5-1-max",
+   "label": "Claude Fable 5.1 Max",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-fable-5-1-medium",
+   "label": "Claude Fable 5.1 Medium",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-fable-5-1-xhigh",
+   "label": "Claude Fable 5.1 XHigh",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_11",
+   "label": "Claude Haiku 4.5",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_CLAUDE_4_5_OPUS",
+   "label": "Claude Opus 4.5",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_CLAUDE_4_5_OPUS_THINKING",
+   "label": "Claude Opus 4.5 Thinking",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-6",
+   "label": "Claude Opus 4.6",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-6-1m",
+   "label": "Claude Opus 4.6 1M",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-6-thinking",
+   "label": "Claude Opus 4.6 Thinking",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-6-thinking-1m",
+   "label": "Claude Opus 4.6 Thinking 1M",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-7-high",
+   "label": "Claude Opus 4.7 High",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-7-low",
+   "label": "Claude Opus 4.7 Low",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-7-max",
+   "label": "Claude Opus 4.7 Max",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-7-medium",
+   "label": "Claude Opus 4.7 Medium",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-7-xhigh",
+   "label": "Claude Opus 4.7 XHigh",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-high",
+   "label": "Claude Opus 4.8 High",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-high-fast",
+   "label": "Claude Opus 4.8 High Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-low",
+   "label": "Claude Opus 4.8 Low",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-low-fast",
+   "label": "Claude Opus 4.8 Low Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-max",
+   "label": "Claude Opus 4.8 Max",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-max-fast",
+   "label": "Claude Opus 4.8 Max Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-medium",
+   "label": "Claude Opus 4.8 Medium",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-medium-fast",
+   "label": "Claude Opus 4.8 Medium Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-xhigh",
+   "label": "Claude Opus 4.8 XHigh",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-4-8-xhigh-fast",
+   "label": "Claude Opus 4.8 XHigh Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-high",
+   "label": "Claude Opus 5 High",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-high-fast",
+   "label": "Claude Opus 5 High Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-low",
+   "label": "Claude Opus 5 Low",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-low-fast",
+   "label": "Claude Opus 5 Low Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-max",
+   "label": "Claude Opus 5 Max",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-max-fast",
+   "label": "Claude Opus 5 Max Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-medium",
+   "label": "Claude Opus 5 Medium",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-medium-fast",
+   "label": "Claude Opus 5 Medium Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-xhigh",
+   "label": "Claude Opus 5 XHigh",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-xhigh-fast",
+   "label": "Claude Opus 5 XHigh Fast",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-high",
+   "label": "Claude Opus 5.5 High",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-high-fast",
+   "label": "Claude Opus 5.5 High Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-low",
+   "label": "Claude Opus 5.5 Low",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-low-fast",
+   "label": "Claude Opus 5.5 Low Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-max",
+   "label": "Claude Opus 5.5 Max",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-max-fast",
+   "label": "Claude Opus 5.5 Max Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-medium",
+   "label": "Claude Opus 5.5 Medium",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-medium-fast",
+   "label": "Claude Opus 5.5 Medium Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-xhigh",
+   "label": "Claude Opus 5.5 XHigh",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-opus-5-5-xhigh-fast",
+   "label": "Claude Opus 5.5 XHigh Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-4-6",
+   "label": "Claude Sonnet 4.6",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 3.75,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-4-6-1m",
+   "label": "Claude Sonnet 4.6 1M",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 3.75,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-4-6-thinking",
+   "label": "Claude Sonnet 4.6 Thinking",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 3.75,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-4-6-thinking-1m",
+   "label": "Claude Sonnet 4.6 Thinking 1M",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 3.75,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-high",
+   "label": "Claude Sonnet 5 High",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-low",
+   "label": "Claude Sonnet 5 Low",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-max",
+   "label": "Claude Sonnet 5 Max",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-medium",
+   "label": "Claude Sonnet 5 Medium",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-xhigh",
+   "label": "Claude Sonnet 5 XHigh",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-5-high",
+   "label": "Claude Sonnet 5.5 High",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-5-low",
+   "label": "Claude Sonnet 5.5 Low",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-5-max",
+   "label": "Claude Sonnet 5.5 Max",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-5-medium",
+   "label": "Claude Sonnet 5.5 Medium",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "claude-sonnet-5-5-xhigh",
+   "label": "Claude Sonnet 5.5 XHigh",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "deepseek-v4-flash-high",
+   "label": "DeepSeek V4 Flash High",
+   "input": 0.14,
+   "output": 0.28,
+   "cache_write": 0.0,
+   "cache_read": 0.028,
+   "tier": "Pro"
+  },
+  {
+   "uid": "deepseek-v4-flash-low",
+   "label": "DeepSeek V4 Flash Low",
+   "input": 0.14,
+   "output": 0.28,
+   "cache_write": 0.0,
+   "cache_read": 0.028,
+   "tier": "Pro"
+  },
+  {
+   "uid": "deepseek-v4-flash-max",
+   "label": "DeepSeek V4 Flash Max",
+   "input": 0.14,
+   "output": 0.28,
+   "cache_write": 0.0,
+   "cache_read": 0.028,
+   "tier": "Pro"
+  },
+  {
+   "uid": "deepseek-v4-pro-high",
+   "label": "DeepSeek V4 Pro High",
+   "input": 1.32,
+   "output": 3.96,
+   "cache_write": 0.0,
+   "cache_read": 0.044,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "deepseek-v4-pro-low",
+   "label": "DeepSeek V4 Pro Low",
+   "input": 1.32,
+   "output": 3.96,
+   "cache_write": 0.0,
+   "cache_read": 0.044,
+   "tier": "Pro"
+  },
+  {
+   "uid": "deepseek-v4-pro-max",
+   "label": "DeepSeek V4 Pro Max",
+   "input": 1.32,
+   "output": 3.96,
+   "cache_write": 0.0,
+   "cache_read": 0.044,
+   "tier": "Pro"
+  },
+  {
+   "uid": "deepseek-v4-1-flash-high",
+   "label": "DeepSeek V4.1 Flash High",
+   "input": 0.22,
+   "output": 0.66,
+   "cache_write": 0.0,
+   "cache_read": 0.007,
+   "tier": "Pro"
+  },
+  {
+   "uid": "deepseek-v4-1-flash-max",
+   "label": "DeepSeek V4.1 Flash Max",
+   "input": 0.22,
+   "output": 0.66,
+   "cache_write": 0.0,
+   "cache_read": 0.007,
+   "tier": "Pro"
+  },
+  {
+   "uid": "arena-fast",
+   "label": "Fast Arena",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "arena-smart",
+   "label": "Frontier Arena",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 3.75,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GOOGLE_GEMINI_2_5_PRO",
+   "label": "Gemini 2.5 Pro",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 4.5,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_HIGH",
+   "label": "Gemini 3 Flash High",
+   "input": 0.5,
+   "output": 3.0,
+   "cache_write": 1.0,
+   "cache_read": 0.05,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_LOW",
+   "label": "Gemini 3 Flash Low",
+   "input": 0.5,
+   "output": 3.0,
+   "cache_write": 1.0,
+   "cache_read": 0.05,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_MEDIUM",
+   "label": "Gemini 3 Flash Medium",
+   "input": 0.5,
+   "output": 3.0,
+   "cache_write": 1.0,
+   "cache_read": 0.05,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_MINIMAL",
+   "label": "Gemini 3 Flash Minimal",
+   "input": 0.5,
+   "output": 3.0,
+   "cache_write": 1.0,
+   "cache_read": 0.05,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-1-pro-high",
+   "label": "Gemini 3.1 Pro High Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 4.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-1-pro-low",
+   "label": "Gemini 3.1 Pro Low Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 4.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-5-flash-high",
+   "label": "Gemini 3.5 Flash High",
+   "input": 1.5,
+   "output": 9.0,
+   "cache_write": 1.0,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-5-flash-low",
+   "label": "Gemini 3.5 Flash Low",
+   "input": 1.5,
+   "output": 9.0,
+   "cache_write": 1.0,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-5-flash-medium",
+   "label": "Gemini 3.5 Flash Medium",
+   "input": 1.5,
+   "output": 9.0,
+   "cache_write": 1.0,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-5-flash-minimal",
+   "label": "Gemini 3.5 Flash Minimal",
+   "input": 1.5,
+   "output": 9.0,
+   "cache_write": 1.0,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-6-flash-high",
+   "label": "Gemini 3.6 Flash High",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-6-flash-low",
+   "label": "Gemini 3.6 Flash Low",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-6-flash-medium",
+   "label": "Gemini 3.6 Flash Medium",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-6-flash-minimal",
+   "label": "Gemini 3.6 Flash Minimal",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-7-flash-high",
+   "label": "Gemini 3.7 Flash High",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-7-flash-low",
+   "label": "Gemini 3.7 Flash Low",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-7-flash-medium",
+   "label": "Gemini 3.7 Flash Medium",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-8-flash-high",
+   "label": "Gemini 3.8 Flash High",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-8-flash-low",
+   "label": "Gemini 3.8 Flash Low",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-3-8-flash-medium",
+   "label": "Gemini 3.8 Flash Medium",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 1.5,
+   "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-2",
+   "label": "GLM-5.2 High",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-2-1m",
+   "label": "GLM-5.2 High 1M",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-2-max",
+   "label": "GLM-5.2 Max",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-2-max-1m",
+   "label": "GLM-5.2 Max 1M",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-2-none",
+   "label": "GLM-5.2 No Thinking",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-2-none-1m",
+   "label": "GLM-5.2 No Thinking 1M",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "glm-5-3-flash-high",
+   "label": "GLM-5.3 Flash High",
+   "input": 0.15,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.029,
+   "tier": "Pro"
+  },
+  {
+   "uid": "glm-5-3-flash-low",
+   "label": "GLM-5.3 Flash Low",
+   "input": 0.15,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.029,
+   "tier": "Pro"
+  },
+  {
+   "uid": "glm-5-3-flash-max",
+   "label": "GLM-5.3 Flash Max",
+   "input": 0.15,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.029,
+   "tier": "Pro"
+  },
+  {
+   "uid": "glm-5-3-high",
+   "label": "GLM-5.3 High",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Pro"
+  },
+  {
+   "uid": "glm-5-3-low",
+   "label": "GLM-5.3 Low",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Pro"
+  },
+  {
+   "uid": "glm-5-3-max",
+   "label": "GLM-5.3 Max",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Pro"
+  },
+  {
+   "uid": "MODEL_CHAT_GPT_4_1_2025_04_14",
+   "label": "GPT-4.1",
+   "input": 2.0,
+   "output": 8.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_CHAT_GPT_4O_2024_08_06",
+   "label": "GPT-4o",
+   "input": 2.5,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 1.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_8",
+   "label": "GPT-5 High Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_6",
+   "label": "GPT-5 Low Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_7",
+   "label": "GPT-5 Medium Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_15",
+   "label": "GPT-5.1 High Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_23",
+   "label": "GPT-5.1 High Thinking Fast",
+   "input": 2.5,
+   "output": 20.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_13",
+   "label": "GPT-5.1 Low Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_21",
+   "label": "GPT-5.1 Low Thinking Fast",
+   "input": 2.5,
+   "output": 20.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_14",
+   "label": "GPT-5.1 Medium Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_22",
+   "label": "GPT-5.1 Medium Thinking Fast",
+   "input": 2.5,
+   "output": 20.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_12",
+   "label": "GPT-5.1 No Thinking",
+   "input": 1.25,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.125,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_20",
+   "label": "GPT-5.1 No Thinking Fast",
+   "input": 2.5,
+   "output": 20.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_HIGH",
+   "label": "GPT-5.2 High Thinking",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_HIGH_PRIORITY",
+   "label": "GPT-5.2 High Thinking Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_LOW",
+   "label": "GPT-5.2 Low Thinking",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_LOW_PRIORITY",
+   "label": "GPT-5.2 Low Thinking Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_MEDIUM",
+   "label": "GPT-5.2 Medium Thinking",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_MEDIUM_PRIORITY",
+   "label": "GPT-5.2 Medium Thinking Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_NONE",
+   "label": "GPT-5.2 No Thinking",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_NONE_PRIORITY",
+   "label": "GPT-5.2 No Thinking Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_XHIGH",
+   "label": "GPT-5.2 XHigh Thinking",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_5_2_XHIGH_PRIORITY",
+   "label": "GPT-5.2 XHigh Thinking Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-high",
+   "label": "GPT-5.3-Codex High",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-high-priority",
+   "label": "GPT-5.3-Codex High Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-low",
+   "label": "GPT-5.3-Codex Low",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-low-priority",
+   "label": "GPT-5.3-Codex Low Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-medium",
+   "label": "GPT-5.3-Codex Medium",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-medium-priority",
+   "label": "GPT-5.3-Codex Medium Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-spark-medium",
+   "label": "GPT-5.3-Codex Spark Medium",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-xhigh",
+   "label": "GPT-5.3-Codex X-High",
+   "input": 1.75,
+   "output": 14.0,
+   "cache_write": 0.0,
+   "cache_read": 0.175,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-3-codex-xhigh-priority",
+   "label": "GPT-5.3-Codex XHigh Fast",
+   "input": 3.5,
+   "output": 28.0,
+   "cache_write": 0.0,
+   "cache_read": 0.35,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-high",
+   "label": "GPT-5.4 High Thinking",
+   "input": 2.5,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-high-priority",
+   "label": "GPT-5.4 High Thinking Fast",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-low",
+   "label": "GPT-5.4 Low Thinking",
+   "input": 2.5,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-low-priority",
+   "label": "GPT-5.4 Low Thinking Fast",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-medium",
+   "label": "GPT-5.4 Medium Thinking",
+   "input": 2.5,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-medium-priority",
+   "label": "GPT-5.4 Medium Thinking Fast",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-mini-high",
+   "label": "GPT-5.4 Mini High Thinking",
+   "input": 0.75,
+   "output": 4.5,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-mini-low",
+   "label": "GPT-5.4 Mini Low Thinking",
+   "input": 0.75,
+   "output": 4.5,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-mini-medium",
+   "label": "GPT-5.4 Mini Medium Thinking",
+   "input": 0.75,
+   "output": 4.5,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-mini-xhigh",
+   "label": "GPT-5.4 Mini XHigh Thinking",
+   "input": 0.75,
+   "output": 4.5,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-none",
+   "label": "GPT-5.4 No Thinking",
+   "input": 2.5,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-none-priority",
+   "label": "GPT-5.4 No Thinking Fast",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-xhigh",
+   "label": "GPT-5.4 XHigh Thinking",
+   "input": 2.5,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-4-xhigh-priority",
+   "label": "GPT-5.4 XHigh Thinking Fast",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-high",
+   "label": "GPT-5.5 High Thinking",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-high-priority",
+   "label": "GPT-5.5 High Thinking Fast",
+   "input": 12.5,
+   "output": 75.0,
+   "cache_write": 0.0,
+   "cache_read": 1.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-low",
+   "label": "GPT-5.5 Low Thinking",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-low-priority",
+   "label": "GPT-5.5 Low Thinking Fast",
+   "input": 12.5,
+   "output": 75.0,
+   "cache_write": 0.0,
+   "cache_read": 1.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-medium",
+   "label": "GPT-5.5 Medium Thinking",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-medium-priority",
+   "label": "GPT-5.5 Medium Thinking Fast",
+   "input": 12.5,
+   "output": 75.0,
+   "cache_write": 0.0,
+   "cache_read": 1.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-none",
+   "label": "GPT-5.5 No Thinking",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-none-priority",
+   "label": "GPT-5.5 No Thinking Fast",
+   "input": 12.5,
+   "output": 75.0,
+   "cache_write": 0.0,
+   "cache_read": 1.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-review",
+   "label": "GPT-5.5 Review",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-xhigh",
+   "label": "GPT-5.5 XHigh Thinking",
+   "input": 5.0,
+   "output": 30.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-5-xhigh-priority",
+   "label": "GPT-5.5 XHigh Thinking Fast",
+   "input": 12.5,
+   "output": 75.0,
+   "cache_write": 0.0,
+   "cache_read": 1.25,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-high",
+   "label": "GPT-5.6 Luna High Thinking",
+   "input": 0.2,
+   "output": 1.2,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-high-priority",
+   "label": "GPT-5.6 Luna High Thinking Fast",
+   "input": 0.4,
+   "output": 2.4,
+   "cache_write": 0.5,
+   "cache_read": 0.04,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-low",
+   "label": "GPT-5.6 Luna Low Thinking",
+   "input": 0.2,
+   "output": 1.2,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-low-priority",
+   "label": "GPT-5.6 Luna Low Thinking Fast",
+   "input": 0.4,
+   "output": 2.4,
+   "cache_write": 0.5,
+   "cache_read": 0.04,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-max",
+   "label": "GPT-5.6 Luna Max Thinking",
+   "input": 0.2,
+   "output": 1.2,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-max-priority",
+   "label": "GPT-5.6 Luna Max Thinking Fast",
+   "input": 0.4,
+   "output": 2.4,
+   "cache_write": 0.5,
+   "cache_read": 0.04,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-medium",
+   "label": "GPT-5.6 Luna Medium Thinking",
+   "input": 0.2,
+   "output": 1.2,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-medium-priority",
+   "label": "GPT-5.6 Luna Medium Thinking Fast",
+   "input": 0.4,
+   "output": 2.4,
+   "cache_write": 0.5,
+   "cache_read": 0.04,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-none",
+   "label": "GPT-5.6 Luna No Thinking",
+   "input": 0.2,
+   "output": 1.2,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-none-priority",
+   "label": "GPT-5.6 Luna No Thinking Fast",
+   "input": 0.4,
+   "output": 2.4,
+   "cache_write": 0.5,
+   "cache_read": 0.04,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-xhigh",
+   "label": "GPT-5.6 Luna XHigh Thinking",
+   "input": 0.2,
+   "output": 1.2,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-luna-xhigh-priority",
+   "label": "GPT-5.6 Luna XHigh Thinking Fast",
+   "input": 0.4,
+   "output": 2.4,
+   "cache_write": 0.5,
+   "cache_read": 0.04,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-high",
+   "label": "GPT-5.6 Sol High Thinking",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-high-priority",
+   "label": "GPT-5.6 Sol High Thinking Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.8,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-low",
+   "label": "GPT-5.6 Sol Low Thinking",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-low-priority",
+   "label": "GPT-5.6 Sol Low Thinking Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.8,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-max",
+   "label": "GPT-5.6 Sol Max Thinking",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-max-priority",
+   "label": "GPT-5.6 Sol Max Thinking Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.8,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-medium",
+   "label": "GPT-5.6 Sol Medium Thinking",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-medium-priority",
+   "label": "GPT-5.6 Sol Medium Thinking Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.8,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-none",
+   "label": "GPT-5.6 Sol No Thinking",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-none-priority",
+   "label": "GPT-5.6 Sol No Thinking Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.8,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-xhigh",
+   "label": "GPT-5.6 Sol XHigh Thinking",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-sol-xhigh-priority",
+   "label": "GPT-5.6 Sol XHigh Thinking Fast",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.8,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-high",
+   "label": "GPT-5.6 Terra High Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-high-priority",
+   "label": "GPT-5.6 Terra High Thinking Fast",
+   "input": 4.0,
+   "output": 24.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-low",
+   "label": "GPT-5.6 Terra Low Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-low-priority",
+   "label": "GPT-5.6 Terra Low Thinking Fast",
+   "input": 4.0,
+   "output": 24.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-max",
+   "label": "GPT-5.6 Terra Max Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-max-priority",
+   "label": "GPT-5.6 Terra Max Thinking Fast",
+   "input": 4.0,
+   "output": 24.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-medium",
+   "label": "GPT-5.6 Terra Medium Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-medium-priority",
+   "label": "GPT-5.6 Terra Medium Thinking Fast",
+   "input": 4.0,
+   "output": 24.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-none",
+   "label": "GPT-5.6 Terra No Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-none-priority",
+   "label": "GPT-5.6 Terra No Thinking Fast",
+   "input": 4.0,
+   "output": 24.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-xhigh",
+   "label": "GPT-5.6 Terra XHigh Thinking",
+   "input": 2.0,
+   "output": 12.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-5-6-terra-xhigh-priority",
+   "label": "GPT-5.6 Terra XHigh Thinking Fast",
+   "input": 4.0,
+   "output": 24.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-high",
+   "label": "GPT-6 Astra High Thinking",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-high-priority",
+   "label": "GPT-6 Astra High Thinking Fast",
+   "input": 20.0,
+   "output": 100.0,
+   "cache_write": 25.0,
+   "cache_read": 2.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-low",
+   "label": "GPT-6 Astra Low Thinking",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-low-priority",
+   "label": "GPT-6 Astra Low Thinking Fast",
+   "input": 20.0,
+   "output": 100.0,
+   "cache_write": 25.0,
+   "cache_read": 2.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-max",
+   "label": "GPT-6 Astra Max Thinking",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-max-priority",
+   "label": "GPT-6 Astra Max Thinking Fast",
+   "input": 20.0,
+   "output": 100.0,
+   "cache_write": 25.0,
+   "cache_read": 2.0,
+   "tier": "Pro"
+  },
+  {
+   "uid": "gpt-6-astra-medium",
+   "label": "GPT-6 Astra Medium Thinking",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-medium-priority",
+   "label": "GPT-6 Astra Medium Thinking Fast",
+   "input": 20.0,
+   "output": 100.0,
+   "cache_write": 25.0,
+   "cache_read": 2.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-xhigh",
+   "label": "GPT-6 Astra XHigh Thinking",
+   "input": 10.0,
+   "output": 50.0,
+   "cache_write": 12.5,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-astra-xhigh-priority",
+   "label": "GPT-6 Astra XHigh Thinking Fast",
+   "input": 20.0,
+   "output": 100.0,
+   "cache_write": 25.0,
+   "cache_read": 2.0,
+   "tier": "Pro"
+  },
+  {
+   "uid": "gpt-6-luna-high",
+   "label": "GPT-6 Luna High Thinking",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-high-priority",
+   "label": "GPT-6 Luna High Thinking Fast",
+   "input": 0.2,
+   "output": 1.0,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-low",
+   "label": "GPT-6 Luna Low Thinking",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-low-priority",
+   "label": "GPT-6 Luna Low Thinking Fast",
+   "input": 0.2,
+   "output": 1.0,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-max",
+   "label": "GPT-6 Luna Max Thinking",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-max-priority",
+   "label": "GPT-6 Luna Max Thinking Fast",
+   "input": 0.2,
+   "output": 1.0,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-medium",
+   "label": "GPT-6 Luna Medium Thinking",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-medium-priority",
+   "label": "GPT-6 Luna Medium Thinking Fast",
+   "input": 0.2,
+   "output": 1.0,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-none",
+   "label": "GPT-6 Luna No Thinking",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-none-priority",
+   "label": "GPT-6 Luna No Thinking Fast",
+   "input": 0.2,
+   "output": 1.0,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-xhigh",
+   "label": "GPT-6 Luna XHigh Thinking",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-luna-xhigh-priority",
+   "label": "GPT-6 Luna XHigh Thinking Fast",
+   "input": 0.2,
+   "output": 1.0,
+   "cache_write": 0.25,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-high",
+   "label": "GPT-6 Sol High Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-high-priority",
+   "label": "GPT-6 Sol High Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-low",
+   "label": "GPT-6 Sol Low Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-low-priority",
+   "label": "GPT-6 Sol Low Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-max",
+   "label": "GPT-6 Sol Max Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-max-priority",
+   "label": "GPT-6 Sol Max Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-medium",
+   "label": "GPT-6 Sol Medium Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-medium-priority",
+   "label": "GPT-6 Sol Medium Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-none",
+   "label": "GPT-6 Sol No Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-none-priority",
+   "label": "GPT-6 Sol No Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-xhigh",
+   "label": "GPT-6 Sol XHigh Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-sol-xhigh-priority",
+   "label": "GPT-6 Sol XHigh Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.4,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-high",
+   "label": "GPT-6.1 Sol High Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-high-priority",
+   "label": "GPT-6.1 Sol High Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-low",
+   "label": "GPT-6.1 Sol Low Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-low-priority",
+   "label": "GPT-6.1 Sol Low Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-max",
+   "label": "GPT-6.1 Sol Max Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-max-priority",
+   "label": "GPT-6.1 Sol Max Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-medium",
+   "label": "GPT-6.1 Sol Medium Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-medium-priority",
+   "label": "GPT-6.1 Sol Medium Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-xhigh",
+   "label": "GPT-6.1 Sol XHigh Thinking",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gpt-6-1-sol-xhigh-priority",
+   "label": "GPT-6.1 Sol XHigh Thinking Fast",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 5.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_GPT_OSS_120B",
+   "label": "GPT-OSS 120B Medium Thinking",
+   "input": 0.15,
+   "output": 0.6,
+   "cache_write": 0.0,
+   "cache_read": 0.07,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-5-high",
+   "label": "Grok 4.5 High",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-5-low",
+   "label": "Grok 4.5 Low",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-5-medium",
+   "label": "Grok 4.5 Medium",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-6-high",
+   "label": "Grok 4.6 High",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-6-low",
+   "label": "Grok 4.6 Low",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-6-medium",
+   "label": "Grok 4.6 Medium",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-6-xhigh",
+   "label": "Grok 4.6 XHigh",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-7-high",
+   "label": "Grok 4.7 High",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-7-low",
+   "label": "Grok 4.7 Low",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-7-medium",
+   "label": "Grok 4.7 Medium",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "grok-4-7-xhigh",
+   "label": "Grok 4.7 XHigh",
+   "input": 2.0,
+   "output": 6.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_PRIVATE_4",
+   "label": "Grok Code Fast 1",
+   "input": 0.2,
+   "output": 1.5,
+   "cache_write": 0.0,
+   "cache_read": 0.02,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "arena-mixed",
+   "label": "Hybrid Arena",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.1,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "inkling-high",
+   "label": "Inkling High",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "inkling-low",
+   "label": "Inkling Low",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "inkling-max",
+   "label": "Inkling Max",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "inkling-medium",
+   "label": "Inkling Medium",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "inkling-none",
+   "label": "Inkling None",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "inkling-xhigh",
+   "label": "Inkling X-High",
+   "input": 1.4,
+   "output": 4.4,
+   "cache_write": 0.0,
+   "cache_read": 0.26,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "kimi-k2-6",
+   "label": "Kimi K2.6",
+   "input": 0.95,
+   "output": 4.0,
+   "cache_write": 0.0,
+   "cache_read": 0.16,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "kimi-k2-7",
+   "label": "Kimi K2.7",
+   "input": 0.95,
+   "output": 4.0,
+   "cache_write": 0.0,
+   "cache_read": 0.19,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "kimi-k3-high",
+   "label": "Kimi K3 High",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "kimi-k3-low",
+   "label": "Kimi K3 Low",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "kimi-k3-max",
+   "label": "Kimi K3 Max",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.3,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "nemotron-3-ultra-high",
+   "label": "Nemotron 3 Ultra High",
+   "input": 0.6,
+   "output": 2.4,
+   "cache_write": 0.0,
+   "cache_read": 0.12,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "nemotron-3-ultra-medium",
+   "label": "Nemotron 3 Ultra Medium",
+   "input": 0.6,
+   "output": 2.4,
+   "cache_write": 0.0,
+   "cache_read": 0.12,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "nemotron-3-ultra-none",
+   "label": "Nemotron 3 Ultra None",
+   "input": 0.6,
+   "output": 2.4,
+   "cache_write": 0.0,
+   "cache_read": 0.12,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_CHAT_O3",
+   "label": "o3",
+   "input": 2.0,
+   "output": 8.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_CHAT_O3_HIGH",
+   "label": "o3 High Reasoning",
+   "input": 2.0,
+   "output": 8.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "opus-4-7-review",
+   "label": "Opus 4.7 Review",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 6.25,
+   "cache_read": 0.5,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "penguin-high",
+   "label": "Penguin High",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Pro"
+  },
+  {
+   "uid": "penguin-max",
+   "label": "Penguin Max",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Pro"
+  },
+  {
+   "uid": "penguin-medium",
+   "label": "Penguin Medium",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Pro"
+  },
+  {
+   "uid": "swe-1-6",
+   "label": "SWE-1.6",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-1-6-fast",
+   "label": "SWE-1.6 Fast",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-1-7-lightning",
+   "label": "SWE-1.7 Lightning Max",
+   "input": 2.5,
+   "output": 12.5,
+   "cache_write": 0.0,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-1-7-lightning-medium",
+   "label": "SWE-1.7 Lightning Medium",
+   "input": 2.5,
+   "output": 12.5,
+   "cache_write": 0.0,
+   "cache_read": 1.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-1-7",
+   "label": "SWE-1.7 Max",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-1-7-medium",
+   "label": "SWE-1.7 Medium",
+   "input": 0.5,
+   "output": 2.5,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-2-high",
+   "label": "SWE-2 High",
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-2-max",
+   "label": "SWE-2 Max",
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-2-medium",
+   "label": "SWE-2 Medium",
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.0,
+   "cache_read": 0.075,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "swe-check",
+   "label": "SWE-check",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "MODEL_XAI_GROK_3",
+   "label": "xAI Grok-3",
+   "input": 3.0,
+   "output": 15.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Pro"
+  },
+  {
+   "uid": "MODEL_XAI_GROK_3_MINI_REASONING",
+   "label": "xAI Grok-3 mini Thinking",
+   "input": 0.3,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Pro"
+  }
+ ]
+}
