@@ -1,5 +1,5 @@
 const $ = (id) => document.getElementById(id);
-const state = { rows: [], sortKey: "created", asc: false, multi: new Set() };
+const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set() };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
@@ -13,11 +13,11 @@ const dayStart = (v) => (v ? new Date(v + "T00:00:00").getTime() / 1000 : null);
 
 function filtered() {
   const q = $("q").value.trim().toLowerCase();
-  const model = $("f-model").value, ws = $("f-ws").value, hidden = $("f-hidden").checked;
+  const ws = $("f-ws").value, hidden = $("f-hidden").checked;
   const from = dayStart($("f-from").value), to = dayStart($("f-to").value);
   return state.rows.filter((r) =>
     (hidden || !r.hidden) &&
-    (!model || r.model === model) &&
+    (!state.models.size || state.models.has(r.model)) &&
     (!ws || r.workspace === ws) &&
     (from == null || r.created >= from) &&
     (to == null || r.created < to + 86400) &&
@@ -63,7 +63,7 @@ function render() {
   renderTotals(rows);
   $("empty").hidden = rows.length > 0;
   $("rows").innerHTML = rows.slice(0, 2000).map((r, i) => `
-    <tr class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">
+    <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">
       <td class="dt">${dt(r.created)}</td>
       <td class="dt">${dt(r.last_activity)}</td>
       <td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div><div class="id">${esc(r.id)}</div></td>
@@ -82,10 +82,95 @@ function render() {
   });
 }
 
+let sessionOpener = null;
+
+function showSession(id, opener = null) {
+  const models = state.rows.filter((r) => r.id === id).sort((a, b) => a.first - b.first);
+  if (!models.length) return;
+  const session = models[0];
+  const totals = models.reduce((a, r) => ({
+    messages: a.messages + r.messages, input: a.input + r.input,
+    output: a.output + r.output, cached: a.cached + r.cached,
+    price: a.price + (r.price ?? 0), priced: a.priced + (r.price != null ? 1 : 0),
+  }), { messages: 0, input: 0, output: 0, cached: 0, price: 0, priced: 0 });
+  const hit = totals.input + totals.cached ? totals.cached / (totals.input + totals.cached) * 100 : 0;
+  const unpriced = models.length - totals.priced;
+  const detail = (label, value, cls = "") => `<div class="${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
+  const stat = (label, value, cls = "") => `<div class="session-stat ${cls}"><div class="lbl">${label}</div><div class="val">${value}</div></div>`;
+  $("session-title").textContent = session.title || "Untitled";
+  $("session-meta").innerHTML = [
+    detail("Session ID", esc(session.id)),
+    detail("Visibility", session.hidden ? "Hidden" : "Visible"),
+    detail("Workspace", esc(session.workspace || "—"), "wide"),
+    detail("Created", dt(session.created), "dt"),
+    detail("Last activity", dt(session.last_activity), "dt"),
+  ].join("");
+  $("session-stats").innerHTML = [
+    stat("Responses", fmt.format(totals.messages)),
+    stat("Input · includes cache write", fmt.format(totals.input), "in"),
+    stat("Output", fmt.format(totals.output), "out"),
+    stat("Cached", fmt.format(totals.cached), "ca"),
+    stat("Cache hit", `${hit.toFixed(1)}%`),
+    stat(unpriced && totals.priced ? "Est. cost · partial" : "Est. cost", totals.priced ? fmtPrice(totals.price) : "—"),
+  ].join("");
+  $("session-models").innerHTML = models.map((r) => `
+    <tr>
+      <td>${esc(r.model)}</td>
+      <td class="num">${fmt.format(r.messages)}</td>
+      <td class="num in">${fmt.format(r.input)}</td>
+      <td class="num">${fmt.format(r.cache_write || 0)}</td>
+      <td class="num out">${fmt.format(r.output)}</td>
+      <td class="num ca">${fmt.format(r.cached)}</td>
+      <td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>
+      <td class="dt">${dt(r.first)}</td>
+      <td class="dt">${dt(r.last)}</td>
+    </tr>`).join("");
+  $("session-cost-note").textContent = !totals.priced ? "No published rates for this session's models; cost is unavailable."
+    : `${unpriced ? `Partial estimate: ${unpriced} model${unpriced === 1 ? "" : "s"} without published rates excluded. ` : ""}Estimated USD at configured model rates; not an invoice.`;
+  sessionOpener = opener;
+  if (opener) opener.focus();
+  if (!$("session-details").open) $("session-details").showModal();
+}
+
+$("rows").addEventListener("dblclick", (e) => {
+  const row = e.target.closest("tr[data-session-id]");
+  if (row) showSession(row.dataset.sessionId, row);
+});
+$("rows").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const row = e.target.closest("tr[data-session-id]");
+  if (!row) return;
+  e.preventDefault();
+  showSession(row.dataset.sessionId, row);
+});
+$("session-close").addEventListener("click", () => $("session-details").close());
+$("session-details").addEventListener("click", (e) => {
+  if (e.target !== $("session-details")) return;
+  const rect = $("session-details").getBoundingClientRect();
+  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) $("session-details").close();
+});
+$("session-details").addEventListener("close", () => {
+  if (sessionOpener) sessionOpener.focus();
+  sessionOpener = null;
+});
+
 function fillSelect(el, values, label) {
   const cur = el.value;
   el.innerHTML = `<option value="">${label}</option>` + values.map((v) => `<option value="${esc(v)}">${esc(label.includes("workspace") ? base(v) + "  —  " + v : v)}</option>`).join("");
   el.value = values.includes(cur) ? cur : "";
+}
+
+function updateModelFilter() {
+  const models = [...state.models];
+  $("f-model-label").textContent = models.length === 1 ? models[0] : models.length ? `${models.length} models selected` : "All models";
+  $("f-model-label").title = models.length ? models.join(", ") : "All models";
+  $("f-model-options").querySelectorAll("input").forEach((input) => (input.checked = state.models.has(input.value)));
+}
+
+function fillModels(values) {
+  state.models = new Set([...state.models].filter((model) => values.includes(model)));
+  $("f-model-options").innerHTML = values.map((model) => `<label class="model-option"><input type="checkbox" value="${esc(model)}"${state.models.has(model) ? " checked" : ""}><span>${esc(model)}</span></label>`).join("");
+  updateModelFilter();
 }
 
 function setData(data) {
@@ -94,7 +179,7 @@ function setData(data) {
   data.rows.forEach((r) => (counts[r.id] = (counts[r.id] || 0) + 1));
   state.multi = new Set(Object.keys(counts).filter((k) => counts[k] > 1));
   $("dbpath").textContent = data.db;
-  fillSelect($("f-model"), [...new Set(data.rows.map((r) => r.model))].sort(), "All models");
+  fillModels([...new Set(data.rows.map((r) => r.model))].sort());
   fillSelect($("f-ws"), [...new Set(data.rows.map((r) => r.workspace))].sort((a, b) => base(a).localeCompare(base(b))), "All workspaces");
   render();
 }
@@ -130,10 +215,34 @@ document.querySelectorAll("thead th[data-k]").forEach((th) =>
     state.sortKey = k;
     render();
   }));
-["q", "f-model", "f-ws", "f-from", "f-to", "f-hidden"].forEach((id) => $(id).addEventListener("input", render));
+["q", "f-ws", "f-from", "f-to", "f-hidden"].forEach((id) => $(id).addEventListener("input", render));
+$("f-model-options").addEventListener("change", (e) => {
+  if (e.target.type !== "checkbox") return;
+  if (e.target.checked) state.models.add(e.target.value);
+  else state.models.delete(e.target.value);
+  updateModelFilter();
+  render();
+});
+$("f-model-all").addEventListener("click", () => {
+  state.models.clear();
+  updateModelFilter();
+  render();
+});
+document.addEventListener("click", (e) => {
+  if (!$("f-model").contains(e.target)) $("f-model").open = false;
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("f-model").open) {
+    $("f-model").open = false;
+    $("f-model-label").focus();
+  }
+});
 $("clear").addEventListener("click", () => {
-  ["q", "f-model", "f-ws", "f-from", "f-to"].forEach((id) => ($(id).value = ""));
+  ["q", "f-ws", "f-from", "f-to"].forEach((id) => ($(id).value = ""));
   $("f-hidden").checked = false;
+  state.models.clear();
+  updateModelFilter();
+  $("f-model").open = false;
   render();
 });
 $("refresh").addEventListener("click", async () => {

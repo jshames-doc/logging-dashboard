@@ -2,7 +2,7 @@
 
 - Run: `run.bat` (starts `python server.py` on http://127.0.0.1:8765 and opens the browser). `--no-browser` to skip opening.
 - Stop: `stop_server.bat` (kills the `server.py` process listening on `DASHBOARD_PORT`/8765; won't touch other programs on that port).
-- Tests: `python -m unittest test_server`
+- Tests: `python -m unittest test_server` (requires Node.js for the model-filter unit test; uses a mocked DOM, no browser).
 - Data source: `%APPDATA%\devin\cli\sessions.db` (opened read-only; override with `SESSIONS_DB`). Port override: `DASHBOARD_PORT`.
 - Tokens come from `message_nodes.chat_message -> $.metadata.metrics` on assistant messages, deduped by `request_id`
   (forked branches duplicate nodes). Input = input_tokens + cache_creation_tokens; Cached = cache_read_tokens.
@@ -18,3 +18,6 @@
 - `pricing.resolve()` maps DB model slugs: OVERRIDES -> published `model_uid` (most slugs) -> ordered-token label match ignoring
   "thinking" (order matters so opus-5-5 != Opus 5). Price is computed at serve time (`server.with_price`) from cached token parts.
   Unpriced slugs (summarizer, compactor, MODEL_SWE_1_5) show "—".
+- Session details: double-click a table row (or focus it and press Enter/Space) to open the native dialog.
+  Details aggregate all rows for that session from `state.rows`, independent of table filters; unpriced models make the cost partial.
+  The dialog and model-filter unit tests use Node.js with a mocked DOM.

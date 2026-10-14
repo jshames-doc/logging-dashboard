@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -79,6 +80,154 @@ class AggregationTest(DBFixture):
         rows = server.flatten(server.refresh_sessions(self.conn, {}))
         self.assertEqual(len(rows), 2)
         self.assertTrue(all(r["id"] == "s1" and r["workspace"] == "C:\\ws\\a" for r in rows))
+
+
+class ModelFilterTest(unittest.TestCase):
+    def run_script(self, script):
+        setup = r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const elements = new Map();
+const element = (id) => {
+  if (!elements.has(id)) elements.set(id, {
+    value: "", checked: false, textContent: "", innerHTML: "", open: false,
+    style: {}, listeners: {},
+    addEventListener(type, fn) { this.listeners[type] = fn; },
+    contains(target) { return target === this; },
+    querySelectorAll() { return []; },
+    focus() { this.focused = true; },
+    showModal() { this.open = true; },
+    close() { this.open = false; },
+    getBoundingClientRect() { return { left: 0, top: 0, right: 800, bottom: 600 }; },
+  });
+  return elements.get(id);
+};
+const document = {
+  getElementById: element,
+  querySelectorAll: () => [],
+  addEventListener(type, fn) { this[type] = fn; },
+};
+const context = vm.createContext({ document, Intl, fetch: () => new Promise(() => {}) });
+vm.runInContext(fs.readFileSync("static/app.js", "utf8"), context);
+"""
+        result = subprocess.run(["node", "-e", setup + script], cwd=Path(__file__).parent,
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_multi_model_filter_and_reset(self):
+        self.run_script(r"""
+vm.runInContext(`
+  state.rows = [
+    { id: "a", model: "model-a", workspace: "one", created: 100 },
+    { id: "b", model: "model-b", workspace: "one", created: 100 },
+    { id: "c", model: "model-c", workspace: "two", created: 100 },
+    { id: "h", model: "model-b", workspace: "one", created: 100, hidden: true },
+  ];
+  state.models = new Set(["model-a", "model-b"]);
+`, context);
+const ids = () => Array.from(vm.runInContext("filtered().map(r => r.id)", context));
+assert.deepEqual(ids(), ["a", "b"]);
+vm.runInContext("render()", context);
+assert.ok(element("totals").innerHTML.includes("2 model rows"));
+assert.ok(!element("rows").innerHTML.includes("model-c"));
+element("f-ws").value = "two";
+assert.deepEqual(ids(), []);
+element("f-ws").value = "";
+element("f-hidden").checked = true;
+assert.deepEqual(ids(), ["a", "b", "h"]);
+element("q").value = "model-a";
+assert.deepEqual(ids(), ["a"]);
+element("q").value = "";
+vm.runInContext("fillModels(['model-a', 'model-b', 'model-c'])", context);
+assert.equal(element("f-model-label").textContent, "2 models selected");
+vm.runInContext("fillModels(['model-b', 'model-c'])", context);
+assert.deepEqual(Array.from(vm.runInContext("state.models", context)), ["model-b"]);
+assert.equal(element("f-model-label").textContent, "model-b");
+vm.runInContext("render = () => {}", context);
+element("f-model-options").listeners.change({ target: { type: "checkbox", value: "model-c", checked: true } });
+assert.deepEqual(ids(), ["b", "c", "h"]);
+element("f-model-options").listeners.change({ target: { type: "checkbox", value: "model-b", checked: false } });
+assert.deepEqual(ids(), ["c"]);
+element("f-model-all").listeners.click();
+assert.deepEqual(ids(), ["a", "b", "c", "h"]);
+assert.equal(element("f-model-label").textContent, "All models");
+vm.runInContext("state.models.add('model-a')", context);
+element("clear").listeners.click();
+assert.deepEqual(ids(), ["a", "b", "c"]);
+assert.equal(element("f-model-label").textContent, "All models");
+element("f-model").open = true;
+document.keydown({ key: "Escape" });
+assert.equal(element("f-model").open, false);
+assert.equal(element("f-model-label").focused, true);
+element("f-model").open = true;
+document.click({ target: element("f-model") });
+assert.equal(element("f-model").open, true);
+document.click({ target: element("q") });
+assert.equal(element("f-model").open, false);
+""")
+
+    def test_session_details_include_all_models_and_handle_unpriced_usage(self):
+        self.run_script(r"""
+vm.runInContext(`
+  state.rows = [
+    { id: 's"1', title: '<script>title</script>', workspace: 'C:/work/<demo>', created: 100,
+      last_activity: 400, hidden: true, model: 'model-a', messages: 2, input: 100,
+      cache_write: 40, output: 20, cached: 300, price: 1.25, price_model: 'Model A', first: 110, last: 200 },
+    { id: 's"1', title: '<script>title</script>', workspace: 'C:/work/<demo>', created: 100,
+      last_activity: 400, hidden: true, model: '<model-b>', messages: 3, input: 50,
+      cache_write: 10, output: 30, cached: 150, price: null, price_model: null, first: 210, last: 350 },
+    { id: 'other', title: 'Other session', workspace: '', created: 500, last_activity: 600,
+      model: 'model-c', messages: 99, input: 999, output: 0, cached: 0, price: 50, first: 500, last: 600 },
+  ];
+  state.models.add('model-a');
+`, context);
+element("f-hidden").checked = true;
+vm.runInContext("render()", context);
+assert.ok(element("rows").innerHTML.includes('data-session-id="s&quot;1"'));
+assert.ok(element("rows").innerHTML.includes('tabindex="0"'));
+const row = { dataset: { sessionId: 's"1' }, focus() { this.focused = true; } };
+const cell = { closest: () => row };
+element("rows").listeners.dblclick({ target: cell });
+assert.equal(element("session-details").open, true);
+assert.equal(element("session-title").textContent, '<script>title</script>');
+assert.ok(element("session-meta").innerHTML.includes('C:/work/&lt;demo&gt;'));
+assert.ok(element("session-meta").innerHTML.includes('Hidden'));
+assert.ok(element("session-stats").innerHTML.includes('150'));
+assert.ok(element("session-stats").innerHTML.includes('450'));
+assert.ok(element("session-stats").innerHTML.includes('75.0%'));
+assert.ok(element("session-stats").innerHTML.includes('$1.25'));
+assert.ok(element("session-cost-note").textContent.includes('1 model without published rates'));
+assert.ok(element("session-models").innerHTML.includes('&lt;model-b&gt;'));
+assert.ok(!element("session-models").innerHTML.includes('model-c'));
+assert.ok(!element("session-models").innerHTML.includes('<model-b>'));
+element("session-details").listeners.click({ target: element("session-models") });
+assert.equal(element("session-details").open, true);
+element("session-details").listeners.click({ target: element("session-details"), clientX: 10, clientY: 10 });
+assert.equal(element("session-details").open, true);
+element("session-close").listeners.click();
+assert.equal(element("session-details").open, false);
+element("session-details").listeners.close();
+assert.equal(row.focused, true);
+let prevented = false;
+element("rows").listeners.keydown({ target: cell, key: 'Enter', preventDefault() { prevented = true; } });
+assert.equal(prevented, true);
+assert.equal(element("session-details").open, true);
+element("session-details").listeners.click({ target: element("session-details"), clientX: -1, clientY: -1 });
+assert.equal(element("session-details").open, false);
+vm.runInContext("showSession('other')", context);
+assert.equal(element("session-title").textContent, 'Other session');
+assert.ok(!element("session-models").innerHTML.includes('&lt;model-b&gt;'));
+vm.runInContext(`
+  state.rows = [{ id: 'empty', title: '', workspace: '', created: 100, last_activity: 100,
+    model: '—', messages: 0, input: 0, output: 0, cached: 0, price: null, first: 100, last: 100 }];
+  showSession('empty');
+`, context);
+assert.equal(element("session-title").textContent, 'Untitled');
+assert.ok(element("session-stats").innerHTML.includes('0.0%'));
+assert.ok(!element("session-stats").innerHTML.includes('NaN'));
+assert.ok(element("session-cost-note").textContent.includes('No published rates'));
+""")
 
 
 class PricingTest(DBFixture):

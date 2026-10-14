@@ -57,11 +57,57 @@
     <p class="prices-foot">USD per 1M tokens · <span class="used-dot"></span> used in your sessions</p>
   </dialog>
 
+  <dialog id="session-details" class="prices session-details" aria-labelledby="session-title" aria-describedby="session-scope">
+    <div class="prices-head">
+      <div>
+        <span class="eyebrow">Session details</span>
+        <h2 id="session-title"></h2>
+        <p class="prices-src" id="session-scope">Full session usage across all models, regardless of table filters.</p>
+      </div>
+      <button class="btn ghost close" id="session-close" aria-label="Close session details" autofocus>Close</button>
+    </div>
+    <div class="session-body">
+      <dl class="session-meta" id="session-meta"></dl>
+      <div class="session-stats" id="session-stats"></div>
+      <div class="session-breakdown">
+        <h3>Model <em>breakdown</em></h3>
+        <div class="session-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th class="num">Responses</th>
+                <th class="num">Input</th>
+                <th class="num">Cache write*</th>
+                <th class="num">Output</th>
+                <th class="num">Cached</th>
+                <th class="num">Est. cost</th>
+                <th>First response</th>
+                <th>Last response</th>
+              </tr>
+            </thead>
+            <tbody id="session-models"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="prices-foot">
+      <p id="session-cost-note"></p>
+      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks.</p>
+    </div>
+  </dialog>
+
   <section class="totals" id="totals"></section>
 
   <section class="filters">
     <input id="q" type="search" placeholder="Search title, id, workspace, model…" autocomplete="off">
-    <select id="f-model"><option value="">All models</option></select>
+    <details id="f-model" class="model-filter">
+      <summary id="f-model-label" aria-label="Filter models">All models</summary>
+      <div class="model-menu">
+        <button id="f-model-all" class="btn ghost" type="button">All models</button>
+        <div id="f-model-options" class="model-options" role="group" aria-label="Models to include"></div>
+      </div>
+    </details>
     <select id="f-ws"><option value="">All workspaces</option></select>
     <label class="field">From <input id="f-from" type="date"></label>
     <label class="field">To <input id="f-to" type="date"></label>
