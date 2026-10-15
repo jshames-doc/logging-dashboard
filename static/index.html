@@ -22,6 +22,7 @@
       <div class="progress"><div class="progress-fill" id="progress"></div></div>
       <div class="actions">
         <button id="prices-btn" class="btn ghost" title="Show per-model API prices">$ Prices</button>
+        <button id="report-btn" class="btn ghost" title="Build a grouped usage report">Report</button>
         <button id="refresh" class="btn">Rescan database</button>
       </div>
     </div>
@@ -95,6 +96,49 @@
       <p id="session-cost-note"></p>
       <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks.</p>
     </div>
+  </dialog>
+
+  <dialog id="report" class="prices report">
+    <div class="prices-head">
+      <div>
+        <span class="eyebrow">Report maker</span>
+        <h2>Usage <em>report</em></h2>
+        <p class="prices-src">Usage grouped by model or time period, filtered by response date.</p>
+      </div>
+      <button class="btn ghost close" id="report-close" aria-label="Close">✕</button>
+    </div>
+    <div class="report-tools">
+      <details id="report-models" class="model-filter">
+        <summary id="report-model-label" aria-label="Filter models">All models</summary>
+        <div class="model-menu">
+          <label class="model-option all"><input type="checkbox" id="report-models-all" checked><span>(Select all)</span></label>
+          <div id="report-model-options" class="model-options" role="group" aria-label="Models to include"></div>
+        </div>
+      </details>
+      <label class="field">From <input id="r-from" type="date"></label>
+      <label class="field">To <input id="r-to" type="date"></label>
+      <label class="field">Group by
+        <select id="r-group">
+          <option value="model">Model</option>
+          <option value="day">Day</option>
+          <option value="week">Week</option>
+          <option value="month">Month</option>
+        </select>
+      </label>
+      <label class="toggle"><input id="r-hidden" type="checkbox"><span></span>Include hidden</label>
+      <button id="r-run" class="btn">Run report</button>
+      <button id="r-csv" class="btn ghost" disabled>Download CSV</button>
+    </div>
+    <div class="totals report-totals" id="report-totals"></div>
+    <div class="prices-body report-body">
+      <table>
+        <thead><tr id="report-head"></tr></thead>
+        <tbody id="report-rows"></tbody>
+      </table>
+      <p class="empty" id="report-empty" hidden>No usage matches these filters.</p>
+      <p class="empty" id="report-hint">Pick filters, then Run report.</p>
+    </div>
+    <p class="prices-foot">Response dates use your local timezone · deduplicated across forks · unpriced models excluded from cost</p>
   </dialog>
 
   <section class="totals" id="totals"></section>

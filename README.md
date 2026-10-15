@@ -45,6 +45,9 @@ SESSIONS_DB=/path/to/sessions.db python server.py
   across all models, regardless of table filters.
 - **$ Prices** shows the rate card; **Rescan database** re-reads `sessions.db`
   (only sessions whose `last_activity_at` changed are re-aggregated).
+- **Report** opens the report maker: Excel-style model checkboxes (all included
+  by default, uncheck to exclude), a response-date range, and grouping by
+  model, day, week, or month. Results are sortable and exportable to CSV.
 
 ## Configuration
 

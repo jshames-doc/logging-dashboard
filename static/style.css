@@ -219,6 +219,24 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 .session-details .prices-foot { padding: 10px 22px; line-height: 1.6; }
 .session-details .prices-foot p { margin: 0; }
 #session-cost-note { color: var(--ink-2); }
+
+/* report dialog */
+.report { width: min(1120px, 94vw); }
+.report-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 0 18px 10px; }
+.report-tools input[type=date], .report-tools select {
+  font: 400 12px var(--mono); color: var(--ink); background: var(--bg-2);
+  border: 1px solid var(--line-2); padding: 5px 8px; outline: none;
+}
+.report-tools input[type=date]:focus, .report-tools select:focus { border-color: var(--in); }
+.report-tools .model-filter summary { min-width: 140px; }
+.report .model-menu { max-width: min(480px, 80vw); }
+.model-option.all { border-bottom: 1px solid var(--line); margin-bottom: 2px; padding-bottom: 8px; font-weight: 500; }
+.report-totals { border-top: 1px solid var(--line-2); padding: 6px 18px; }
+.report-totals:empty { display: none; }
+.report-totals .card .val { font-size: 20px; }
+.report-body .empty { font-size: 17px; padding: 34px 0; }
+.report-body td:first-child { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
+
 @media (max-width: 600px) {
   .session-meta { grid-template-columns: 1fr; }
   .session-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

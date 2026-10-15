@@ -33,13 +33,14 @@ function sorted(rows) {
   });
 }
 
+const card = (lbl, val, sub, sw = "", i = 0) =>
+  `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div><div class="sub">${sub}</div></div>`;
+
 function renderTotals(rows) {
   const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0) }),
     { input: 0, output: 0, cached: 0, messages: 0, price: 0 });
   const sessions = new Set(rows.map((r) => r.id)).size;
   const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
-  const card = (lbl, val, sub, sw = "", i = 0) =>
-    `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div><div class="sub">${sub}</div></div>`;
   $("totals").innerHTML = [
     card("Sessions", fmt.format(sessions), `${fmt.format(rows.length)} model rows`, "", 0),
     card("Responses", compact.format(t.messages), fmt.format(t.messages), "", 1),
@@ -230,6 +231,7 @@ $("f-model-all").addEventListener("click", () => {
 });
 document.addEventListener("click", (e) => {
   if (!$("f-model").contains(e.target)) $("f-model").open = false;
+  if (!$("report-models").contains(e.target)) $("report-models").open = false;
 });
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && $("f-model").open) {
@@ -294,5 +296,144 @@ document.querySelectorAll("#prices th[data-pk]").forEach((th) =>
     prices.key = k;
     renderPrices();
   }));
+
+/* report maker */
+const report = { models: [], excluded: new Set(), rows: [], totals: null, group: "model", sortKey: "price", asc: false };
+const GROUP_LABEL = { model: "Model", day: "Day", week: "Week", month: "Month" };
+
+function fillReportModels() {
+  report.models = [...new Set(state.rows.map((r) => r.model).filter((m) => m !== "—"))].sort();
+  report.excluded = new Set([...report.excluded].filter((m) => report.models.includes(m)));
+  $("report-model-options").innerHTML = report.models.map((m) =>
+    `<label class="model-option"><input type="checkbox" value="${esc(m)}"${report.excluded.has(m) ? "" : " checked"}><span>${esc(m)}</span></label>`).join("");
+  updateReportModels();
+}
+
+function updateReportModels() {
+  const n = report.models.length - report.excluded.size;
+  $("report-model-label").textContent = report.excluded.size ? `${n} of ${report.models.length} models` : "All models";
+  $("report-model-label").title = report.excluded.size ? `Excluded: ${[...report.excluded].join(", ")}` : "All models";
+  const all = $("report-models-all");
+  all.checked = report.excluded.size === 0;
+  all.indeterminate = report.excluded.size > 0 && n > 0;
+}
+
+function reportCols() {
+  const cols = [["key", GROUP_LABEL[report.group]], ["sessions", "Sessions"]];
+  if (report.group !== "model") cols.push(["models", "Models"]);
+  return cols.concat([["messages", "Responses"], ["input", "Input"], ["output", "Output"], ["cached", "Cached"], ["price", "Est. cost"]]);
+}
+
+function sortedReport() {
+  const k = report.sortKey, dir = report.asc ? 1 : -1;
+  return [...report.rows].sort((a, b) => {
+    const x = a[k], y = b[k];
+    if (x == null || y == null) return x == null ? (y == null ? 0 : 1) : -1;
+    return (typeof x === "number" ? x - y : String(x).localeCompare(String(y))) * dir;
+  });
+}
+
+function renderReport() {
+  $("report-hint").hidden = true;
+  const cols = reportCols();
+  $("report-head").innerHTML = cols.map(([k, l], i) => `<th data-rk="${k}"${i ? ' class="num"' : ""}>${l}</th>`).join("");
+  document.querySelectorAll("#report-head th[data-rk]").forEach((th) => {
+    th.classList.toggle("sorted", th.dataset.rk === report.sortKey);
+    th.classList.toggle("asc", th.dataset.rk === report.sortKey && report.asc);
+  });
+  const rows = sortedReport();
+  $("report-empty").hidden = rows.length > 0;
+  $("report-rows").innerHTML = rows.map((r) => `
+    <tr>
+      <td${report.group === "model" ? ` class="model" title="${esc(r.price_model || "no published rate")}"` : ""}>${esc(r.label)}</td>
+      <td class="num">${fmt.format(r.sessions)}</td>
+      ${report.group !== "model" ? `<td class="num">${fmt.format(r.models)}</td>` : ""}
+      <td class="num">${fmt.format(r.messages)}</td>
+      <td class="num in">${fmt.format(r.input)}</td>
+      <td class="num out">${fmt.format(r.output)}</td>
+      <td class="num ca">${fmt.format(r.cached)}</td>
+      <td class="num price"${r.unpriced ? ` title="excludes ${r.unpriced} unpriced model${r.unpriced === 1 ? "" : "s"}"` : ""}>${r.price == null ? "—" : fmtPrice(r.price)}</td>
+    </tr>`).join("");
+  const t = report.totals;
+  if (t) {
+    const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
+    $("report-totals").innerHTML = [
+      card("Sessions", fmt.format(t.sessions), `${fmt.format(t.models)} models`, "", 0),
+      card("Responses", compact.format(t.messages), fmt.format(t.messages), "", 1),
+      card("Input", compact.format(t.input), fmt.format(t.input), "in", 2),
+      card("Output", compact.format(t.output), fmt.format(t.output), "out", 3),
+      card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 4),
+      card("Cache hit", `${hit.toFixed(1)}%`, "", "", 5),
+      card("Est. cost", t.price ? fmtPrice(t.price) : "—", t.unpriced ? `${t.unpriced} unpriced model${t.unpriced === 1 ? "" : "s"}` : "", "", 6),
+    ].join("");
+  }
+}
+
+async function runReport() {
+  const p = new URLSearchParams({ group: $("r-group").value });
+  if ($("r-from").value) p.set("from", $("r-from").value);
+  if ($("r-to").value) p.set("to", $("r-to").value);
+  if ($("r-hidden").checked) p.set("hidden", "1");
+  if (report.excluded.size) p.set("exc", [...report.excluded].join(","));
+  $("r-run").disabled = true;
+  try {
+    const data = await (await fetch("/api/report?" + p)).json();
+    report.group = data.group;
+    report.rows = data.rows || [];
+    report.totals = data.totals;
+    report.sortKey = data.group === "model" ? "price" : "key";
+    report.asc = data.group !== "model";
+    renderReport();
+    $("r-csv").disabled = !report.rows.length;
+  } finally {
+    $("r-run").disabled = false;
+  }
+}
+
+const csvCell = (v) => /[",\n]/.test(v = String(v ?? "")) ? `"${v.replace(/"/g, '""')}"` : v;
+
+$("report-btn").addEventListener("click", () => {
+  fillReportModels();
+  $("report").showModal();
+});
+$("report-close").addEventListener("click", () => $("report").close());
+$("report").addEventListener("click", (e) => e.target === $("report") && $("report").close());
+$("report").addEventListener("cancel", (e) => {
+  if ($("report-models").open) {
+    e.preventDefault();
+    $("report-models").open = false;
+  }
+});
+$("report-models").addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.type !== "checkbox") return;
+  if (t.id === "report-models-all") {
+    report.excluded = t.checked ? new Set() : new Set(report.models);
+    fillReportModels();
+    return;
+  }
+  t.checked ? report.excluded.delete(t.value) : report.excluded.add(t.value);
+  updateReportModels();
+});
+$("r-run").addEventListener("click", () => runReport().catch((e) => setStatus({ error: e.message })));
+$("report-head").addEventListener("click", (e) => {
+  const th = e.target.closest("th[data-rk]");
+  if (!th) return;
+  const k = th.dataset.rk;
+  report.asc = report.sortKey === k ? !report.asc : k === "key";
+  report.sortKey = k;
+  renderReport();
+});
+$("r-csv").addEventListener("click", () => {
+  const cols = reportCols();
+  const lines = [cols.map(([, l]) => csvCell(l)).join(",")];
+  for (const r of sortedReport())
+    lines.push(cols.map(([k]) => csvCell(k === "key" ? r.label : k === "price" ? (r.price == null ? "" : r.price.toFixed(6)) : r[k])).join(","));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([lines.join("\n") + "\n"], { type: "text/csv" }));
+  a.download = `session-report-${report.group}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
 
 load().catch((e) => setStatus({ error: e.message }));

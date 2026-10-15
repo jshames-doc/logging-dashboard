@@ -8,6 +8,11 @@
   (forked branches duplicate nodes). Input = input_tokens + cache_creation_tokens; Cached = cache_read_tokens.
 - `message_nodes.created_at` is rewritten on save; use `$.metadata.created_at` for real message times.
 - Aggregates cached in `.cache/sessions_cache.json`, keyed by session `last_activity_at`; bump `CACHE_VERSION` when the aggregate shape changes.
+  Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`).
+- Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
+  Groups the cached `daily` buckets server-side (price is computed per model inside each group so long-prompt tiers apply;
+  `unpriced` counts models without rates). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
+  per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,
   parses the embedded `modelCostData` array (Enterprise SaaS tier, Pro-tier fallback for models only published there), prints a diff
   and writes `pricing_data.json`. `pricing.py` hot-reloads that file on mtime change; no restart or cache bump needed.
