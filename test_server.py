@@ -119,7 +119,7 @@ const document = {
   querySelectorAll: () => [],
   addEventListener(type, fn) { this[type] = fn; },
 };
-const context = vm.createContext({ document, Intl, fetch: () => new Promise(() => {}) });
+const context = vm.createContext({ document, Intl, fetch: () => new Promise(() => {}), setInterval: () => 0 });
 vm.runInContext(fs.readFileSync("static/app.js", "utf8"), context);
 """
         result = subprocess.run(["node", "-e", setup + script], cwd=Path(__file__).parent,

@@ -261,6 +261,18 @@ class State:
 
 STATE = State()
 
+PING_TIMEOUT = 90  # page pings every 20s; Chrome throttles background tabs to ~1/min
+last_ping = [0.0]  # watchdog arms on the first /api/ping, so --no-browser stays up
+
+
+def watch_browser(server):
+    while True:
+        time.sleep(5)
+        if last_ping[0] and time.time() - last_ping[0] > PING_TIMEOUT:
+            print("Browser closed - shutting down.")
+            server.shutdown()
+            return
+
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
@@ -283,6 +295,9 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"status": STATE.status, "db": str(DB_PATH), "rows": flatten(STATE.sessions)})
         if self.path.startswith("/api/status"):
             return self._json(STATE.status)
+        if self.path.startswith("/api/ping"):
+            last_ping[0] = time.time()
+            return self._json({"ok": True})
         if self.path.startswith("/api/pricing"):
             return self._json(pricing.snapshot())
         if self.path.startswith("/api/report"):
@@ -324,6 +339,7 @@ def main():
         sys.exit(f"Port {PORT} is already in use - the dashboard may already be running at {url}. "
                  "Close that window first (or set DASHBOARD_PORT).")
     STATE.refresh_async()
+    threading.Thread(target=watch_browser, args=(server,), daemon=True).start()
     print(f"Session dashboard running at {url}  (Ctrl+C to stop)")
     if "--no-browser" not in sys.argv:
         webbrowser.open(url)

@@ -436,4 +436,5 @@ $("r-csv").addEventListener("click", () => {
   URL.revokeObjectURL(a.href);
 });
 
+setInterval(() => fetch("/api/ping").catch(() => {}), 20000);
 load().catch((e) => setStatus({ error: e.message }));
