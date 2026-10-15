@@ -67,22 +67,27 @@ def aggregate_session(conn, session_id, fallback_model=""):
         key = rid or mid
         if key in seen:
             continue
+        try:
+            m = json.loads(metrics)
+            created = parse_ts(iso, node_ts)
+            inp, cw = m.get("input_tokens") or 0, m.get("cache_creation_tokens") or 0
+            out, cr = m.get("output_tokens") or 0, m.get("cache_read_tokens") or 0
+            if not all(isinstance(v, (int, float)) for v in (inp, cw, out, cr)):
+                continue
+            day = datetime.fromtimestamp(created).date().isoformat()
+        except (TypeError, ValueError, AttributeError, OverflowError, OSError):
+            continue  # malformed metrics or unusable timestamp: skip the row, not the whole scan
         seen.add(key)
-        m = json.loads(metrics)
-        created = parse_ts(iso, node_ts)
         name = gm or fallback_model or "unknown"
         agg = models.setdefault(name, {"model": name, "first": created, "last": created, "messages": 0,
                                        "input": 0, "output": 0, "cached": 0, "cache_write": 0,
                                        "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}})
         agg["first"], agg["last"] = min(agg["first"], created), max(agg["last"], created)
         agg["messages"] += 1
-        inp, cw = m.get("input_tokens") or 0, m.get("cache_creation_tokens") or 0
-        out, cr = m.get("output_tokens") or 0, m.get("cache_read_tokens") or 0
         agg["input"] += inp + cw
         agg["cache_write"] += cw
         agg["output"] += out
         agg["cached"] += cr
-        day = datetime.fromtimestamp(created).date().isoformat()
         d = daily.setdefault((name, day), _empty_day(day, name))
         d["messages"] += 1
         d["input"] += inp + cw

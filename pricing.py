@@ -14,6 +14,7 @@ Manual entries may set "long_prompt" rates, applied to requests whose prompt
 
 import json
 import re
+import sys
 import threading
 from pathlib import Path
 
@@ -61,9 +62,24 @@ def _strip(toks):
 
 def _read(path):
     try:
-        return path.stat().st_mtime, json.loads(path.read_text(encoding="utf-8"))
-    except OSError:
+        mtime = path.stat().st_mtime
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return mtime, data if isinstance(data, dict) else {"models": []}
+    except (OSError, ValueError):
         return None, {"models": []}
+
+
+def _models(data):
+    """Well-formed entries from a pricing file's "models" list: dicts with a string label."""
+    models = data.get("models")
+    return ([m for m in models if isinstance(m, dict) and isinstance(m.get("label"), str)]
+            if isinstance(models, list) else [])
+
+
+def _uids(m):
+    """Lowercased slugs for an entry: the 'uids' list (manual) or the single 'uid' (published)."""
+    u = m.get("uids") or ([m["uid"]] if isinstance(m.get("uid"), str) else [])
+    return [x.lower() for x in u if isinstance(x, str)] if isinstance(u, list) else []
 
 
 def _mtimes():
@@ -84,22 +100,27 @@ def _load():
             return DATA
         m1, data = _read(DATA_PATH)
         m2, manual = _read(MANUAL_PATH)
-        published = data.get("models", [])
-        labels, uids = {m["label"] for m in published}, {m["uid"].lower() for m in published}
-        extra = [{**m, "uid": m["uids"][0], "tier": "Manual"} for m in manual.get("models", [])
-                 if m["label"] not in labels and not {u.lower() for u in m["uids"]} & uids]
+        published = _models(data)
+        labels = {m["label"] for m in published}
+        uids = {u for m in published for u in _uids(m)}
+        extra = [{**m, "uid": muids[0], "tier": "Manual"} for m in _models(manual)
+                 if (muids := _uids(m)) and m["label"] not in labels and not set(muids) & uids]
         for d in (DATA, RATES, LONG_RATES, UIDS, _EXACT, _LOOSE, _RESOLVED):
             d.clear()
         DATA.update(data, models=published + extra)
         for m in published + extra:
-            RATES.setdefault(m["label"], tuple(m[c] for c in COSTS))
-            if m.get("long_prompt"):
-                LONG_RATES.setdefault(m["label"], tuple(m["long_prompt"][c] for c in COSTS))
-            for uid in m.get("uids") or [m["uid"]]:
-                UIDS.setdefault(uid.lower(), m["label"])
+            for uid in _uids(m):
+                UIDS.setdefault(uid, m["label"])
             toks = _tokens(m["label"])
             _EXACT.setdefault(toks, m["label"])
             _LOOSE.setdefault(_strip(toks), m["label"])
+            try:
+                RATES.setdefault(m["label"], tuple(float(m[c]) for c in COSTS))
+                lp = m.get("long_prompt")
+                if lp:
+                    LONG_RATES.setdefault(m["label"], tuple(float(lp[c]) for c in COSTS))
+            except (KeyError, TypeError, ValueError, AttributeError):
+                print(f"pricing: invalid rates for {m['label']!r} - treated as unpriced", file=sys.stderr)
         _mtime = (m1, m2)
     return DATA
 

@@ -92,6 +92,25 @@ class AggregationTest(DBFixture):
         self.assertEqual(len(rows), 2)
         self.assertTrue(all(r["id"] == "s1" and r["workspace"] == "C:\\ws\\a" for r in rows))
 
+    def test_aggregation_skips_malformed_rows(self):
+        c = sqlite3.connect(self.db)
+        rows = [
+            (0, json.dumps({"message_id": "b1", "role": "assistant",
+                            "metadata": {"request_id": "bad1", "metrics": 5}}), 500),  # metrics not an object
+            (1, json.dumps({"message_id": "b2", "role": "assistant",
+                            "metadata": {"request_id": "bad2",
+                                         "metrics": {"input_tokens": "lots", "output_tokens": 2}}}), 500),
+            (2, msg("assistant", "bad3", "b3", "model-a", inp=9, out=9), None),  # no usable timestamp
+            (3, msg("assistant", "good1", "g1", "model-a", inp=3, out=2), 500),
+        ]
+        c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s7',?,?,?)", rows)
+        c.commit()
+        c.close()
+        models, daily = server.aggregate_session(self.conn, "s7")
+        res = {m["model"]: m for m in models}
+        self.assertEqual((res["model-a"]["messages"], res["model-a"]["input"], res["model-a"]["output"]), (1, 3, 2))
+        self.assertEqual((len(daily), daily[0]["messages"], daily[0]["input"]), (1, 1, 3))
+
 
 class ModelFilterTest(unittest.TestCase):
     def run_script(self, script):
@@ -176,6 +195,24 @@ document.click({ target: element("f-model") });
 assert.equal(element("f-model").open, true);
 document.click({ target: element("q") });
 assert.equal(element("f-model").open, false);
+""")
+
+    def test_row_cap_notice_expands_on_click(self):
+        self.run_script(r"""
+vm.runInContext(`
+  state.rows = Array.from({ length: 4100 }, (_, i) => ({ id: "s" + i, model: "m", workspace: "", created: i, last_activity: i }));
+  render();
+`, context);
+assert.equal(element("more").hidden, false);
+assert.ok(element("more").textContent.includes("of 4,100"), element("more").textContent);
+assert.ok(!element("rows").innerHTML.includes('data-session-id="s2099"'));
+element("more").listeners.click();
+assert.equal(element("more").hidden, false);
+assert.ok(element("rows").innerHTML.includes('data-session-id="s2099"'));
+assert.ok(element("more").textContent.includes("100 more"), element("more").textContent);
+element("more").listeners.click();
+assert.equal(element("more").hidden, true);
+assert.ok(element("rows").innerHTML.includes('data-session-id="s4099"'));
 """)
 
     def test_report_model_select_all(self):
@@ -441,6 +478,30 @@ class UpdatePricesTest(unittest.TestCase):
         m = lambda label, i: {"label": label, "input": i, "output": 1, "cache_write": 0, "cache_read": 0}
         lines = update_prices.diff({"models": [m("A", 1), m("B", 1)]}, {"models": [m("A", 2), m("C", 1)]})
         self.assertEqual([l[0] for l in lines], ["+", "-", "~"])
+
+    def test_pricing_survives_malformed_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            data_path, manual_path = Path(tmp) / "d.json", Path(tmp) / "m.json"
+            orig = pricing.DATA_PATH, pricing.MANUAL_PATH
+            write = lambda p, text, mtime: (p.write_text(text), os.utime(p, (mtime, mtime)))
+            try:
+                pricing.DATA_PATH, pricing.MANUAL_PATH = data_path, manual_path
+                write(data_path, json.dumps({"models": [
+                    {"uid": "x-9", "label": "X 9", "input": "3", "output": 0,
+                     "cache_write": 0, "cache_read": 0}, 42, {"label": "No Rates"}]}), 1000)
+                self.assertEqual(pricing.price_info("x-9"), ("X 9", (3.0, 0.0, 0.0, 0.0)))
+                self.assertIsNone(pricing.resolve("claude-haiku-5-5-high"))  # manual file absent
+                write(manual_path, "{ not json ]", 1500)
+                self.assertIsNone(pricing.resolve("claude-haiku-5-5-high"))
+                write(data_path, "[1, 2, 3]", 2000)  # valid JSON, not an object
+                write(manual_path, json.dumps({"models": [{"label": "Claude Haiku 5.5",
+                    "uids": ["claude-haiku-5-5-high"], "input": 0.1, "output": 0.5,
+                    "cache_write": 0.125, "cache_read": 0.01}]}), 2500)
+                self.assertIsNone(pricing.resolve("x-9"))
+                self.assertEqual(pricing.resolve("claude-haiku-5-5-high"), "Claude Haiku 5.5")
+            finally:
+                pricing.DATA_PATH, pricing.MANUAL_PATH = orig
+                pricing._load()
 
     def test_pricing_reloads_when_file_changes(self):
         with tempfile.TemporaryDirectory() as tmp:

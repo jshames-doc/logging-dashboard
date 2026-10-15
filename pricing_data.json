@@ -2,7 +2,7 @@
  "source": "https://docs.devin.ai/desktop/models",
  "tier": "Enterprise SaaS",
  "fallback_tier": "Pro",
- "fetched": "2026-10-12",
+ "fetched": "2026-10-15",
  "models": [
   {
    "uid": "adaptive",
@@ -884,6 +884,33 @@
    "output": 7.5,
    "cache_write": 1.5,
    "cache_read": 0.15,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-4-argon-high",
+   "label": "Gemini 4 Argon High",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 4.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-4-argon-low",
+   "label": "Gemini 4 Argon Low",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 4.0,
+   "cache_read": 0.2,
+   "tier": "Enterprise SaaS"
+  },
+  {
+   "uid": "gemini-4-argon-medium",
+   "label": "Gemini 4 Argon Medium",
+   "input": 4.0,
+   "output": 20.0,
+   "cache_write": 4.0,
+   "cache_read": 0.2,
    "tier": "Enterprise SaaS"
   },
   {

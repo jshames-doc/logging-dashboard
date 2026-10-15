@@ -12,6 +12,19 @@
    "cache_write": 0.125,
    "cache_read": 0.01,
    "long_prompt": {"input": 0.5, "output": 2.5, "cache_write": 0.625, "cache_read": 0.05}
+  },
+  {
+   "label": "SWE-2 Lightning",
+   "uids": ["swe-2-lightning", "swe-2-low-lightning", "swe-2-medium-lightning",
+            "swe-2-high-lightning", "swe-2-xhigh-lightning", "swe-2-max-lightning",
+            "swe-2-lightning-low", "swe-2-lightning-medium", "swe-2-lightning-high",
+            "swe-2-lightning-xhigh", "swe-2-lightning-max"],
+   "source": "user-provided (not on docs.devin.ai/desktop/models)",
+   "noted": "2026-10-15",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 0.0,
+   "cache_read": 0.1
   }
  ]
 }

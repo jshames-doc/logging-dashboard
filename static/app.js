@@ -1,5 +1,5 @@
 const $ = (id) => document.getElementById(id);
-const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set() };
+const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000 };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
@@ -63,7 +63,8 @@ function render() {
   const rows = sorted(filtered());
   renderTotals(rows);
   $("empty").hidden = rows.length > 0;
-  $("rows").innerHTML = rows.slice(0, 2000).map((r, i) => `
+  const shown = rows.slice(0, state.limit);
+  $("rows").innerHTML = shown.map((r, i) => `
     <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">
       <td class="dt">${dt(r.created)}</td>
       <td class="dt">${dt(r.last_activity)}</td>
@@ -77,6 +78,10 @@ function render() {
       <td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>
       <td>${mix(r)}</td>
     </tr>`).join("");
+  const rest = rows.length - shown.length;
+  $("more").hidden = !rest;
+  if (rest)
+    $("more").textContent = `Showing first ${fmt.format(shown.length)} of ${fmt.format(rows.length)} rows — click to show ${fmt.format(Math.min(state.limit, rest))} more, or narrow the filters`;
   document.querySelectorAll("thead th[data-k]").forEach((th) => {
     th.classList.toggle("sorted", th.dataset.k === state.sortKey);
     th.classList.toggle("asc", th.dataset.k === state.sortKey && state.asc);
@@ -176,6 +181,7 @@ function fillModels(values) {
 
 function setData(data) {
   state.rows = data.rows;
+  state.limit = 2000;
   const counts = {};
   data.rows.forEach((r) => (counts[r.id] = (counts[r.id] || 0) + 1));
   state.multi = new Set(Object.keys(counts).filter((k) => counts[k] > 1));
@@ -216,18 +222,20 @@ document.querySelectorAll("thead th[data-k]").forEach((th) =>
     state.sortKey = k;
     render();
   }));
-["q", "f-ws", "f-from", "f-to", "f-hidden"].forEach((id) => $(id).addEventListener("input", render));
+const refilter = () => { state.limit = 2000; render(); };
+$("more").addEventListener("click", () => { state.limit += 2000; render(); });
+["q", "f-ws", "f-from", "f-to", "f-hidden"].forEach((id) => $(id).addEventListener("input", refilter));
 $("f-model-options").addEventListener("change", (e) => {
   if (e.target.type !== "checkbox") return;
   if (e.target.checked) state.models.add(e.target.value);
   else state.models.delete(e.target.value);
   updateModelFilter();
-  render();
+  refilter();
 });
 $("f-model-all").addEventListener("click", () => {
   state.models.clear();
   updateModelFilter();
-  render();
+  refilter();
 });
 document.addEventListener("click", (e) => {
   if (!$("f-model").contains(e.target)) $("f-model").open = false;
@@ -245,7 +253,7 @@ $("clear").addEventListener("click", () => {
   state.models.clear();
   updateModelFilter();
   $("f-model").open = false;
-  render();
+  refilter();
 });
 $("refresh").addEventListener("click", async () => {
   setStatus(await (await fetch("/api/refresh", { method: "POST" })).json());
