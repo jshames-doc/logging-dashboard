@@ -131,7 +131,6 @@ thead th:hover { color: var(--ink); }
 thead th.sorted { color: var(--in); }
 thead th.sorted::after { content: " ↓"; }
 thead th.sorted.asc::after { content: " ↑"; }
-th.mix { cursor: default; }
 td { padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
 tbody tr { animation: fade .35s ease-out both; }
 tbody tr:hover td { background: rgba(236,228,212,.035); }
@@ -147,9 +146,6 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 .ws { color: var(--ink-2); max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 .model { color: var(--ink); }
 .tag { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--bg); background: var(--ink-3); padding: 1px 5px; margin-left: 6px; }
-.mixbar { display: flex; width: 120px; height: 6px; margin-top: 6px; background: var(--line); }
-.mixbar i { display: block; height: 100%; }
-.mixbar .in { background: var(--in); } .mixbar .out { background: var(--out); } .mixbar .ca { background: var(--ca); }
 .more {
   width: 100%; padding: 14px; border: 0; background: transparent;
   font: 400 12px var(--mono); color: var(--ink-2); cursor: pointer; text-align: center;
