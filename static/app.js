@@ -424,6 +424,15 @@ $("report-models").addEventListener("change", (e) => {
   updateReportModels();
 });
 $("r-run").addEventListener("click", () => runReport().catch((e) => setStatus({ error: e.message })));
+$("r-clear").addEventListener("click", () => {
+  ["r-from", "r-to"].forEach((id) => ($(id).value = ""));
+  $("r-group").value = "model";
+  $("r-hidden").checked = false;
+  report.excluded.clear();
+  fillReportModels();
+  $("report-models").open = false;
+  runReport().catch((e) => setStatus({ error: e.message }));
+});
 $("report-head").addEventListener("click", (e) => {
   const th = e.target.closest("th[data-rk]");
   if (!th) return;
