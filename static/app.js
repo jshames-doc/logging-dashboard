@@ -1,7 +1,7 @@
 const $ = (id) => document.getElementById(id);
 const COLS = [
   ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
-  ["model", "Model"], ["messages", "Msgs"], ["input", "Input"], ["output", "Output"], ["tps", "TPS"],
+  ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["input", "Input"], ["output", "Output"],
   ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
 ];
 const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
