@@ -19,10 +19,12 @@ CREATE INDEX idx_message_nodes_session ON message_nodes(session_id);
 """
 
 
-def msg(role, rid=None, mid="m", model=None, inp=0, out=0, cw=0, cr=0, at=None):
+def msg(role, rid=None, mid="m", model=None, inp=0, out=0, cw=0, cr=0, at=None, tps=None):
     meta = {"request_id": rid, "generation_model": model, "created_at": at}
     if role == "assistant" and rid:
         meta["metrics"] = {"input_tokens": inp, "output_tokens": out, "cache_creation_tokens": cw, "cache_read_tokens": cr}
+        if tps is not None:
+            meta["metrics"]["tokens_per_sec"] = tps
     return json.dumps({"message_id": mid, "role": role, "content": "", "metadata": meta}, separators=(",", ":"))
 
 
@@ -45,11 +47,11 @@ class DBFixture(unittest.TestCase):
         c.execute("INSERT INTO sessions VALUES ('s1',?,'',100,300,'T',0)", ("C:\\ws\\a",))
         nodes = [
             msg("user", mid="u1"),
-            msg("assistant", "r1", "a1", "model-a", inp=4, out=10, cw=100, cr=1000),
-            msg("assistant", "r1", "a1", "model-a", inp=4, out=10, cw=100, cr=1000),  # forked duplicate
+            msg("assistant", "r1", "a1", "model-a", inp=4, out=10, cw=100, cr=1000, tps=250),
+            msg("assistant", "r1", "a1", "model-a", inp=4, out=10, cw=100, cr=1000, tps=250),  # forked duplicate
             msg("tool", mid="t1"),
-            msg("assistant", "r2", "a2", "model-b", inp=1, out=5, cw=None, cr=50),
-            msg("assistant", "r3", "a3", "model-a", inp=2, out=3, cw=0, cr=7),
+            msg("assistant", "r2", "a2", "model-b", inp=1, out=5, cw=None, cr=50, tps=100),
+            msg("assistant", "r3", "a3", "model-a", inp=2, out=3, cw=0, cr=7),  # no tokens_per_sec
             msg("assistant", mid="a4"),  # no metrics
         ]
         c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s1',?,?,?)",
@@ -78,6 +80,35 @@ class AggregationTest(DBFixture):
         self.assertEqual((a["first"], a["last"]), (101, 105))
         b = res["model-b"]
         self.assertEqual((b["messages"], b["input"], b["output"], b["cached"]), (1, 1, 5, 50))
+
+    def test_tps_generation_time_accumulated_and_served(self):
+        res = {m["model"]: m for m in server.aggregate_session(self.conn, "s1")[0]}
+        # gen_ms = output / tokens_per_sec * 1000: r1 10/250 -> 40 ms, r2 5/100 -> 50 ms; r3 has no tps
+        self.assertAlmostEqual(res["model-a"]["gen_ms"], 40.0)
+        self.assertAlmostEqual(res["model-b"]["gen_ms"], 50.0)
+        served = {k: server.with_price(m) for k, m in res.items()}
+        self.assertEqual(served["model-a"]["tps"], 325.0)  # 13 output tokens / 0.04 s
+        self.assertEqual(served["model-b"]["tps"], 100.0)
+
+    def test_tps_ignores_missing_or_invalid_speed(self):
+        c = sqlite3.connect(self.db)
+        nodes = [
+            msg("assistant", "t1", "t1", "model-a", inp=1, out=0, tps=5000),  # no output: no generation time
+            msg("assistant", "t2", "t2", "model-a", inp=1, out=4, tps=0),     # zero speed: unusable
+            msg("assistant", "t3", "t3", "model-a", inp=1, out=4, tps=-5),    # negative speed: unusable
+            msg("assistant", "t4", "t4", "model-a", inp=1, out=4, tps=200),   # 20 ms
+        ]
+        c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s9',?,?,?)",
+                      [(i, n, 400 + i) for i, n in enumerate(nodes)])
+        c.commit()
+        c.close()
+        (m,) = server.aggregate_session(self.conn, "s9")[0]
+        self.assertEqual((m["messages"], m["output"], m["gen_ms"]), (4, 12, 20.0))
+        self.assertEqual(server.with_price(m)["tps"], 600.0)  # 12 tokens / 0.02 s
+
+    def test_untracked_speed_yields_null_tps(self):
+        res = {m["model"]: server.with_price(m) for m in server.aggregate_session(self.conn, "s2")[0]}
+        self.assertIsNone(res["claude-sonnet-4-6"]["tps"])
 
     def test_refresh_reuses_cache_when_unchanged(self):
         fake = {"s1": {"last_activity": 300, "models": [{"model": "cached"}]}}
@@ -200,25 +231,26 @@ assert.equal(element("f-model").open, false);
     def test_column_visibility_dropdown(self):
         self.run_script(r"""
 vm.runInContext(`
-  state.rows = [
+  setData({ rows: [
     { id: "a", title: "A", model: "model-a", workspace: "ws1", created: 100, last_activity: 200,
-      messages: 3, input: 10, output: 5, cached: 7, price: 1.5, first: 100, last: 200 },
-  ];
-  render();
+      messages: 3, input: 10, output: 5, cached: 7, price: 1.5, tps: 87.5, first: 100, last: 200 },
+  ], db: "db" });
 `, context);
 assert.ok(element("rows").innerHTML.includes('class="model"'));
-assert.ok(element("f-cols-options").innerHTML.includes('value="mix"'));
+assert.ok(element("rows").innerHTML.includes("41.2%"));  // cache hit = cached / (input + cached)
+assert.ok(element("rows").innerHTML.includes("87.5"));   // TPS cell
+assert.ok(element("f-cols-options").innerHTML.includes('value="hit"'));
 assert.equal(element("f-cols-label").textContent, "Columns");
 element("f-cols-options").listeners.change({ target: { type: "checkbox", value: "model", checked: false } });
 assert.ok(!element("rows").innerHTML.includes('class="model"'));
 assert.ok(element("rows").innerHTML.includes('class="ws"'));
-assert.equal(element("f-cols-label").textContent, "10 of 11 columns");
-const target = { type: "checkbox", value: "mix", checked: false };
-for (const k of ["created", "last_activity", "title", "workspace", "messages", "input", "output", "cached", "price"])
+assert.equal(element("f-cols-label").textContent, "11 of 12 columns");
+const target = { type: "checkbox", value: "hit", checked: false };
+for (const k of ["created", "last_activity", "title", "workspace", "messages", "input", "output", "tps", "cached", "price"])
   element("f-cols-options").listeners.change({ target: { type: "checkbox", value: k, checked: false } });
 element("f-cols-options").listeners.change({ target });
 assert.equal(target.checked, true);  // last visible column can't be hidden
-assert.equal(vm.runInContext("state.hiddenCols.size", context), 10);
+assert.equal(vm.runInContext("state.hiddenCols.size", context), 11);
 element("f-cols-all").listeners.click();
 assert.equal(element("f-cols-label").textContent, "Columns");
 assert.ok(element("rows").innerHTML.includes('class="model"'));
@@ -275,10 +307,10 @@ vm.runInContext(`
   state.rows = [
     { id: 's"1', title: '<script>title</script>', workspace: 'C:/work/<demo>', created: 100,
       last_activity: 400, hidden: true, model: 'model-a', messages: 2, input: 100,
-      cache_write: 40, output: 20, cached: 300, price: 1.25, price_model: 'Model A', first: 110, last: 200 },
+      cache_write: 40, output: 20, cached: 300, price: 1.25, price_model: 'Model A', tps: 500, gen_ms: 40, first: 110, last: 200 },
     { id: 's"1', title: '<script>title</script>', workspace: 'C:/work/<demo>', created: 100,
       last_activity: 400, hidden: true, model: '<model-b>', messages: 3, input: 50,
-      cache_write: 10, output: 30, cached: 150, price: null, price_model: null, first: 210, last: 350 },
+      cache_write: 10, output: 30, cached: 150, price: null, price_model: null, tps: null, first: 210, last: 350 },
     { id: 'other', title: 'Other session', workspace: '', created: 500, last_activity: 600,
       model: 'model-c', messages: 99, input: 999, output: 0, cached: 0, price: 50, first: 500, last: 600 },
   ];
@@ -299,8 +331,11 @@ assert.ok(element("session-stats").innerHTML.includes('150'));
 assert.ok(element("session-stats").innerHTML.includes('450'));
 assert.ok(element("session-stats").innerHTML.includes('75.0%'));
 assert.ok(element("session-stats").innerHTML.includes('$1.25'));
+assert.ok(element("session-stats").innerHTML.includes('Avg TPS'));
+assert.ok(element("session-stats").innerHTML.includes('1250.0'));  // 50 output / 0.04 s, model-b untracked
 assert.ok(element("session-cost-note").textContent.includes('1 model without published rates'));
 assert.ok(element("session-models").innerHTML.includes('&lt;model-b&gt;'));
+assert.ok(element("session-models").innerHTML.includes('500.0'));  // model-a TPS cell
 assert.ok(!element("session-models").innerHTML.includes('model-c'));
 assert.ok(!element("session-models").innerHTML.includes('<model-b>'));
 element("session-details").listeners.click({ target: element("session-models") });
@@ -349,10 +384,10 @@ class ReportTest(DBFixture):
 
     def test_daily_buckets_dedupe_and_group_by_day(self):
         self.add_session("s4", [
-            msg("assistant", "d1", "d1", "model-a", inp=10, out=5, at=self.D12),
-            msg("assistant", "d2", "d2", "model-b", inp=20, out=6, at=self.D12),
-            msg("assistant", "d3", "d3", "model-a", inp=30, out=7, at=self.D13),
-            msg("assistant", "d1", "d1", "model-a", inp=10, out=5, at=self.D12),  # forked duplicate
+            msg("assistant", "d1", "d1", "model-a", inp=10, out=5, at=self.D12, tps=100),
+            msg("assistant", "d2", "d2", "model-b", inp=20, out=6, at=self.D12, tps=200),
+            msg("assistant", "d3", "d3", "model-a", inp=30, out=7, at=self.D13, tps=70),
+            msg("assistant", "d1", "d1", "model-a", inp=10, out=5, at=self.D12, tps=100),  # forked duplicate
         ])
         sessions = self.refresh()
         self.assertEqual(len(sessions["s4"]["daily"]), 3)
@@ -361,6 +396,8 @@ class ReportTest(DBFixture):
         self.assertEqual((days[d12]["messages"], days[d12]["input"], days[d12]["output"]), (2, 30, 11))
         self.assertEqual((days[d12]["sessions"], days[d12]["models"]), (1, 2))
         self.assertEqual((days[d13]["messages"], days[d13]["input"]), (1, 30))
+        # token-weighted: 11 output / (5/100 + 6/200 s) and 7 / (7/70 s)
+        self.assertEqual((days[d12]["tps"], days[d13]["tps"]), (137.5, 70.0))
 
     def test_report_filters_models_days_and_hidden(self):
         self.add_session("s4", [
@@ -406,9 +443,24 @@ class ReportTest(DBFixture):
         ir, orr, cwr, crr = pricing.RATES["Claude Sonnet 4.6"]
         self.assertAlmostEqual(row["price"], (10 * ir + 5 * orr + 10 * cwr + 100 * crr) / 1e6)
         self.assertEqual(row["unpriced"], 1)
+        self.assertIsNone(row["tps"])  # this day's buckets have no tokens_per_sec
         by_model = {r["key"]: r for r in server.report(sessions, group="model")["rows"]}
         self.assertEqual(by_model["claude-sonnet-4-6"]["price_model"], "Claude Sonnet 4.6")
         self.assertIsNone(by_model["model-a"]["price"])
+        self.assertEqual(by_model["model-a"]["tps"], 450.0)  # group includes s1's model-a: 18 tokens / 0.04 s
+
+    def test_report_tps_is_token_weighted(self):
+        self.add_session("s4", [
+            msg("assistant", "d1", "d1", "model-x", inp=10, out=5, at=self.D12, tps=100),
+            msg("assistant", "d2", "d2", "model-y", inp=20, out=6, at=self.D12, tps=200),
+            msg("assistant", "d3", "d3", "model-x", inp=30, out=7, at=self.D13, tps=70),
+        ])
+        sessions = self.refresh()
+        models = {r["key"]: r for r in server.report(sessions, group="model")["rows"]}
+        self.assertEqual((models["model-x"]["tps"], models["model-y"]["tps"]), (80.0, 200.0))
+        # from_day drops the shared fixture's 1970-era buckets, isolating s4: 18 tokens / 0.18 s
+        tot = server.report(sessions, group="model", from_day=day_of(self.D12))["totals"]
+        self.assertEqual(tot["tps"], 100.0)
 
     def test_report_empty_when_all_models_excluded(self):
         rep = server.report(self.refresh(), exclude={"model-a", "model-b"}, group="model")

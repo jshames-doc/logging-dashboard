@@ -81,6 +81,7 @@
                 <th class="num">Input</th>
                 <th class="num">Cache write*</th>
                 <th class="num">Output</th>
+                <th class="num" title="Output tokens ÷ generation time (token-weighted)">TPS</th>
                 <th class="num">Cached</th>
                 <th class="num">Est. cost</th>
                 <th>First response</th>
@@ -94,7 +95,7 @@
     </div>
     <div class="prices-foot">
       <p id="session-cost-note"></p>
-      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks.</p>
+      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks. TPS = output tokens ÷ generation time.</p>
     </div>
   </dialog>
 
@@ -139,7 +140,7 @@
       <p class="empty" id="report-empty" hidden>No usage matches these filters.</p>
       <p class="empty" id="report-hint">Pick filters, then Run report.</p>
     </div>
-    <p class="prices-foot">Response dates use your local timezone · deduplicated across forks · unpriced models excluded from cost</p>
+    <p class="prices-foot">Response dates use your local timezone · deduplicated across forks · unpriced models excluded from cost · TPS = output tokens ÷ generation time</p>
   </dialog>
 
   <section class="totals" id="totals"></section>
@@ -179,9 +180,10 @@
           <th data-k="messages" class="num">Msgs</th>
           <th data-k="input" class="num">Input</th>
           <th data-k="output" class="num">Output</th>
+          <th data-k="tps" class="num" title="Output tokens ÷ generation time (token-weighted)">TPS</th>
           <th data-k="cached" class="num">Cached</th>
           <th data-k="price" class="num">Est. cost</th>
-          <th class="mix" data-col="mix">Mix</th>
+          <th data-k="hit" class="num" title="cached ÷ (input + cached)">Cache hit</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>

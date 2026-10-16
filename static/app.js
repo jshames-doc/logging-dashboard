@@ -1,8 +1,8 @@
 const $ = (id) => document.getElementById(id);
 const COLS = [
   ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
-  ["model", "Model"], ["messages", "Msgs"], ["input", "Input"], ["output", "Output"], ["cached", "Cached"],
-  ["price", "Est. cost"], ["mix", "Mix"],
+  ["model", "Model"], ["messages", "Msgs"], ["input", "Input"], ["output", "Output"], ["tps", "TPS"],
+  ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
 ];
 const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
 const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000,
@@ -44,8 +44,8 @@ const card = (lbl, val, sub, sw = "", i = 0) =>
   `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div><div class="sub">${sub}</div></div>`;
 
 function renderTotals(rows) {
-  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0) }),
-    { input: 0, output: 0, cached: 0, messages: 0, price: 0 });
+  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0), gen_ms: a.gen_ms + (r.gen_ms || 0) }),
+    { input: 0, output: 0, cached: 0, messages: 0, price: 0, gen_ms: 0 });
   const sessions = new Set(rows.map((r) => r.id)).size;
   const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
   $("totals").innerHTML = [
@@ -53,18 +53,14 @@ function renderTotals(rows) {
     card("Responses", compact.format(t.messages), fmt.format(t.messages), "", 1),
     card("Input", compact.format(t.input), fmt.format(t.input), "in", 2),
     card("Output", compact.format(t.output), fmt.format(t.output), "out", 3),
-    card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 4),
-    card("Cache hit", `${hit.toFixed(1)}%`, "cached ÷ (input + cached)", "", 5),
-    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "Enterprise SaaS rates", "", 6),
+    card("Avg TPS", t.gen_ms ? (t.output * 1000 / t.gen_ms).toFixed(1) : "—", "output ÷ generation time", "", 4),
+    card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 5),
+    card("Cache hit", `${hit.toFixed(1)}%`, "cached ÷ (input + cached)", "", 6),
+    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "Enterprise SaaS rates", "", 7),
   ].join("");
 }
 
-function mix(r) {
-  const tot = r.input + r.output + r.cached;
-  if (!tot) return `<div class="mixbar"></div>`;
-  const p = (v) => ((v / tot) * 100).toFixed(2);
-  return `<div class="mixbar" title="in ${p(r.input)}% · out ${p(r.output)}% · cached ${p(r.cached)}%"><i class="in" style="width:${p(r.input)}%"></i><i class="out" style="width:${p(r.output)}%"></i><i class="ca" style="width:${p(r.cached)}%"></i></div>`;
-}
+const hitPct = (r) => (r.input + r.cached ? (r.cached / (r.input + r.cached)) * 100 : null);
 
 const CELLS = {
   created: (r) => `<td class="dt">${dt(r.created)}</td>`,
@@ -75,9 +71,10 @@ const CELLS = {
   messages: (r) => `<td class="num">${fmt.format(r.messages)}</td>`,
   input: (r) => `<td class="num in">${fmt.format(r.input)}</td>`,
   output: (r) => `<td class="num out">${fmt.format(r.output)}</td>`,
+  tps: (r) => `<td class="num" title="Output tokens ÷ generation time (token-weighted)">${r.tps == null ? "—" : r.tps.toFixed(1)}</td>`,
   cached: (r) => `<td class="num ca">${fmt.format(r.cached)}</td>`,
   price: (r) => `<td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>`,
-  mix: (r) => `<td>${mix(r)}</td>`,
+  hit: (r) => `<td class="num">${r.hit == null ? "—" : r.hit.toFixed(1) + "%"}</td>`,
 };
 
 function render() {
@@ -106,9 +103,9 @@ function showSession(id, opener = null) {
   const session = models[0];
   const totals = models.reduce((a, r) => ({
     messages: a.messages + r.messages, input: a.input + r.input,
-    output: a.output + r.output, cached: a.cached + r.cached,
+    output: a.output + r.output, cached: a.cached + r.cached, gen_ms: a.gen_ms + (r.gen_ms || 0),
     price: a.price + (r.price ?? 0), priced: a.priced + (r.price != null ? 1 : 0),
-  }), { messages: 0, input: 0, output: 0, cached: 0, price: 0, priced: 0 });
+  }), { messages: 0, input: 0, output: 0, cached: 0, gen_ms: 0, price: 0, priced: 0 });
   const hit = totals.input + totals.cached ? totals.cached / (totals.input + totals.cached) * 100 : 0;
   const unpriced = models.length - totals.priced;
   const detail = (label, value, cls = "") => `<div class="${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
@@ -125,6 +122,7 @@ function showSession(id, opener = null) {
     stat("Responses", fmt.format(totals.messages)),
     stat("Input · includes cache write", fmt.format(totals.input), "in"),
     stat("Output", fmt.format(totals.output), "out"),
+    stat("Avg TPS", totals.gen_ms ? (totals.output * 1000 / totals.gen_ms).toFixed(1) : "—"),
     stat("Cached", fmt.format(totals.cached), "ca"),
     stat("Cache hit", `${hit.toFixed(1)}%`),
     stat(unpriced && totals.priced ? "Est. cost · partial" : "Est. cost", totals.priced ? fmtPrice(totals.price) : "—"),
@@ -136,6 +134,7 @@ function showSession(id, opener = null) {
       <td class="num in">${fmt.format(r.input)}</td>
       <td class="num">${fmt.format(r.cache_write || 0)}</td>
       <td class="num out">${fmt.format(r.output)}</td>
+      <td class="num" title="Output tokens ÷ generation time (token-weighted)">${r.tps == null ? "—" : r.tps.toFixed(1)}</td>
       <td class="num ca">${fmt.format(r.cached)}</td>
       <td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>
       <td class="dt">${dt(r.first)}</td>
@@ -209,7 +208,7 @@ function fillCols() {
 }
 
 function setData(data) {
-  state.rows = data.rows;
+  state.rows = data.rows.map((r) => ({ ...r, hit: hitPct(r) }));
   state.limit = 2000;
   const counts = {};
   data.rows.forEach((r) => (counts[r.id] = (counts[r.id] || 0) + 1));
@@ -376,7 +375,7 @@ function updateReportModels() {
 function reportCols() {
   const cols = [["key", GROUP_LABEL[report.group]], ["sessions", "Sessions"]];
   if (report.group !== "model") cols.push(["models", "Models"]);
-  return cols.concat([["messages", "Responses"], ["input", "Input"], ["output", "Output"], ["cached", "Cached"], ["price", "Est. cost"]]);
+  return cols.concat([["messages", "Responses"], ["input", "Input"], ["output", "Output"], ["tps", "TPS"], ["cached", "Cached"], ["price", "Est. cost"]]);
 }
 
 function sortedReport() {
@@ -406,6 +405,7 @@ function renderReport() {
       <td class="num">${fmt.format(r.messages)}</td>
       <td class="num in">${fmt.format(r.input)}</td>
       <td class="num out">${fmt.format(r.output)}</td>
+      <td class="num" title="Output tokens ÷ generation time (token-weighted)">${r.tps == null ? "—" : r.tps.toFixed(1)}</td>
       <td class="num ca">${fmt.format(r.cached)}</td>
       <td class="num price"${r.unpriced ? ` title="excludes ${r.unpriced} unpriced model${r.unpriced === 1 ? "" : "s"}"` : ""}>${r.price == null ? "—" : fmtPrice(r.price)}</td>
     </tr>`).join("");
@@ -417,9 +417,10 @@ function renderReport() {
       card("Responses", compact.format(t.messages), fmt.format(t.messages), "", 1),
       card("Input", compact.format(t.input), fmt.format(t.input), "in", 2),
       card("Output", compact.format(t.output), fmt.format(t.output), "out", 3),
-      card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 4),
-      card("Cache hit", `${hit.toFixed(1)}%`, "", "", 5),
-      card("Est. cost", t.price ? fmtPrice(t.price) : "—", t.unpriced ? `${t.unpriced} unpriced model${t.unpriced === 1 ? "" : "s"}` : "", "", 6),
+      card("Avg TPS", t.tps == null ? "—" : t.tps.toFixed(1), "output ÷ generation time", "", 4),
+      card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 5),
+      card("Cache hit", `${hit.toFixed(1)}%`, "", "", 6),
+      card("Est. cost", t.price ? fmtPrice(t.price) : "—", t.unpriced ? `${t.unpriced} unpriced model${t.unpriced === 1 ? "" : "s"}` : "", "", 7),
     ].join("");
   }
 }

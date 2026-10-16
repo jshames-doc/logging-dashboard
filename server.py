@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent
 DB_PATH = Path(os.environ.get("SESSIONS_DB") or Path(os.environ.get("APPDATA", "")) / "devin" / "cli" / "sessions.db")
 CACHE_PATH = ROOT / ".cache" / "sessions_cache.json"
 HOST, PORT = "127.0.0.1", int(os.environ.get("DASHBOARD_PORT", "8765"))
-CACHE_VERSION = 7
+CACHE_VERSION = 8
 
 ASSISTANT_SQL = """
 SELECT json_extract(chat_message, '$.metadata.request_id'),
@@ -53,7 +53,7 @@ def parse_ts(iso, fallback):
 
 def _empty_day(day, name):
     return {"day": day, "model": name, "messages": 0, "input": 0, "output": 0, "cached": 0,
-            "cache_write": 0, "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
+            "cache_write": 0, "gen_ms": 0, "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
 
 
 def aggregate_session(conn, session_id, fallback_model=""):
@@ -80,7 +80,7 @@ def aggregate_session(conn, session_id, fallback_model=""):
         seen.add(key)
         name = gm or fallback_model or "unknown"
         agg = models.setdefault(name, {"model": name, "first": created, "last": created, "messages": 0,
-                                       "input": 0, "output": 0, "cached": 0, "cache_write": 0,
+                                       "input": 0, "output": 0, "cached": 0, "cache_write": 0, "gen_ms": 0,
                                        "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}})
         agg["first"], agg["last"] = min(agg["first"], created), max(agg["last"], created)
         agg["messages"] += 1
@@ -94,6 +94,11 @@ def aggregate_session(conn, session_id, fallback_model=""):
         d["cache_write"] += cw
         d["output"] += out
         d["cached"] += cr
+        tps = m.get("tokens_per_sec")  # generation time for the TPS metric: out / tps, ttft excluded
+        if out > 0 and isinstance(tps, (int, float)) and tps > 0:
+            gen_ms = out * 1000.0 / tps
+            agg["gen_ms"] += gen_ms
+            d["gen_ms"] += gen_ms
         if inp + cw + cr > LONG_PROMPT_TOKENS:  # long-prompt requests, for models with prompt-size price tiers
             for k, v in (("input", inp), ("output", out), ("cache_write", cw), ("cache_read", cr)):
                 agg["long"][k] += v
@@ -103,11 +108,13 @@ def aggregate_session(conn, session_id, fallback_model=""):
 
 
 def with_price(m):
-    """Price is computed at serve time from the token parts, so price updates need no cache rebuild."""
+    """Price and TPS are computed at serve time from the cached parts, so price updates need no cache rebuild."""
     cw = m.get("cache_write", 0)
     parts = {"input": m["input"] - cw, "output": m["output"], "cache_write": cw, "cache_read": m["cached"]}
     label, price = cost(m["model"], parts, m.get("long"))
-    return {**m, "price": price, "price_model": label}
+    gen_ms = m.get("gen_ms") or 0
+    return {**m, "price": price, "price_model": label,
+            "tps": round(m["output"] * 1000.0 / gen_ms, 1) if gen_ms else None}
 
 
 def load_cache(path=CACHE_PATH):
@@ -149,7 +156,7 @@ def flatten(sessions):
     for s in sessions.values():
         base = {k: s[k] for k in ("id", "title", "workspace", "created", "last_activity", "hidden")}
         for m in s["models"] or [{"model": "—", "first": s["created"], "last": s["last_activity"],
-                                   "messages": 0, "input": 0, "output": 0, "cached": 0, "cache_write": 0}]:
+                                   "messages": 0, "input": 0, "output": 0, "cached": 0, "cache_write": 0, "gen_ms": 0}]:
             rows.append({**base, **with_price(m)})
     return rows
 
@@ -194,12 +201,12 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
             key, label = (b["model"], b["model"]) if group == "model" else _period(b["day"], group)
             g = meta.setdefault(key, {"key": key, "label": label, "sessions": set(), "models": set(),
                                       "messages": 0, "input": 0, "output": 0, "cached": 0,
-                                      "cache_write": 0, "price": 0.0, "priced": 0, "unpriced": 0})
+                                      "cache_write": 0, "gen_ms": 0, "price": 0.0, "priced": 0, "unpriced": 0})
             g["sessions"].add(s["id"])
             g["models"].add(b["model"])
             all_sessions.add(s["id"])
             all_models.add(b["model"])
-            for f in ("messages", "input", "output", "cached", "cache_write"):
+            for f in ("messages", "input", "output", "cached", "cache_write", "gen_ms"):
                 g[f] += b[f]
             c = cells.setdefault((key, b["model"]),
                                  {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0,
@@ -222,14 +229,17 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
     rows = [{"key": g["key"], "label": g["label"], "sessions": len(g["sessions"]),
              "models": len(g["models"]), "messages": g["messages"], "input": g["input"],
              "output": g["output"], "cached": g["cached"], "cache_write": g["cache_write"],
+             "tps": round(g["output"] * 1000.0 / g["gen_ms"], 1) if g["gen_ms"] else None,
              "price": g["price"] if g["priced"] else None, "unpriced": g["unpriced"],
              "price_model": g.get("price_model")} for g in meta.values()]
     rows.sort(key=lambda r: r["key"])
     priced = [r["price"] for r in rows if r["price"] is not None]
+    tot_gen = sum(g["gen_ms"] for g in meta.values())
     totals = {"sessions": len(all_sessions), "models": len(all_models),
               "messages": sum(r["messages"] for r in rows),
               "input": sum(r["input"] for r in rows), "output": sum(r["output"] for r in rows),
               "cached": sum(r["cached"] for r in rows), "cache_write": sum(r["cache_write"] for r in rows),
+              "tps": round(sum(g["output"] for g in meta.values()) * 1000.0 / tot_gen, 1) if tot_gen else None,
               "price": sum(priced) if priced else None,
               "unpriced": sum(r["unpriced"] for r in rows)}
     return {"group": group, "rows": rows, "totals": totals, "generated": int(time.time())}
