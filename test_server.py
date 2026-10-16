@@ -142,6 +142,24 @@ class AggregationTest(DBFixture):
         self.assertEqual((res["model-a"]["messages"], res["model-a"]["input"], res["model-a"]["output"]), (1, 3, 2))
         self.assertEqual((len(daily), daily[0]["messages"], daily[0]["input"]), (1, 1, 3))
 
+    def test_metrics_without_request_or_message_id_all_counted(self):
+        bare = lambda i: json.dumps({"role": "assistant", "content": "",
+                                     "metadata": {"generation_model": "model-a",
+                                                  "metrics": {"input_tokens": i, "output_tokens": i}}},
+                                    separators=(",", ":"))
+        mid_only = lambda i: json.dumps({"message_id": "x1", "role": "assistant", "content": "",
+                                         "metadata": {"generation_model": "model-a",
+                                                      "metrics": {"input_tokens": i, "output_tokens": i}}},
+                                        separators=(",", ":"))
+        nodes = [bare(1), bare(2), mid_only(4), mid_only(4)]  # mid_only pair is a forked duplicate
+        c = sqlite3.connect(self.db)
+        c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s8',?,?,?)",
+                      [(i, n, 600 + i) for i, n in enumerate(nodes)])
+        c.commit()
+        c.close()
+        (m,) = server.aggregate_session(self.conn, "s8")[0]
+        self.assertEqual((m["messages"], m["input"], m["output"]), (3, 7, 7))
+
 
 class ModelFilterTest(unittest.TestCase):
     def run_script(self, script):
@@ -301,6 +319,30 @@ vm.runInContext("fillReportModels()", context);
 assert.equal(element("report-model-label").textContent, "1 of 2 models");
 """)
 
+    def test_report_workspace_group_shows_basename(self):
+        self.run_script(r"""
+vm.runInContext(`
+  report.group = "workspace";
+  report.rows = [
+    { key: "C:\\\\ws\\\\proj", label: "C:\\\\ws\\\\proj", sessions: 2, models: 1, messages: 5,
+      input: 10, output: 5, cached: 3, cache_write: 0, tps: 50, price: 1.2, unpriced: 0 },
+    { key: "/home/u/lib", label: "/home/u/lib", sessions: 1, models: 1, messages: 2,
+      input: 6, output: 2, cached: 1, cache_write: 0, tps: null, price: null, unpriced: 1 },
+  ];
+  report.totals = { sessions: 3, models: 2, messages: 7, input: 16, output: 7, cached: 4,
+    cache_write: 0, tps: 50, price: 1.2, unpriced: 1 };
+  renderReport();
+`, context);
+const html = element("report-rows").innerHTML;
+assert.ok(element("report-head").innerHTML.includes("Workspace"));
+assert.ok(element("report-head").innerHTML.includes("Models"));
+assert.ok(html.includes('title="C:\\ws\\proj"'));  // full path on hover
+assert.ok(html.includes(">proj<"));               // basename shown
+assert.ok(html.includes('title="/home/u/lib"'));
+assert.ok(html.includes(">lib<"));
+assert.ok(html.includes("—"));                    // unpriced row
+""")
+
     def test_session_details_include_all_models_and_handle_unpriced_usage(self):
         self.run_script(r"""
 vm.runInContext(`
@@ -432,6 +474,26 @@ class ReportTest(DBFixture):
         mk = day_of("2026-10-14T12:00:00Z")[:7]
         self.assertEqual(months[mk]["input"], 15)
         self.assertEqual(months[mk]["label"], "October 2026")
+
+    def test_report_groups_by_workspace(self):
+        self.add_session("s4", [
+            msg("assistant", "w1", "w1", "model-a", inp=10, out=5, at=self.D12),
+            msg("assistant", "w2", "w2", "model-b", inp=4, out=2, at=self.D13),
+        ])
+        c = sqlite3.connect(self.db)
+        c.execute("INSERT INTO sessions VALUES ('sn',NULL,'',100,300,'T',0)")  # no working_directory
+        c.execute("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('sn',0,?,700)",
+                  (msg("assistant", "n1", "n1", "model-a", inp=3, out=1, at=self.D12),))
+        c.commit()
+        c.close()
+        sessions = self.refresh()
+        rows = {r["key"]: r for r in server.report(sessions, group="workspace")["rows"]}
+        self.assertEqual(set(rows), {"C:\\ws\\a", "C:\\ws\\s4", "—"})
+        ws = rows["C:\\ws\\s4"]
+        self.assertEqual((ws["label"], ws["sessions"], ws["models"]), ("C:\\ws\\s4", 1, 2))
+        self.assertEqual((ws["input"], ws["output"]), (14, 7))
+        self.assertEqual(rows["—"]["input"], 3)
+        self.assertEqual(server.report(sessions, group="workspace")["totals"]["sessions"], 3)
 
     def test_report_prices_per_model_within_groups(self):
         self.add_session("s6", [

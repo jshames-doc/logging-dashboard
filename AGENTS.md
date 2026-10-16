@@ -7,7 +7,8 @@
 - Tests: `python -m unittest test_server` (requires Node.js for the model-filter unit test; uses a mocked DOM, no browser).
 - Data source: `%APPDATA%\devin\cli\sessions.db` (opened read-only; override with `SESSIONS_DB`). Port override: `DASHBOARD_PORT`.
 - Tokens come from `message_nodes.chat_message -> $.metadata.metrics` on assistant messages, deduped by `request_id`
-  (forked branches duplicate nodes). Input = input_tokens + cache_creation_tokens; Cached = cache_read_tokens.
+  (forked branches duplicate nodes; falls back to `message_id`, and rows with neither are all counted — only non-null keys dedupe).
+  Input = input_tokens + cache_creation_tokens; Cached = cache_read_tokens.
 - TPS = output tokens ÷ generation time, token-weighted (sum(output) ÷ sum(gen_ms)). The CLI stores `tokens_per_sec`
   per message (= output / (total_time_ms − ttft_ms); ttft_ms is null in ~⅓ of rows), so the aggregator derives
   `gen_ms = output_tokens / tokens_per_sec * 1000`, skipping rows without positive output/tps (zero-output responses).
@@ -16,8 +17,9 @@
 - `message_nodes.created_at` is rewritten on save; use `$.metadata.created_at` for real message times.
 - Aggregates cached in `.cache/sessions_cache.json`, keyed by session `last_activity_at`; bump `CACHE_VERSION` when the aggregate shape changes.
   Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`).
-- Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
-  Groups the cached `daily` buckets server-side (price is computed per model inside each group so long-prompt tiers apply;
+- Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|workspace|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
+  Groups the cached `daily` buckets server-side (workspace groups by the session's `working_directory`, showing the basename with the
+  full path as tooltip; sessions without one fold into "—"). Price is computed per model inside each group so long-prompt tiers apply;
   `unpriced` counts models without rates; TPS is token-weighted per group). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
   per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,

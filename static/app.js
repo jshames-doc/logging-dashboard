@@ -353,7 +353,7 @@ document.querySelectorAll("#prices th[data-pk]").forEach((th) =>
 
 /* report maker */
 const report = { models: [], excluded: new Set(), rows: [], totals: null, group: "model", sortKey: "price", asc: false };
-const GROUP_LABEL = { model: "Model", day: "Day", week: "Week", month: "Month" };
+const GROUP_LABEL = { model: "Model", workspace: "Workspace", day: "Day", week: "Week", month: "Month" };
 
 function fillReportModels() {
   report.models = [...new Set(state.rows.map((r) => r.model).filter((m) => m !== "—"))].sort();
@@ -399,7 +399,7 @@ function renderReport() {
   $("report-empty").hidden = rows.length > 0;
   $("report-rows").innerHTML = rows.map((r) => `
     <tr>
-      <td${report.group === "model" ? ` class="model" title="${esc(r.price_model || "no published rate")}"` : ""}>${esc(r.label)}</td>
+      <td${report.group === "model" ? ` class="model" title="${esc(r.price_model || "no published rate")}"` : report.group === "workspace" ? ` class="ws" title="${esc(r.label)}"` : ""}>${esc(report.group === "workspace" ? base(r.label) : r.label)}</td>
       <td class="num">${fmt.format(r.sessions)}</td>
       ${report.group !== "model" ? `<td class="num">${fmt.format(r.models)}</td>` : ""}
       <td class="num">${fmt.format(r.messages)}</td>
@@ -437,8 +437,9 @@ async function runReport() {
     report.group = data.group;
     report.rows = data.rows || [];
     report.totals = data.totals;
-    report.sortKey = data.group === "model" ? "price" : "key";
-    report.asc = data.group !== "model";
+    const costGroup = data.group === "model" || data.group === "workspace";
+    report.sortKey = costGroup ? "price" : "key";
+    report.asc = !costGroup;
     renderReport();
     $("r-csv").disabled = !report.rows.length;
   } finally {

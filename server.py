@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent
 DB_PATH = Path(os.environ.get("SESSIONS_DB") or Path(os.environ.get("APPDATA", "")) / "devin" / "cli" / "sessions.db")
 CACHE_PATH = ROOT / ".cache" / "sessions_cache.json"
 HOST, PORT = "127.0.0.1", int(os.environ.get("DASHBOARD_PORT", "8765"))
-CACHE_VERSION = 8
+CACHE_VERSION = 9  # 9: rows with metrics but no request_id/message_id were undercounted
 
 ASSISTANT_SQL = """
 SELECT json_extract(chat_message, '$.metadata.request_id'),
@@ -65,7 +65,7 @@ def aggregate_session(conn, session_id, fallback_model=""):
         if not metrics:
             continue
         key = rid or mid
-        if key in seen:
+        if key is not None and key in seen:
             continue
         try:
             m = json.loads(metrics)
@@ -77,7 +77,8 @@ def aggregate_session(conn, session_id, fallback_model=""):
             day = datetime.fromtimestamp(created).date().isoformat()
         except (TypeError, ValueError, AttributeError, OverflowError, OSError):
             continue  # malformed metrics or unusable timestamp: skip the row, not the whole scan
-        seen.add(key)
+        if key is not None:  # no rid/mid: can't dedupe, so count every such row
+            seen.add(key)
         name = gm or fallback_model or "unknown"
         agg = models.setdefault(name, {"model": name, "first": created, "last": created, "messages": 0,
                                        "input": 0, "output": 0, "cached": 0, "cache_write": 0, "gen_ms": 0,
@@ -161,7 +162,7 @@ def flatten(sessions):
     return rows
 
 
-REPORT_GROUPS = ("model", "day", "week", "month")
+REPORT_GROUPS = ("model", "workspace", "day", "week", "month")
 
 
 def _period(day, group):
@@ -198,7 +199,12 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
         for b in s.get("daily") or []:
             if b["model"] in exclude or (from_day and b["day"] < from_day) or (to_day and b["day"] > to_day):
                 continue
-            key, label = (b["model"], b["model"]) if group == "model" else _period(b["day"], group)
+            if group == "model":
+                key, label = b["model"], b["model"]
+            elif group == "workspace":
+                key = label = s["workspace"] or "—"
+            else:
+                key, label = _period(b["day"], group)
             g = meta.setdefault(key, {"key": key, "label": label, "sessions": set(), "models": set(),
                                       "messages": 0, "input": 0, "output": 0, "cached": 0,
                                       "cache_write": 0, "gen_ms": 0, "price": 0.0, "priced": 0, "unpriced": 0})
