@@ -157,6 +157,13 @@
     <label class="field">From <input id="f-from" type="date"></label>
     <label class="field">To <input id="f-to" type="date"></label>
     <label class="toggle"><input id="f-hidden" type="checkbox"><span></span>Show hidden</label>
+    <details id="f-cols" class="model-filter">
+      <summary id="f-cols-label" aria-label="Choose columns">Columns</summary>
+      <div class="model-menu">
+        <button id="f-cols-all" class="btn ghost" type="button">Show all</button>
+        <div id="f-cols-options" class="model-options" role="group" aria-label="Columns to show"></div>
+      </div>
+    </details>
     <button id="clear" class="btn ghost">Clear</button>
   </section>
 
@@ -174,7 +181,7 @@
           <th data-k="output" class="num">Output</th>
           <th data-k="cached" class="num">Cached</th>
           <th data-k="price" class="num">Est. cost</th>
-          <th class="mix">Mix</th>
+          <th class="mix" data-col="mix">Mix</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>

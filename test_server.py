@@ -197,6 +197,33 @@ document.click({ target: element("q") });
 assert.equal(element("f-model").open, false);
 """)
 
+    def test_column_visibility_dropdown(self):
+        self.run_script(r"""
+vm.runInContext(`
+  state.rows = [
+    { id: "a", title: "A", model: "model-a", workspace: "ws1", created: 100, last_activity: 200,
+      messages: 3, input: 10, output: 5, cached: 7, price: 1.5, first: 100, last: 200 },
+  ];
+  render();
+`, context);
+assert.ok(element("rows").innerHTML.includes('class="model"'));
+assert.ok(element("f-cols-options").innerHTML.includes('value="mix"'));
+assert.equal(element("f-cols-label").textContent, "Columns");
+element("f-cols-options").listeners.change({ target: { type: "checkbox", value: "model", checked: false } });
+assert.ok(!element("rows").innerHTML.includes('class="model"'));
+assert.ok(element("rows").innerHTML.includes('class="ws"'));
+assert.equal(element("f-cols-label").textContent, "10 of 11 columns");
+const target = { type: "checkbox", value: "mix", checked: false };
+for (const k of ["created", "last_activity", "title", "workspace", "messages", "input", "output", "cached", "price"])
+  element("f-cols-options").listeners.change({ target: { type: "checkbox", value: k, checked: false } });
+element("f-cols-options").listeners.change({ target });
+assert.equal(target.checked, true);  // last visible column can't be hidden
+assert.equal(vm.runInContext("state.hiddenCols.size", context), 10);
+element("f-cols-all").listeners.click();
+assert.equal(element("f-cols-label").textContent, "Columns");
+assert.ok(element("rows").innerHTML.includes('class="model"'));
+""")
+
     def test_row_cap_notice_expands_on_click(self):
         self.run_script(r"""
 vm.runInContext(`

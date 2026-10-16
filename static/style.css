@@ -236,6 +236,8 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 .report-tools .model-filter summary { min-width: 140px; }
 .report .model-menu { max-width: min(480px, 80vw); }
 .model-option.all { border-bottom: 1px solid var(--line); margin-bottom: 2px; padding-bottom: 8px; font-weight: 500; }
+#f-cols { min-width: 0; }
+#f-cols .model-menu { left: auto; right: 0; }
 .report-totals { border-top: 1px solid var(--line-2); padding: 6px 18px; }
 .report-totals:empty { display: none; }
 .report-totals .card .val { font-size: 20px; }

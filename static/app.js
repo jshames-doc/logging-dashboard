@@ -1,5 +1,12 @@
 const $ = (id) => document.getElementById(id);
-const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000 };
+const COLS = [
+  ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
+  ["model", "Model"], ["messages", "Msgs"], ["input", "Input"], ["output", "Output"], ["cached", "Cached"],
+  ["price", "Est. cost"], ["mix", "Mix"],
+];
+const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
+const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000,
+  hiddenCols: new Set(savedCols().filter((k) => COLS.some(([c]) => c === k))) };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
@@ -59,25 +66,28 @@ function mix(r) {
   return `<div class="mixbar" title="in ${p(r.input)}% · out ${p(r.output)}% · cached ${p(r.cached)}%"><i class="in" style="width:${p(r.input)}%"></i><i class="out" style="width:${p(r.output)}%"></i><i class="ca" style="width:${p(r.cached)}%"></i></div>`;
 }
 
+const CELLS = {
+  created: (r) => `<td class="dt">${dt(r.created)}</td>`,
+  last_activity: (r) => `<td class="dt">${dt(r.last_activity)}</td>`,
+  title: (r) => `<td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div><div class="id">${esc(r.id)}</div></td>`,
+  workspace: (r) => `<td class="ws" title="${esc(r.workspace)}">${esc(base(r.workspace))}</td>`,
+  model: (r) => `<td class="model" title="Used ${esc(new Date(r.first * 1000).toLocaleString())} → ${esc(new Date(r.last * 1000).toLocaleString())}">${esc(r.model)}</td>`,
+  messages: (r) => `<td class="num">${fmt.format(r.messages)}</td>`,
+  input: (r) => `<td class="num in">${fmt.format(r.input)}</td>`,
+  output: (r) => `<td class="num out">${fmt.format(r.output)}</td>`,
+  cached: (r) => `<td class="num ca">${fmt.format(r.cached)}</td>`,
+  price: (r) => `<td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>`,
+  mix: (r) => `<td>${mix(r)}</td>`,
+};
+
 function render() {
   const rows = sorted(filtered());
   renderTotals(rows);
   $("empty").hidden = rows.length > 0;
   const shown = rows.slice(0, state.limit);
+  const cols = COLS.filter(([k]) => !state.hiddenCols.has(k));
   $("rows").innerHTML = shown.map((r, i) => `
-    <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">
-      <td class="dt">${dt(r.created)}</td>
-      <td class="dt">${dt(r.last_activity)}</td>
-      <td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div><div class="id">${esc(r.id)}</div></td>
-      <td class="ws" title="${esc(r.workspace)}">${esc(base(r.workspace))}</td>
-      <td class="model" title="Used ${esc(new Date(r.first * 1000).toLocaleString())} → ${esc(new Date(r.last * 1000).toLocaleString())}">${esc(r.model)}</td>
-      <td class="num">${fmt.format(r.messages)}</td>
-      <td class="num in">${fmt.format(r.input)}</td>
-      <td class="num out">${fmt.format(r.output)}</td>
-      <td class="num ca">${fmt.format(r.cached)}</td>
-      <td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>
-      <td>${mix(r)}</td>
-    </tr>`).join("");
+    <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map(([k]) => CELLS[k](r)).join("")}</tr>`).join("");
   const rest = rows.length - shown.length;
   $("more").hidden = !rest;
   if (rest)
@@ -179,6 +189,25 @@ function fillModels(values) {
   updateModelFilter();
 }
 
+const saveCols = () => { try { localStorage.setItem("ledger.cols", JSON.stringify([...state.hiddenCols])); } catch {} };
+
+function applyCols() {
+  document.querySelectorAll("#tbl thead th").forEach((th) => (th.hidden = state.hiddenCols.has(th.dataset.k || th.dataset.col)));
+}
+
+function updateCols() {
+  const shown = COLS.length - state.hiddenCols.size;
+  $("f-cols-label").textContent = state.hiddenCols.size ? `${shown} of ${COLS.length} columns` : "Columns";
+  $("f-cols-options").querySelectorAll("input").forEach((input) => (input.checked = !state.hiddenCols.has(input.value)));
+}
+
+function fillCols() {
+  $("f-cols-options").innerHTML = COLS.map(([k, label]) =>
+    `<label class="model-option"><input type="checkbox" value="${k}"${state.hiddenCols.has(k) ? "" : " checked"}><span>${label}</span></label>`).join("");
+  updateCols();
+  applyCols();
+}
+
 function setData(data) {
   state.rows = data.rows;
   state.limit = 2000;
@@ -237,15 +266,33 @@ $("f-model-all").addEventListener("click", () => {
   updateModelFilter();
   refilter();
 });
+$("f-cols-options").addEventListener("change", (e) => {
+  if (e.target.type !== "checkbox") return;
+  if (e.target.checked) state.hiddenCols.delete(e.target.value);
+  else if (state.hiddenCols.size < COLS.length - 1) state.hiddenCols.add(e.target.value);
+  else { e.target.checked = true; return; }
+  saveCols();
+  updateCols();
+  applyCols();
+  render();
+});
+$("f-cols-all").addEventListener("click", () => {
+  state.hiddenCols.clear();
+  saveCols();
+  updateCols();
+  applyCols();
+  render();
+});
 document.addEventListener("click", (e) => {
   if (!$("f-model").contains(e.target)) $("f-model").open = false;
+  if (!$("f-cols").contains(e.target)) $("f-cols").open = false;
   if (!$("report-models").contains(e.target)) $("report-models").open = false;
 });
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && $("f-model").open) {
-    $("f-model").open = false;
-    $("f-model-label").focus();
-  }
+  if (e.key !== "Escape") return;
+  [["f-model", "f-model-label"], ["f-cols", "f-cols-label"]].forEach(([d, lbl]) => {
+    if ($(d).open) { $(d).open = false; $(lbl).focus(); }
+  });
 });
 $("clear").addEventListener("click", () => {
   ["q", "f-ws", "f-from", "f-to"].forEach((id) => ($(id).value = ""));
@@ -454,4 +501,5 @@ $("r-csv").addEventListener("click", () => {
 });
 
 setInterval(() => fetch("/api/ping").catch(() => {}), 20000);
+fillCols();
 load().catch((e) => setStatus({ error: e.message }));

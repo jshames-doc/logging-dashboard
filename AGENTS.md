@@ -28,3 +28,5 @@
 - Session details: double-click a table row (or focus it and press Enter/Space) to open the native dialog.
   Details aggregate all rows for that session from `state.rows`, independent of table filters; unpriced models make the cost partial.
   The dialog and model-filter unit tests use Node.js with a mocked DOM.
+- Column picker: **Columns** dropdown in the filter bar toggles `#tbl` columns (`COLS`/`CELLS` maps in `app.js`;
+  `state.hiddenCols` persisted in localStorage `ledger.cols`, all visible by default, at least one column stays shown).
