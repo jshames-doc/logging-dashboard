@@ -161,6 +161,52 @@ class AggregationTest(DBFixture):
         self.assertEqual((m["messages"], m["input"], m["output"]), (3, 7, 7))
 
 
+class MultiDBTest(unittest.TestCase):
+    def _mk(self, folder, sid, model, wd):
+        db = Path(self.tmp.name) / folder / "sessions.db"
+        db.parent.mkdir(parents=True, exist_ok=True)
+        c = sqlite3.connect(db)
+        c.executescript(SCHEMA)
+        c.execute("INSERT INTO sessions VALUES (?,?,'',100,300,'T',0)", (sid, wd))
+        c.execute("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES (?,?,?,?)",
+                  (sid, 0, msg("assistant", "r1", "a1", model, inp=4, out=10), 150))
+        c.commit()
+        c.close()
+        return db
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+
+    def test_refresh_merges_dbs_with_source_labels(self):
+        # same session id in both DBs must not collide; rows carry the DB label
+        a = self._mk("cli", "shared", "model-a", "C:\\ws\\one")
+        b = self._mk("cli-next", "shared", "model-b", "C:\\ws\\two")
+        ca, cb = server.connect(a), server.connect(b)
+        try:
+            merged = server.refresh_sessions(ca, {}, src="cli")
+            merged.update(server.refresh_sessions(cb, merged, src="cli-next"))
+        finally:
+            ca.close()
+            cb.close()
+        self.assertEqual(set(merged), {"cli:shared", "cli-next:shared"})
+        rows = server.flatten(merged)
+        self.assertEqual(len(rows), 2)
+        self.assertEqual({r["src"] for r in rows}, {"cli", "cli-next"})
+        self.assertEqual({r["id"] for r in rows}, {"shared"})  # raw id kept for display
+
+    def test_cache_reuse_is_scoped_per_source(self):
+        db = self._mk("cli", "s1", "model-a", "C:\\ws\\one")
+        conn = server.connect(db)
+        try:
+            cache = server.refresh_sessions(conn, {}, src="cli")
+            self.assertEqual(set(cache), {"cli:s1"})
+            out = server.refresh_sessions(conn, cache, src="cli")
+            self.assertEqual(out["cli:s1"]["models"], cache["cli:s1"]["models"])
+        finally:
+            conn.close()
+
+
 class ModelFilterTest(unittest.TestCase):
     def run_script(self, script):
         setup = r"""
@@ -262,13 +308,13 @@ assert.equal(element("f-cols-label").textContent, "Columns");
 element("f-cols-options").listeners.change({ target: { type: "checkbox", value: "model", checked: false } });
 assert.ok(!element("rows").innerHTML.includes('class="model"'));
 assert.ok(element("rows").innerHTML.includes('class="ws"'));
-assert.equal(element("f-cols-label").textContent, "11 of 12 columns");
+assert.equal(element("f-cols-label").textContent, "12 of 13 columns");
 const target = { type: "checkbox", value: "hit", checked: false };
-for (const k of ["created", "last_activity", "title", "workspace", "messages", "input", "output", "tps", "cached", "price"])
+for (const k of ["created", "last_activity", "title", "workspace", "src", "messages", "input", "output", "tps", "cached", "price"])
   element("f-cols-options").listeners.change({ target: { type: "checkbox", value: k, checked: false } });
 element("f-cols-options").listeners.change({ target });
 assert.equal(target.checked, true);  // last visible column can't be hidden
-assert.equal(vm.runInContext("state.hiddenCols.size", context), 11);
+assert.equal(vm.runInContext("state.hiddenCols.size", context), 12);
 element("f-cols-all").listeners.click();
 assert.equal(element("f-cols-label").textContent, "Columns");
 assert.ok(element("rows").innerHTML.includes('class="model"'));

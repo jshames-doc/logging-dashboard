@@ -1,15 +1,18 @@
 # Session Ledger
 
 A local, read-only dashboard for token usage across your Devin IDE sessions.
-It reads the Devin CLI's `sessions.db` directly from your machine, aggregates
-token metrics per session and model, estimates cost at published rates, and
-serves a single-page dashboard on `127.0.0.1`. No data leaves your machine.
+It reads the Devin `sessions.db` files directly from your machine — both the
+CLI's (`%APPDATA%\devin\cli`) and the IDE's (`%APPDATA%\devin\cli-next`) when
+present — aggregates token metrics per session and model, estimates cost at
+published rates, and serves a single-page dashboard on `127.0.0.1`.
+No data leaves your machine.
 
 ## Requirements
 
 - Windows (`run.bat` / `stop_server.bat`; macOS/Linux users see below)
 - Python 3.8+ on PATH — **no pip installs**, stdlib only
-- The Devin CLI / Devin Desktop installed, so `%APPDATA%\devin\cli\sessions.db` exists
+- The Devin CLI / Devin Desktop installed, so a `sessions.db` exists under
+  `%APPDATA%\devin\cli` or `%APPDATA%\devin\cli-next`
 - Node.js — only needed to run the unit tests, not the dashboard
 
 ## Run
@@ -32,7 +35,8 @@ The batch files are Windows-only, but the server itself is portable:
 SESSIONS_DB=/path/to/sessions.db python server.py
 ```
 
-`SESSIONS_DB` is required there because the default path uses `%APPDATA%`.
+`SESSIONS_DB` is required there because the default paths use `%APPDATA%`.
+It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
 
 ## Using the dashboard
 
@@ -41,6 +45,8 @@ SESSIONS_DB=/path/to/sessions.db python server.py
 - Forked branches duplicate assistant responses; they're deduplicated by `request_id`.
 - Filter by search text, model (multi-select), workspace, and date range.
   Toggle "Show hidden" to include hidden sessions. Click column headers to sort.
+  The **Source** column shows which database a session came from (`cli` vs
+  `cli-next`); hide it via the Columns picker.
 - **Double-click a row** (or focus it and press Enter) for full session details
   across all models, regardless of table filters.
 - **$ Prices** shows the rate card; **Rescan database** re-reads `sessions.db`
@@ -51,12 +57,14 @@ SESSIONS_DB=/path/to/sessions.db python server.py
 
 ## Configuration
 
-| Env var          | Default                                        | Purpose              |
-|------------------|------------------------------------------------|----------------------|
-| `SESSIONS_DB`    | `%APPDATA%\devin\cli\sessions.db`              | Path to the database |
-| `DASHBOARD_PORT` | `8765`                                         | Port to listen on    |
+| Env var          | Default                                                    | Purpose                              |
+|------------------|------------------------------------------------------------|--------------------------------------|
+| `SESSIONS_DB`    | `%APPDATA%\devin\cli\sessions.db` and `...\cli-next\…`     | Database paths (`os.pathsep`-joined) |
+| `DASHBOARD_PORT` | `8765`                                                     | Port to listen on                    |
 
-Aggregates are cached in `.cache/sessions_cache.json`, keyed by each session's
+Each configured database that exists is scanned; sessions are tagged with a
+**Source** label taken from the database's parent folder. Aggregates are cached
+in `.cache/sessions_cache.json`, keyed by `source:session-id` and each session's
 `last_activity_at`, so rescans are incremental.
 
 ## Pricing

@@ -20,10 +20,31 @@ import pricing
 from pricing import LONG_PROMPT_TOKENS, cost
 
 ROOT = Path(__file__).resolve().parent
-DB_PATH = Path(os.environ.get("SESSIONS_DB") or Path(os.environ.get("APPDATA", "")) / "devin" / "cli" / "sessions.db")
+
+
+def _configured_dbs():
+    """SESSIONS_DB may hold several paths joined by os.pathsep (';' on Windows).
+    By default both Devin databases are read: the CLI's and the IDE's (cli-next),
+    each included only if the file exists at refresh time."""
+    env = os.environ.get("SESSIONS_DB")
+    if env:
+        return [Path(p) for p in env.split(os.pathsep) if p.strip()]
+    appdata = Path(os.environ.get("APPDATA", "")) / "devin"
+    return [appdata / "cli" / "sessions.db", appdata / "cli-next" / "sessions.db"]
+
+
+def _db_label(path, paths):
+    """Short per-database tag for the Source column: the parent folder name
+    ('cli', 'cli-next'), unless two configured DBs share it."""
+    name = path.parent.name or path.stem
+    return name if sum(p.parent.name == name for p in paths) == 1 else str(path)
+
+
+DB_PATHS = _configured_dbs()
+DB_SOURCES = [(_db_label(p, DB_PATHS), p) for p in DB_PATHS]
 CACHE_PATH = ROOT / ".cache" / "sessions_cache.json"
 HOST, PORT = "127.0.0.1", int(os.environ.get("DASHBOARD_PORT", "8765"))
-CACHE_VERSION = 9  # 9: rows with metrics but no request_id/message_id were undercounted
+CACHE_VERSION = 10  # 10: sessions carry a per-database 'src' label; cache keys are src:sid
 
 ASSISTANT_SQL = """
 SELECT json_extract(chat_message, '$.metadata.request_id'),
@@ -39,7 +60,7 @@ WHERE session_id = ?
 """
 
 
-def connect(db_path=DB_PATH):
+def connect(db_path):
     return sqlite3.connect(f"file:{Path(db_path).as_posix()}?mode=ro", uri=True, check_same_thread=False)
 
 
@@ -134,18 +155,22 @@ def save_cache(sessions, path=CACHE_PATH):
     tmp.replace(path)
 
 
-def refresh_sessions(conn, cache, progress=lambda done, total: None):
-    """Re-aggregate only sessions whose last_activity_at changed. Returns new cache dict."""
+def refresh_sessions(conn, cache, progress=lambda done, total: None, src=""):
+    """Re-aggregate only sessions whose last_activity_at changed. Returns new cache dict.
+
+    src labels which database the session came from; dict keys are prefixed
+    with it so identical session ids in different databases can't collide."""
     rows = conn.execute("SELECT id, title, working_directory, model, created_at, last_activity_at, hidden "
                         "FROM sessions ORDER BY last_activity_at DESC").fetchall()
     out = {}
     for i, (sid, title, wd, model, created, last, hidden) in enumerate(rows):
-        prev = cache.get(sid)
+        key = f"{src}:{sid}" if src else sid
+        prev = cache.get(key)
         if prev and prev["last_activity"] == last:
             models, daily = prev["models"], prev.get("daily", [])
         else:
             models, daily = aggregate_session(conn, sid, model)
-        out[sid] = {"id": sid, "title": title or "", "workspace": wd, "created": created,
+        out[key] = {"id": sid, "src": src, "title": title or "", "workspace": wd, "created": created,
                     "last_activity": last, "hidden": bool(hidden), "models": models, "daily": daily}
         progress(i + 1, len(rows))
     return out
@@ -155,7 +180,7 @@ def flatten(sessions):
     """One row per (session, model). Sessions without any metrics get a single empty row."""
     rows = []
     for s in sessions.values():
-        base = {k: s[k] for k in ("id", "title", "workspace", "created", "last_activity", "hidden")}
+        base = {k: s[k] for k in ("id", "src", "title", "workspace", "created", "last_activity", "hidden")}
         for m in s["models"] or [{"model": "—", "first": s["created"], "last": s["last_activity"],
                                    "messages": 0, "input": 0, "output": 0, "cached": 0, "cache_write": 0, "gen_ms": 0}]:
             rows.append({**base, **with_price(m)})
@@ -266,13 +291,22 @@ class State:
 
     def _refresh(self):
         try:
-            conn = connect()
-            try:
-                result = refresh_sessions(conn, self.sessions, lambda d, t: self.status.update(done=d, total=t))
-            finally:
-                conn.close()
-            self.sessions = result
-            save_cache(result)
+            merged, done, total = {}, 0, 0
+            for src, path in DB_SOURCES:
+                if not path.exists():
+                    continue
+                conn = connect(path)
+                try:
+                    n0 = len(merged)
+                    merged.update(refresh_sessions(
+                        conn, self.sessions,
+                        lambda d, t, d0=done, t0=total: self.status.update(done=d0 + d, total=t0 + t),
+                        src=src))
+                    done = total = total + len(merged) - n0
+                finally:
+                    conn.close()
+            self.sessions = merged
+            save_cache(merged)
             self.status["updated"] = int(time.time())
         except Exception as e:  # surfaced to the UI
             self.status["error"] = str(e)
@@ -313,7 +347,8 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.startswith("/api/data"):
-            return self._json({"status": STATE.status, "db": str(DB_PATH), "rows": flatten(STATE.sessions)})
+            dbs = " + ".join(str(p) for _, p in DB_SOURCES if p.exists())
+            return self._json({"status": STATE.status, "db": dbs, "rows": flatten(STATE.sessions)})
         if self.path.startswith("/api/status"):
             return self._json(STATE.status)
         if self.path.startswith("/api/ping"):
@@ -351,8 +386,10 @@ class Server(ThreadingHTTPServer):
 
 
 def main():
-    if not DB_PATH.exists():
-        sys.exit(f"sessions.db not found at {DB_PATH} (set SESSIONS_DB to override)")
+    if not any(p.exists() for _, p in DB_SOURCES):
+        sys.exit("no sessions.db found (looked in "
+                 + ", ".join(str(p) for _, p in DB_SOURCES)
+                 + "; set SESSIONS_DB to override)")
     url = f"http://{HOST}:{PORT}/"
     try:
         server = Server((HOST, PORT), Handler)

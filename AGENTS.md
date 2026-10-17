@@ -5,7 +5,10 @@
   The server also exits on its own ~90s after the dashboard tab/browser closes: `app.js` pings `/api/ping` every 20s and
   `server.watch_browser` shuts down once pings stop. The watchdog only arms after the first ping, so `--no-browser` stays up.
 - Tests: `python -m unittest test_server` (requires Node.js for the model-filter unit test; uses a mocked DOM, no browser).
-- Data source: `%APPDATA%\devin\cli\sessions.db` (opened read-only; override with `SESSIONS_DB`). Port override: `DASHBOARD_PORT`.
+- Data source: every existing `sessions.db` under `%APPDATA%\devin\cli` (CLI) and `%APPDATA%\devin\cli-next` (IDE),
+  opened read-only and merged; override with `SESSIONS_DB` (accepts an `os.pathsep`-joined list). Port override: `DASHBOARD_PORT`.
+  Each session is tagged `src` = the DB's parent folder name (the **Source** column); cache keys are `src:session-id` so
+  identical session ids across DBs can't collide.
 - Tokens come from `message_nodes.chat_message -> $.metadata.metrics` on assistant messages, deduped by `request_id`
   (forked branches duplicate nodes; falls back to `message_id`, and rows with neither are all counted — only non-null keys dedupe).
   Input = input_tokens + cache_creation_tokens; Cached = cache_read_tokens.
@@ -15,7 +18,7 @@
   TPS is computed at serve time in `with_price` and per report group; shown as a table column (after Output), an
   "Avg TPS" totals card, and a report column.
 - `message_nodes.created_at` is rewritten on save; use `$.metadata.created_at` for real message times.
-- Aggregates cached in `.cache/sessions_cache.json`, keyed by session `last_activity_at`; bump `CACHE_VERSION` when the aggregate shape changes.
+- Aggregates cached in `.cache/sessions_cache.json`, keyed by `src:session-id` and invalidated on `last_activity_at` change; bump `CACHE_VERSION` when the aggregate shape changes.
   Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`).
 - Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|workspace|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
   Groups the cached `daily` buckets server-side (workspace groups by the session's `working_directory`, showing the basename with the

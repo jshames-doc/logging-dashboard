@@ -1,7 +1,7 @@
 const $ = (id) => document.getElementById(id);
 const COLS = [
   ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
-  ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["input", "Input"], ["output", "Output"],
+  ["src", "Source"], ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["input", "Input"], ["output", "Output"],
   ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
 ];
 const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
@@ -28,7 +28,7 @@ function filtered() {
     (!ws || r.workspace === ws) &&
     (from == null || r.created >= from) &&
     (to == null || r.created < to + 86400) &&
-    (!q || `${r.title} ${r.id} ${r.workspace} ${r.model}`.toLowerCase().includes(q)));
+    (!q || `${r.title} ${r.id} ${r.workspace} ${r.src} ${r.model}`.toLowerCase().includes(q)));
 }
 
 function sorted(rows) {
@@ -67,6 +67,7 @@ const CELLS = {
   last_activity: (r) => `<td class="dt">${dt(r.last_activity)}</td>`,
   title: (r) => `<td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div><div class="id">${esc(r.id)}</div></td>`,
   workspace: (r) => `<td class="ws" title="${esc(r.workspace)}">${esc(base(r.workspace))}</td>`,
+  src: (r) => `<td class="src">${esc(r.src || "—")}</td>`,
   model: (r) => `<td class="model" title="Used ${esc(new Date(r.first * 1000).toLocaleString())} → ${esc(new Date(r.last * 1000).toLocaleString())}">${esc(r.model)}</td>`,
   messages: (r) => `<td class="num">${fmt.format(r.messages)}</td>`,
   input: (r) => `<td class="num in">${fmt.format(r.input)}</td>`,
@@ -115,6 +116,7 @@ function showSession(id, opener = null) {
     detail("Session ID", esc(session.id)),
     detail("Visibility", session.hidden ? "Hidden" : "Visible"),
     detail("Workspace", esc(session.workspace || "—"), "wide"),
+    detail("Source", esc(session.src || "—")),
     detail("Created", dt(session.created), "dt"),
     detail("Last activity", dt(session.last_activity), "dt"),
   ].join("");
