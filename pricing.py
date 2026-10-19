@@ -45,6 +45,7 @@ _mtime, _lock = None, threading.Lock()
 
 _TOK = re.compile(r"[a-z0-9]+")
 _ALIAS = {"priority": "fast", "none": "no thinking"}
+_BUILD = re.compile(r"(?:0[1-9]|1[0-2])(?:0[1-9]|[12][0-9]|3[01])")  # MMDD snapshot stamp
 
 
 def _tokens(s):
@@ -58,6 +59,11 @@ def _tokens(s):
 
 def _strip(toks):
     return tuple(t for t in toks if t != "thinking")
+
+
+def _no_build(toks):
+    """Drop a 4-digit MMDD build stamp (deepseek-v4-1-flash-1017-high has uid deepseek-v4-1-flash-high)."""
+    return tuple(t for t in toks if not _BUILD.fullmatch(t))
 
 
 def _read(path):
@@ -130,7 +136,9 @@ def resolve(model_name):
 
     1. OVERRIDES; 2. exact published model_uid (most DB slugs are uids);
     3. ordered-token match against labels, then ignoring 'thinking'
-       (e.g. gpt-5-6-luna-high -> GPT-5.6 Luna High Thinking).
+       (e.g. gpt-5-6-luna-high -> GPT-5.6 Luna High Thinking), then also
+       ignoring an MMDD build stamp (deepseek-v4-1-flash-1017-high ->
+       DeepSeek V4.1 Flash High).
     """
     _load()
     if model_name in _RESOLVED:
@@ -140,7 +148,8 @@ def resolve(model_name):
         label = UIDS.get(model_name.lower())
     if label is None:
         toks = _tokens(model_name)
-        label = _EXACT.get(toks) or _LOOSE.get(_strip(toks))
+        label = (_EXACT.get(toks) or _LOOSE.get(_strip(toks))
+                 or _LOOSE.get(_strip(_no_build(toks))))
     _RESOLVED[model_name] = label
     return label
 

@@ -629,6 +629,11 @@ class PricingTest(DBFixture):
         self.assertEqual(pricing.resolve("claude-5-fable-low"), "Claude Fable 5 Low")
         self.assertEqual(pricing.resolve("CLAUDE-OPUS-5-5-MEDIUM-FAST"), "Claude Opus 5.5 Medium Fast")
 
+    def test_resolve_ignores_mmdd_build_stamp(self):
+        self.assertEqual(pricing.resolve("deepseek-v4-1-flash-1017-high"), "DeepSeek V4.1 Flash High")
+        self.assertEqual(pricing.resolve("deepseek-v4-1-flash-high"), "DeepSeek V4.1 Flash High")
+        self.assertEqual(pricing.resolve("deepseek-v4-1-flash-1232-high"), None)  # not a date: stays unpriced
+
     def test_session_price_from_token_parts(self):
         res = {m["model"]: server.with_price(m) for m in server.aggregate_session(self.conn, "s2")[0]}
         m = res["claude-sonnet-4-6"]

@@ -33,8 +33,9 @@
   `long_prompt` rates for requests whose prompt (input + cache write + cache read) > 100K; the aggregator tracks those requests
   separately per model in the `long` bucket.
 - `pricing.resolve()` maps DB model slugs: OVERRIDES -> published `model_uid` (most slugs) -> ordered-token label match ignoring
-  "thinking" (order matters so opus-5-5 != Opus 5). Price is computed at serve time (`server.with_price`) from cached token parts.
-  Unpriced slugs (summarizer, compactor, MODEL_SWE_1_5) show "—".
+  "thinking" (order matters so opus-5-5 != Opus 5), then also ignoring a 4-digit MMDD build stamp
+  (`deepseek-v4-1-flash-1017-high` -> DeepSeek V4.1 Flash High). Price is computed at serve time (`server.with_price`) from
+  cached token parts. Unpriced slugs (summarizer, compactor, MODEL_SWE_1_5) show "—".
 - Session details: double-click a table row (or focus it and press Enter/Space) to open the native dialog.
   Details aggregate all rows for that session from `state.rows`, independent of table filters; unpriced models make the cost partial.
   Shows an Avg TPS stat and a per-model TPS column (token-weighted; "—" when no response had measurable speed).
