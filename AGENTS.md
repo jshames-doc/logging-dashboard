@@ -1,6 +1,11 @@
 # Session Ledger (local Devin IDE token dashboard)
 
-- Run: `run.bat` (starts `python server.py` on http://127.0.0.1:8765 and opens the browser). `--no-browser` to skip opening.
+- Run: `run.bat` (starts `python server.py` on http://127.0.0.1:8765 and opens the dashboard). `--no-browser` to skip opening.
+  `server.open_dashboard` prefers the installed PWA: it finds the web-app shortcut the browser created in
+  `%APPDATA%\...\Start Menu\Programs\Chrome Apps\Session Ledger.lnk` (also searched: machine Start Menu, Desktop) and
+  launches it via `os.startfile`, so the app window opens instead of a browser tab; falls back to `webbrowser.open`.
+  `DASHBOARD_APP` overrides the shortcut/exe path, `DASHBOARD_APP=browser` forces the browser. The shortcut is named after
+  the page `<title>` in `static/index.html`, so keep `APP_TITLE` in sync when the title changes.
 - Stop: `stop_server.bat` (kills the `server.py` process listening on `DASHBOARD_PORT`/8765; won't touch other programs on that port).
   The server also exits on its own ~90s after the dashboard tab/browser closes: `app.js` pings `/api/ping` every 20s and
   `server.watch_browser` shuts down once pings stop. The watchdog only arms after the first ping, so `--no-browser` stays up.

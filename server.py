@@ -20,6 +20,7 @@ import pricing
 from pricing import LONG_PROMPT_TOKENS, cost
 
 ROOT = Path(__file__).resolve().parent
+APP_TITLE = "Session Ledger"  # matches <title> in static/index.html and the installed web-app shortcut
 
 
 def _configured_dbs():
@@ -320,6 +321,47 @@ PING_TIMEOUT = 90  # page pings every 20s; Chrome throttles background tabs to ~
 last_ping = [0.0]  # watchdog arms on the first /api/ping, so --no-browser stays up
 
 
+def _shortcut_dirs():
+    """Where Chrome/Edge drop shortcuts for installed web apps (PWAs)."""
+    for base in (os.environ.get("APPDATA"), os.environ.get("PROGRAMDATA")):
+        if base:
+            yield Path(base) / "Microsoft" / "Windows" / "Start Menu" / "Programs"
+    home = Path.home()
+    yield home / "Desktop"
+    yield home / "OneDrive" / "Desktop"
+
+
+def find_app_shortcut(name=APP_TITLE, roots=None):
+    """Path of the installed web-app shortcut named after the dashboard, or None.
+    Browsers name the shortcut after the page title, so 'Session Ledger.lnk'
+    under Start Menu\\Programs\\Chrome Apps is the installed PWA."""
+    for root in _shortcut_dirs() if roots is None else roots:
+        try:
+            for lnk in root.rglob(name + ".lnk"):
+                return lnk
+        except OSError:
+            continue
+    return None
+
+
+def open_dashboard(url):
+    """Open the dashboard window: the installed web app when one is found (so
+    run.bat launches the PWA rather than a browser tab), else the default browser.
+    DASHBOARD_APP overrides the shortcut/exe to launch; DASHBOARD_APP=browser forces
+    the browser."""
+    pref = os.environ.get("DASHBOARD_APP", "").strip()
+    target = Path(pref).expanduser() if pref and pref.lower() != "browser" else None
+    if target is None and pref.lower() != "browser":
+        target = find_app_shortcut()
+    if target and target.exists():
+        try:
+            os.startfile(str(target))
+            return
+        except (AttributeError, OSError):
+            pass
+    webbrowser.open(url)
+
+
 def watch_browser(server):
     while True:
         time.sleep(5)
@@ -400,7 +442,7 @@ def main():
     threading.Thread(target=watch_browser, args=(server,), daemon=True).start()
     print(f"Session dashboard running at {url}  (Ctrl+C to stop)")
     if "--no-browser" not in sys.argv:
-        webbrowser.open(url)
+        open_dashboard(url)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

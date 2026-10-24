@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest import mock
 
 import server
 import pricing
@@ -711,6 +712,44 @@ class UpdatePricesTest(unittest.TestCase):
             finally:
                 pricing.DATA_PATH = orig
                 pricing._load()
+
+
+class OpenDashboardTest(unittest.TestCase):
+    def test_find_app_shortcut_searches_roots(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            apps = Path(tmp) / "Chrome Apps"
+            apps.mkdir()
+            lnk = apps / "Session Ledger.lnk"
+            lnk.write_text("")
+            self.assertEqual(server.find_app_shortcut(roots=[Path(tmp) / "missing", Path(tmp)]), lnk)
+            self.assertIsNone(server.find_app_shortcut("Other App", roots=[Path(tmp)]))
+
+    def test_open_dashboard_prefers_installed_app(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lnk = Path(tmp) / "Session Ledger.lnk"
+            lnk.write_text("")
+            with mock.patch.dict(os.environ, {"DASHBOARD_APP": str(lnk)}), \
+                 mock.patch.object(server.os, "startfile", create=True) as startfile, \
+                 mock.patch.object(server.webbrowser, "open") as browser:
+                server.open_dashboard("http://127.0.0.1:8765/")
+            startfile.assert_called_once_with(str(lnk))
+            browser.assert_not_called()
+
+    def test_open_dashboard_falls_back_to_browser(self):
+        with mock.patch.dict(os.environ, {"DASHBOARD_APP": "browser"}), \
+             mock.patch.object(server.webbrowser, "open") as browser:
+            server.open_dashboard("http://127.0.0.1:8765/")
+        browser.assert_called_once_with("http://127.0.0.1:8765/")
+
+    def test_open_dashboard_falls_back_when_launch_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lnk = Path(tmp) / "Session Ledger.lnk"
+            lnk.write_text("")
+            with mock.patch.dict(os.environ, {"DASHBOARD_APP": str(lnk)}), \
+                 mock.patch.object(server.os, "startfile", side_effect=OSError, create=True), \
+                 mock.patch.object(server.webbrowser, "open") as browser:
+                server.open_dashboard("http://127.0.0.1:8765/")
+            browser.assert_called_once_with("http://127.0.0.1:8765/")
 
 
 if __name__ == "__main__":
