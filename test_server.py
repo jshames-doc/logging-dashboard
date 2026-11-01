@@ -124,6 +124,44 @@ class AggregationTest(DBFixture):
         self.assertEqual(len(rows), 2)
         self.assertTrue(all(r["id"] == "s1" and r["workspace"] == "C:\\ws\\a" for r in rows))
 
+    def test_timestamped_usage_is_deduped_and_preserves_token_parts(self):
+        _, daily = server.aggregate_session(self.conn, "s1")
+        usage = sorted((u for b in daily for u in b["usage"]), key=lambda u: u["at"])
+        self.assertEqual([u["at"] for u in usage], [101, 104, 105])
+        self.assertEqual(usage[0], {"at": 101, "input": 4, "output": 10,
+                                    "cache_write": 100, "cache_read": 1000})
+
+    def test_timestamped_usage_preserves_long_prompt_pricing_and_real_time(self):
+        c = sqlite3.connect(self.db)
+        c.execute("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES (?,?,?,?)",
+                  ("long", 0, msg("assistant", "long", model="claude-haiku-5-5",
+                                 inp=100001, out=10, cw=20, cr=30,
+                                 at="2026-10-20T12:00:00Z"), 999))
+        c.commit()
+        c.close()
+        models, daily = server.aggregate_session(self.conn, "long")
+        usage = daily[0]["usage"][0]
+        self.assertEqual(usage["at"], server.parse_ts("2026-10-20T12:00:00Z", 0))
+        self.assertEqual(usage["long"], {"input": 100001, "output": 10,
+                                        "cache_write": 20, "cache_read": 30})
+        self.assertEqual(pricing.cost(models[0]["model"], usage, usage["long"])[1],
+                         server.with_price(models[0])["price"])
+        at = usage["at"]
+        samples = [(at - 1, 90, 90, None, at + 100), (at + 1, 80, 80, None, at + 100)]
+        r = server.allowance(samples, {"long": {"hidden": False, "daily": daily}})
+        self.assertEqual(r["cost"], server.with_price(models[0])["price"])
+
+    def test_cache_rebuilds_legacy_aggregates_and_roundtrips_usage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "cache.json"
+            path.write_text(json.dumps({"version": 10, "sessions": {"s1": {}}}))
+            self.assertEqual(server.load_cache(path), {})
+            sessions = server.refresh_sessions(self.conn, {})
+            server.save_cache(sessions, path)
+            loaded = server.load_cache(path)
+            self.assertEqual(loaded, sessions)
+            self.assertTrue(loaded["s1"]["daily"][0]["usage"])
+
     def test_aggregation_skips_malformed_rows(self):
         c = sqlite3.connect(self.db)
         rows = [
@@ -871,6 +909,10 @@ class AllowanceTest(unittest.TestCase):
              "cached": 0, "cache_write": 10, "gen_ms": 0,
              "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
         b.update(kw)
+        b.setdefault("usage", [{"at": int(datetime.fromisoformat(day).timestamp()) + 1,
+                                 "input": b["input"] - b["cache_write"], "output": b["output"],
+                                 "cache_write": b["cache_write"], "cache_read": b["cached"],
+                                 "long": b["long"]}])
         return b
 
     def _sessions(self, *buckets, hidden=False):
@@ -885,7 +927,8 @@ class AllowanceTest(unittest.TestCase):
 
     def test_weekly_value_from_sample_window(self):
         d0, d1 = self._t(), self._t(86400)
-        samples = [(d0, 90, 90, d1, 9999), (d1, 90, 80, d1 + 86400, 9999)]
+        reset = self._t(604800)
+        samples = [(d0, 90, 90, d1, reset), (d1, 90, 80, d1 + 86400, reset)]
         b = self._bucket()
         r = server.allowance(samples, self._sessions(b))
         usd = self._usd(b)
@@ -896,14 +939,16 @@ class AllowanceTest(unittest.TestCase):
 
     def test_window_spanning_weekly_reset_skipped(self):
         d0, d1 = self._t(), self._t(86400)
-        samples = [(d0, 90, 90, d1, 111), (d1, 90, 100, d1 + 86400, 222)]  # reset rolled: wr changed
+        samples = [(d0, 90, 90, d1, self._t(604800)),
+                   (d1, 90, 80, d1 + 86400, self._t(1209600))]
         r = server.allowance(samples, self._sessions(self._bucket()))
         self.assertEqual(r["windows"], 0)
         self.assertIsNone(r["weekly_usd"])
 
     def test_excluded_and_unpriced_models_not_costed(self):
         d0, d1 = self._t(), self._t(86400)
-        samples = [(d0, 90, 90, d1, 999), (d1, 90, 85, d1 + 86400, 999)]
+        reset = self._t(604800)
+        samples = [(d0, 90, 90, d1, reset), (d1, 90, 85, d1 + 86400, reset)]
         sess = self._sessions(self._bucket(), self._bucket(model="MODEL_SWE_1_5"))
         r = server.allowance(samples, sess, exclude={"claude-sonnet-4-6"})
         self.assertEqual(r["unpriced"], 1)
@@ -913,20 +958,59 @@ class AllowanceTest(unittest.TestCase):
 
     def test_hidden_sessions_skipped_unless_requested(self):
         d0, d1 = self._t(), self._t(86400)
-        samples = [(d0, 90, 90, d1, 999), (d1, 90, 85, d1 + 86400, 999)]
+        reset = self._t(604800)
+        samples = [(d0, 90, 90, d1, reset), (d1, 90, 85, d1 + 86400, reset)]
         sess = self._sessions(self._bucket(), hidden=True)
         self.assertEqual(server.allowance(samples, sess)["cost"], 0)
         self.assertGreater(server.allowance(samples, sess, hidden=True)["cost"], 0)
 
-    def test_partial_day_overlap_is_apportioned(self):
-        d0, half = self._t(), self._t(43200)
-        samples = [(d0, 90, 90, 999, 999), (half, 90, 88, 999, 999)]
-        r = server.allowance(samples, self._sessions(self._bucket()))
-        self.assertAlmostEqual(r["cost"], self._usd(self._bucket()) / 2, places=4)
+    def test_short_burst_is_costed_in_full_not_prorated_over_day(self):
+        d0, end, reset = self._t(), self._t(300), self._t(604800)
+        samples = [(d0, 90, 90, None, reset), (end, 80, 80, None, reset)]
+        with mock.patch.object(server, "cost", return_value=("priced", 24.0)):
+            r = server.allowance(samples, self._sessions(self._bucket()))
+        self.assertEqual(r["cost"], 24.0)
+        self.assertEqual(r["weekly_usd"], 240.0)
+        self.assertEqual(r["monthly_usd"], 1039.2)
+
+    def test_requests_outside_windows_are_not_costed_and_boundaries_count_once(self):
+        d0, mid, end, reset = self._t(), self._t(300), self._t(600), self._t(604800)
+        samples = [(d0, 90, 90, None, reset), (mid, 80, 80, None, reset),
+                   (end, 70, 70, None, reset)]
+        b = self._bucket()
+        b["usage"] = [{**b["usage"][0], "at": t}
+                      for t in (d0 - 1, d0, mid, end, end + 1)]
+        with mock.patch.object(server, "cost", return_value=("priced", 24.0)) as price:
+            r = server.allowance(samples, self._sessions(b))
+        self.assertEqual(price.call_count, 2)
+        self.assertEqual(r["cost"], 48.0)
+        self.assertEqual(r["weekly_delta"], 20)
+
+    def test_missing_or_expired_reset_does_not_establish_a_valid_window(self):
+        d0, d1 = self._t(), self._t(14 * 86400)
+        for r0, r1 in ((None, None), (None, self._t(21 * 86400)),
+                       (self._t(604800), self._t(604800)), (d1, d1)):
+            with self.subTest(resets=(r0, r1)):
+                samples = [(d0, 90, 90, None, r0), (d1, 80, 80, None, r1)]
+                r = server.allowance(samples, self._sessions(self._bucket()))
+                self.assertEqual(r["windows"], 0)
+                self.assertIsNone(r["weekly_usd"])
+
+    def test_requests_in_no_drop_gaps_are_not_costed(self):
+        d0, mid, end, reset = self._t(), self._t(300), self._t(600), self._t(604800)
+        samples = [(d0, 90, 90, None, reset), (mid, 90, 90, None, reset),
+                   (end, 80, 80, None, reset)]
+        b = self._bucket()
+        b["usage"] = [{**b["usage"][0], "at": t} for t in (d0 + 1, mid, mid + 1)]
+        with mock.patch.object(server, "cost", return_value=("priced", 24.0)) as price:
+            r = server.allowance(samples, self._sessions(b))
+        self.assertEqual(price.call_count, 1)
+        self.assertEqual(r["cost"], 24.0)
 
     def test_date_range_limits_samples(self):
         d0, mid, d2 = self._t(), self._t(43200), self._t(172800)
-        samples = [(d0, 90, 90, 999, 999), (mid, 90, 85, 999, 999), (d2, 90, 80, 999, 999)]
+        reset = self._t(604800)
+        samples = [(d0, 90, 90, None, reset), (mid, 90, 85, None, reset), (d2, 90, 80, None, reset)]
         r = server.allowance(samples, self._sessions(self._bucket()),
                              from_day=self.DAY, to_day=self.DAY)
         self.assertEqual(r["samples_in_range"], 2)  # sample at d2 falls outside the inclusive range

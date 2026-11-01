@@ -494,7 +494,7 @@ async function runAllowance() {
     if (!ok)
       notes.push(d.samples_in_range < 2
         ? "Not enough quota samples in this range — history accrues while the dashboard is open."
-        : "No measurable weekly-quota drop in this range — widen the dates or wait for more usage.");
+        : "No measurable weekly-quota drop within a known reset cycle in this range — widen the dates or wait for more usage.");
     if (d.unpriced) notes.push(`${d.unpriced} model${d.unpriced === 1 ? "" : "s"} without published rates excluded from cost.`);
     notes.push("Quota is account-wide: usage outside these sessions (and any excluded models' drain) still counts toward the %.");
     const note = $("allowance-note");

@@ -24,15 +24,16 @@
   "Avg TPS" totals card, and a report column.
 - `message_nodes.created_at` is rewritten on save; use `$.metadata.created_at` for real message times.
 - Aggregates cached in `.cache/sessions_cache.json`, keyed by `src:session-id` and invalidated on `last_activity_at` change; bump `CACHE_VERSION` when the aggregate shape changes.
-  Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`).
+  Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`
+  and `usage`: deduplicated request timestamps and token parts, including long-prompt parts when applicable).
 - Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|workspace|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
   Groups the cached `daily` buckets server-side (workspace groups by the session's `working_directory`, showing the basename with the
   full path as tooltip; sessions without one fold into "—"). Price is computed per model inside each group so long-prompt tiers apply;
   `unpriced` counts models without rates; TPS is token-weighted per group). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
   per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
   **Allowance value** button -> `GET /api/allowance?from&to&exc&hidden`: `server.allowance` pairs consecutive quota
-  samples inside the range that share a `weekly_reset` into windows where `weekly` dropped, apportions priced usage from
-  the daily buckets by day-overlap fraction, and returns `weekly_usd = cost × 100 ÷ Δweekly%` (`monthly_usd = × 4.33`);
+  samples inside the range that share a known, unexpired `weekly_reset` into windows where `weekly` dropped, sums priced
+  requests whose timestamps fall in `(start, end]`, and returns `weekly_usd = cost × 100 ÷ Δweekly%` (`monthly_usd = × 4.33`);
   `None` when no usable windows (too few samples or no drop — note tells the user why). Quota is account-wide while cost
   is local-only, so other clients' and excluded models' drain stay in the denominator.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,

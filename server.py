@@ -48,7 +48,7 @@ DB_PATHS = _configured_dbs()
 DB_SOURCES = [(_db_label(p, DB_PATHS), p) for p in DB_PATHS]
 CACHE_PATH = ROOT / ".cache" / "sessions_cache.json"
 HOST, PORT = "127.0.0.1", int(os.environ.get("DASHBOARD_PORT", "8765"))
-CACHE_VERSION = 10  # 10: sessions carry a per-database 'src' label; cache keys are src:sid
+CACHE_VERSION = 11  # 11: daily buckets include timestamped usage for allowance windows
 
 ASSISTANT_SQL = """
 SELECT json_extract(chat_message, '$.metadata.request_id'),
@@ -78,7 +78,8 @@ def parse_ts(iso, fallback):
 
 def _empty_day(day, name):
     return {"day": day, "model": name, "messages": 0, "input": 0, "output": 0, "cached": 0,
-            "cache_write": 0, "gen_ms": 0, "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
+            "cache_write": 0, "gen_ms": 0, "usage": [],
+            "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
 
 
 def aggregate_session(conn, session_id, fallback_model=""):
@@ -120,12 +121,15 @@ def aggregate_session(conn, session_id, fallback_model=""):
         d["cache_write"] += cw
         d["output"] += out
         d["cached"] += cr
+        usage = {"at": created, "input": inp, "output": out, "cache_write": cw, "cache_read": cr}
+        d["usage"].append(usage)
         tps = m.get("tokens_per_sec")  # generation time for the TPS metric: out / tps, ttft excluded
         if out > 0 and isinstance(tps, (int, float)) and tps > 0:
             gen_ms = out * 1000.0 / tps
             agg["gen_ms"] += gen_ms
             d["gen_ms"] += gen_ms
         if inp + cw + cr > LONG_PROMPT_TOKENS:  # long-prompt requests, for models with prompt-size price tiers
+            usage["long"] = {k: usage[k] for k in ("input", "output", "cache_write", "cache_read")}
             for k, v in (("input", inp), ("output", out), ("cache_write", cw), ("cache_read", cr)):
                 agg["long"][k] += v
                 d["long"][k] += v
@@ -289,41 +293,39 @@ def allowance(samples, sessions, exclude=(), from_day=None, to_day=None, hidden=
 
     Consecutive quota samples inside the range that share a weekly_reset form
     windows in which the weekly-% drop is attributable to usage in (t_a, t_b].
-    Priced usage in each window is apportioned from the cached per-(model, day)
-    buckets by day-overlap fraction; weekly_usd = cost * 100 / weekly_delta.
+    Priced requests are matched to windows by their message timestamps;
+    weekly_usd = cost * 100 / weekly_delta.
     """
     exclude = set(exclude)
     lo = int(datetime.fromisoformat(from_day).timestamp()) if from_day else None
-    hi = int(datetime.fromisoformat(to_day).timestamp()) + 86400 if to_day else None
+    hi = int((datetime.fromisoformat(to_day) + timedelta(days=1)).timestamp()) if to_day else None
     ss = [s for s in samples if (lo is None or s[0] >= lo) and (hi is None or s[0] < hi)]
     windows = []
     for a, b in zip(ss, ss[1:]):
         w0, wr0, w1, wr1 = a[2], a[4], b[2], b[4]
-        if w0 is None or w1 is None or wr0 != wr1 or w0 - w1 <= 0:
+        if (w0 is None or w1 is None or wr0 is None or wr1 is None or wr0 != wr1
+                or not a[0] < b[0] < wr0 or w0 - w1 <= 0):
             continue  # missing value, weekly reset inside the window, or no drop
         windows.append((a[0], b[0], w0 - w1))
-    buckets, unpriced = [], set()
+    used, unpriced = 0.0, set()
+    ends = [t1 for _, t1, _ in windows]
     for s in sessions.values():
         if s["hidden"] and not hidden:
             continue
         for b in s.get("daily") or []:
             if b["model"] in exclude:
                 continue
-            parts = {"input": b["input"] - b["cache_write"], "output": b["output"],
-                     "cache_write": b["cache_write"], "cache_read": b["cached"]}
-            _, usd = cost(b["model"], parts, b.get("long"))
-            if usd is None:
-                unpriced.add(b["model"])
-                continue
-            ds = int(datetime.fromisoformat(b["day"]).timestamp())
-            buckets.append((ds, ds + 86400, usd))
-    used, measured = 0.0, 0
-    for t0, t1, _ in windows:
-        measured += t1 - t0
-        for b0, b1, usd in buckets:
-            ov = min(b1, t1) - max(b0, t0)
-            if ov > 0:
-                used += usd * ov / 86400.0
+            for usage in b.get("usage") or []:
+                at = usage["at"]
+                i = bisect.bisect_left(ends, at)
+                if i == len(windows) or not windows[i][0] < at:
+                    continue
+                _, usd = cost(b["model"], usage, usage.get("long"))
+                if usd is None:
+                    unpriced.add(b["model"])
+                else:
+                    used += usd
+    measured = sum(t1 - t0 for t0, t1, _ in windows)
     delta = sum(w[2] for w in windows)
     weekly = used * 100.0 / delta if delta else None
     return {"from": from_day, "to": to_day, "samples_in_range": len(ss),
