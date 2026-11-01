@@ -3,10 +3,11 @@ const COLS = [
   ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
   ["src", "Source"], ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["input", "Input"], ["output", "Output"],
   ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
+  ["quota_day", "Daily %"], ["quota_week", "Weekly %"],
 ];
 const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
 const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000,
-  hiddenCols: new Set(savedCols().filter((k) => COLS.some(([c]) => c === k))) };
+  quota: null, hiddenCols: new Set(savedCols().filter((k) => COLS.some(([c]) => c === k))) };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
@@ -76,7 +77,21 @@ const CELLS = {
   cached: (r) => `<td class="num ca">${fmt.format(r.cached)}</td>`,
   price: (r) => `<td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>`,
   hit: (r) => `<td class="num">${r.hit == null ? "—" : r.hit.toFixed(1) + "%"}</td>`,
+  quota_day: (r) => `<td class="num" title="${esc(quotaTitle(r, "daily"))}">${r.quota_day == null ? "—" : r.quota_day + "%"}</td>`,
+  quota_week: (r) => `<td class="num" title="${esc(quotaTitle(r, "weekly"))}">${r.quota_week == null ? "—" : r.quota_week + "%"}</td>`,
 };
+
+function quotaTitle(r, which) {
+  const label = which === "daily" ? "Daily" : "Weekly";
+  const v = which === "daily" ? r.quota_day : r.quota_week;
+  if (v != null && r.quota_t != null)
+    return `${label} quota remaining · sampled ${new Date(r.quota_t * 1000).toLocaleString()}`;
+  if (r.quota_t != null)
+    return `${label} quota unknown · the last sample before this session ended (${new Date(r.quota_t * 1000).toLocaleString()}) predates a quota reset`;
+  const q = state.quota;
+  if (q && q.error) return `Quota unavailable: ${q.error}`;
+  return `No ${label.toLowerCase()} quota sample at or before this session's last activity`;
+}
 
 function render() {
   const rows = sorted(filtered());
@@ -110,7 +125,8 @@ function showSession(id, opener = null) {
   const hit = totals.input + totals.cached ? totals.cached / (totals.input + totals.cached) * 100 : 0;
   const unpriced = models.length - totals.priced;
   const detail = (label, value, cls = "") => `<div class="${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
-  const stat = (label, value, cls = "") => `<div class="session-stat ${cls}"><div class="lbl">${label}</div><div class="val">${value}</div></div>`;
+  const stat = (label, value, cls = "", title = "") =>
+    `<div class="session-stat ${cls}"${title ? ` title="${esc(title)}"` : ""}><div class="lbl">${label}</div><div class="val">${value}</div></div>`;
   $("session-title").textContent = session.title || "Untitled";
   $("session-meta").innerHTML = [
     detail("Session ID", esc(session.id)),
@@ -127,6 +143,8 @@ function showSession(id, opener = null) {
     stat("Avg TPS", totals.gen_ms ? (totals.output * 1000 / totals.gen_ms).toFixed(1) : "—"),
     stat("Cached", fmt.format(totals.cached), "ca"),
     stat("Cache hit", `${hit.toFixed(1)}%`),
+    stat("Daily quota", session.quota_day != null ? session.quota_day + "%" : "—", "", quotaTitle(session, "daily")),
+    stat("Weekly quota", session.quota_week != null ? session.quota_week + "%" : "—", "", quotaTitle(session, "weekly")),
     stat(unpriced && totals.priced ? "Est. cost · partial" : "Est. cost", totals.priced ? fmtPrice(totals.price) : "—"),
   ].join("");
   $("session-models").innerHTML = models.map((r) => `
@@ -210,6 +228,7 @@ function fillCols() {
 }
 
 function setData(data) {
+  state.quota = data.quota || null;
   state.rows = data.rows.map((r) => ({ ...r, hit: hitPct(r) }));
   state.limit = 2000;
   const counts = {};
@@ -391,6 +410,7 @@ function sortedReport() {
 
 function renderReport() {
   $("report-hint").hidden = true;
+  $("allowance-note").hidden = true;
   const cols = reportCols();
   $("report-head").innerHTML = cols.map(([k, l], i) => `<th data-rk="${k}"${i ? ' class="num"' : ""}>${l}</th>`).join("");
   document.querySelectorAll("#report-head th[data-rk]").forEach((th) => {
@@ -448,6 +468,44 @@ async function runReport() {
     $("r-run").disabled = false;
   }
 }
+
+async function runAllowance() {
+  const p = new URLSearchParams();
+  if ($("r-from").value) p.set("from", $("r-from").value);
+  if ($("r-to").value) p.set("to", $("r-to").value);
+  if ($("r-hidden").checked) p.set("hidden", "1");
+  if (report.excluded.size) p.set("exc", [...report.excluded].join(","));
+  $("r-allow").disabled = true;
+  try {
+    const d = await (await fetch("/api/allowance?" + p)).json();
+    $("report-hint").hidden = true;
+    $("report-empty").hidden = true;
+    $("report-head").innerHTML = "";
+    $("report-rows").innerHTML = "";
+    $("r-csv").disabled = true;
+    const ok = d.weekly_usd != null;
+    $("report-totals").innerHTML = [
+      card("Weekly quota used", `${d.weekly_delta}%`, `${d.windows} sample windows · ${d.samples_in_range} samples in range`, "", 0),
+      card("Est. cost in windows", d.cost ? fmtPrice(d.cost) : "—", `${d.measured_hours}h measured of ${d.from && d.to ? `${d.from} → ${d.to}` : "open range"}`, "", 1),
+      card("Weekly allowance ≈", ok ? fmtPrice(d.weekly_usd) : "—", "est. cost ÷ weekly % used", "", 2),
+      card("Monthly allowance ≈", ok ? fmtPrice(d.monthly_usd) : "—", "weekly × 4.33", "", 3),
+    ].join("");
+    const notes = [];
+    if (!ok)
+      notes.push(d.samples_in_range < 2
+        ? "Not enough quota samples in this range — history accrues while the dashboard is open."
+        : "No measurable weekly-quota drop in this range — widen the dates or wait for more usage.");
+    if (d.unpriced) notes.push(`${d.unpriced} model${d.unpriced === 1 ? "" : "s"} without published rates excluded from cost.`);
+    notes.push("Quota is account-wide: usage outside these sessions (and any excluded models' drain) still counts toward the %.");
+    const note = $("allowance-note");
+    note.textContent = notes.join(" ");
+    note.hidden = false;
+  } finally {
+    $("r-allow").disabled = false;
+  }
+}
+
+$("r-allow").addEventListener("click", () => runAllowance().catch((e) => setStatus({ error: e.message })));
 
 const csvCell = (v) => /[",\n]/.test(v = String(v ?? "")) ? `"${v.replace(/"/g, '""')}"` : v;
 

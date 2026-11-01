@@ -30,6 +30,11 @@
   full path as tooltip; sessions without one fold into "—"). Price is computed per model inside each group so long-prompt tiers apply;
   `unpriced` counts models without rates; TPS is token-weighted per group). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
   per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
+  **Allowance value** button -> `GET /api/allowance?from&to&exc&hidden`: `server.allowance` pairs consecutive quota
+  samples inside the range that share a `weekly_reset` into windows where `weekly` dropped, apportions priced usage from
+  the daily buckets by day-overlap fraction, and returns `weekly_usd = cost × 100 ÷ Δweekly%` (`monthly_usd = × 4.33`);
+  `None` when no usable windows (too few samples or no drop — note tells the user why). Quota is account-wide while cost
+  is local-only, so other clients' and excluded models' drain stay in the denominator.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,
   parses the embedded `modelCostData` array (Enterprise SaaS tier, Pro-tier fallback for models only published there), prints a diff
   and writes `pricing_data.json`. `pricing.py` hot-reloads that file on mtime change; no restart or cache bump needed.
@@ -47,3 +52,13 @@
   The dialog and model-filter unit tests use Node.js with a mocked DOM.
 - Column picker: **Columns** dropdown in the filter bar toggles `#tbl` columns (`COLS`/`CELLS` maps in `app.js`;
   `state.hiddenCols` persisted in localStorage `ledger.cols`, all visible by default, at least one column stays shown).
+- Quota columns (Daily % / Weekly %): `server.quota()` calls the CLI's `GetUserStatus` endpoint
+  (`{api_server_url}/exa.seat_management_pb.SeatManagementService/GetUserStatus`, POST JSON `{"metadata": {...}}`;
+  api_key + api_server_url come from `%APPDATA%\devin\credentials.toml` — the metadata block must include ide_name,
+  ide_version, extension_name, extension_version or it's a 400; the key never leaves the server). Cached `QUOTA_TTL`=300s;
+  invoked by `/api/data` and `/api/ping` so samples accrue while the dashboard is open.
+  `record_quota` appends changed (fetched, daily, weekly, daily_reset, weekly_reset) samples to `.cache/quota_history.json`;
+  `flatten` stamps each row with the latest sample at or before `last_activity` (bisect on sample time only — values may be
+  None), so columns show quota in effect when the session ended. A value is only valid until that sample's reset for its
+  counter; past the reset the cell shows "—" (tooltip explains), and identical percents re-record when a reset advances.
+  Legacy 3-field samples load padded with unbounded resets. Percent fields only exist on quota-billed plans.

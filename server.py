@@ -3,13 +3,16 @@
 Reads the IDE's sessions.db read-only, aggregates token metrics per
 (session, model), caches results on disk, and serves a static dashboard.
 """
+import bisect
 import json
 import os
+import re
 import socket
 import sqlite3
 import sys
 import threading
 import time
+import urllib.request
 import webbrowser
 from datetime import date, datetime, timedelta, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -178,10 +181,14 @@ def refresh_sessions(conn, cache, progress=lambda done, total: None, src=""):
 
 
 def flatten(sessions):
-    """One row per (session, model). Sessions without any metrics get a single empty row."""
+    """One row per (session, model). Sessions without any metrics get a single empty row.
+    Quota columns show the account sample in effect at the session's last activity."""
     rows = []
     for s in sessions.values():
         base = {k: s[k] for k in ("id", "src", "title", "workspace", "created", "last_activity", "hidden")}
+        qs = _sample_at(_quota_hist, s["last_activity"])
+        base.update(quota_day=qs[1] if qs else None, quota_week=qs[2] if qs else None,
+                    quota_t=qs[0] if qs else None)
         for m in s["models"] or [{"model": "—", "first": s["created"], "last": s["last_activity"],
                                    "messages": 0, "input": 0, "output": 0, "cached": 0, "cache_write": 0, "gen_ms": 0}]:
             rows.append({**base, **with_price(m)})
@@ -277,6 +284,56 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
     return {"group": group, "rows": rows, "totals": totals, "generated": int(time.time())}
 
 
+def allowance(samples, sessions, exclude=(), from_day=None, to_day=None, hidden=False):
+    """Implied USD value of the weekly/monthly quota allowance.
+
+    Consecutive quota samples inside the range that share a weekly_reset form
+    windows in which the weekly-% drop is attributable to usage in (t_a, t_b].
+    Priced usage in each window is apportioned from the cached per-(model, day)
+    buckets by day-overlap fraction; weekly_usd = cost * 100 / weekly_delta.
+    """
+    exclude = set(exclude)
+    lo = int(datetime.fromisoformat(from_day).timestamp()) if from_day else None
+    hi = int(datetime.fromisoformat(to_day).timestamp()) + 86400 if to_day else None
+    ss = [s for s in samples if (lo is None or s[0] >= lo) and (hi is None or s[0] < hi)]
+    windows = []
+    for a, b in zip(ss, ss[1:]):
+        w0, wr0, w1, wr1 = a[2], a[4], b[2], b[4]
+        if w0 is None or w1 is None or wr0 != wr1 or w0 - w1 <= 0:
+            continue  # missing value, weekly reset inside the window, or no drop
+        windows.append((a[0], b[0], w0 - w1))
+    buckets, unpriced = [], set()
+    for s in sessions.values():
+        if s["hidden"] and not hidden:
+            continue
+        for b in s.get("daily") or []:
+            if b["model"] in exclude:
+                continue
+            parts = {"input": b["input"] - b["cache_write"], "output": b["output"],
+                     "cache_write": b["cache_write"], "cache_read": b["cached"]}
+            _, usd = cost(b["model"], parts, b.get("long"))
+            if usd is None:
+                unpriced.add(b["model"])
+                continue
+            ds = int(datetime.fromisoformat(b["day"]).timestamp())
+            buckets.append((ds, ds + 86400, usd))
+    used, measured = 0.0, 0
+    for t0, t1, _ in windows:
+        measured += t1 - t0
+        for b0, b1, usd in buckets:
+            ov = min(b1, t1) - max(b0, t0)
+            if ov > 0:
+                used += usd * ov / 86400.0
+    delta = sum(w[2] for w in windows)
+    weekly = used * 100.0 / delta if delta else None
+    return {"from": from_day, "to": to_day, "samples_in_range": len(ss),
+            "windows": len(windows), "measured_hours": round(measured / 3600.0, 1),
+            "weekly_delta": delta, "cost": used,
+            "weekly_usd": round(weekly, 2) if weekly is not None else None,
+            "monthly_usd": round(weekly * 4.33, 2) if weekly is not None else None,
+            "unpriced": len(unpriced), "generated": int(time.time())}
+
+
 class State:
     def __init__(self):
         self.lock = threading.Lock()
@@ -316,6 +373,130 @@ class State:
 
 
 STATE = State()
+
+CREDENTIALS_PATH = Path(os.environ.get("APPDATA", "")) / "devin" / "credentials.toml"
+QUOTA_TTL = 300  # seconds between upstream GetUserStatus calls
+_quota_lock = threading.Lock()
+_quota = {"at": 0.0, "data": None}
+
+
+def _credentials(path):
+    """(api_key, api_server_url) from the Devin CLI's credentials.toml, or None."""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError:
+        return None
+    vals = dict(re.findall(r'(?m)^(\w+)\s*=\s*"([^"]*)"', text))
+    key, base = vals.get("windsurf_api_key", ""), vals.get("api_server_url", "")
+    return (key, base) if key and base else None
+
+
+def fetch_quota(creds):
+    """The same GetUserStatus call the Devin CLI's /usage panel makes.
+
+    Returns the account's plan quota (daily/weekly percent remaining and reset
+    times); fields absent under the account's billing strategy are omitted."""
+    key, base = creds
+    meta = {"api_key": key, "ide_name": "devin-cli", "ide_version": "0.0.0",
+            "extension_name": "devin-cli", "extension_version": "0.0.0"}  # all required; api_key alone is a 400
+    body = json.dumps({"metadata": meta}).encode()
+    req = urllib.request.Request(
+        base + "/exa.seat_management_pb.SeatManagementService/GetUserStatus",
+        data=body, headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=10) as r:
+        ps = json.loads(r.read()).get("userStatus", {}).get("planStatus", {})
+    out = {"plan": (ps.get("planInfo") or {}).get("planName"), "fetched": int(time.time())}
+    for src, dst in (("dailyQuotaRemainingPercent", "daily"),
+                     ("weeklyQuotaRemainingPercent", "weekly"),
+                     ("dailyQuotaResetAtUnix", "daily_reset"),
+                     ("weeklyQuotaResetAtUnix", "weekly_reset")):
+        try:
+            if ps.get(src) is not None:
+                out[dst] = int(ps[src])
+        except (TypeError, ValueError):
+            pass
+    return out
+
+
+def quota(path=CREDENTIALS_PATH):
+    """Account quota snapshot, refetched at most every QUOTA_TTL seconds.
+    Returns {'error': ...} when credentials or the upstream call fail."""
+    now = time.time()
+    with _quota_lock:
+        if _quota["data"] is not None and now - _quota["at"] < QUOTA_TTL:
+            return _quota["data"]
+        creds = _credentials(path)
+        try:
+            data = fetch_quota(creds) if creds else {"error": "Devin credentials not found"}
+        except Exception as e:
+            data = {"error": str(e)}
+        _quota.update(at=now, data=data)
+    record_quota(data)
+    return data
+
+
+QUOTA_HISTORY_PATH = ROOT / ".cache" / "quota_history.json"
+_hist_lock = threading.Lock()
+
+
+def load_quota_history(path=QUOTA_HISTORY_PATH):
+    """[(t, daily, weekly, daily_reset, weekly_reset)] sorted by t. Any field
+    but t may be None; shorter legacy tuples are padded."""
+    def num(v):
+        try:
+            return int(v) if v is not None else None
+        except (TypeError, ValueError):
+            return None
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        return sorted((tuple(num(x) for x in (list(s) + [None] * 5)[:5]) for s in data["samples"]),
+                      key=lambda s: s[0] or 0)  # key avoids comparing Nones on a timestamp tie
+    except (OSError, ValueError, KeyError, TypeError, IndexError):
+        return []
+
+
+_quota_hist = load_quota_history()
+
+
+def record_quota(data, path=QUOTA_HISTORY_PATH):
+    """Append a (fetched, daily, weekly, daily_reset, weekly_reset) sample when
+    the values changed; this history backs the per-row quota columns. Errors
+    aren't recorded. Reset times dedupe too, so an identical-looking percent in
+    a new cycle still extends validity."""
+    daily, weekly = data.get("daily"), data.get("weekly")
+    if data.get("error") or (daily is None and weekly is None):
+        return
+    t = int(data.get("fetched") or time.time())
+    sample = (t, daily, weekly, data.get("daily_reset"), data.get("weekly_reset"))
+    with _hist_lock:
+        if _quota_hist and _quota_hist[-1][1:] == sample[1:]:
+            return
+        _quota_hist.append(sample)
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = path.with_suffix(".tmp")
+            tmp.write_text(json.dumps({"samples": _quota_hist}), encoding="utf-8")
+            tmp.replace(path)
+        except OSError:
+            pass
+
+
+def _sample_at(samples, t):
+    """(t, daily, weekly) of the most recent sample at or before unix time t.
+
+    Each value is kept only while t precedes the sample's reset for that counter
+    (a missing reset leaves it unbounded): quota consumed after a reset makes an
+    older percent meaningless, so expired values come back as None and the UI
+    shows unknown. The sample time itself is always returned so the UI can tell
+    'expired sample' apart from 'no sample'."""
+    i = bisect.bisect_right([s[0] for s in samples], t) - 1
+    if i < 0:
+        return None
+    st, d, w, dr, wr = samples[i]
+    return (st,
+            d if dr is None or t < dr else None,
+            w if wr is None or t < wr else None)
+
 
 PING_TIMEOUT = 90  # page pings every 20s; Chrome throttles background tabs to ~1/min
 last_ping = [0.0]  # watchdog arms on the first /api/ping, so --no-browser stays up
@@ -390,14 +571,24 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith("/api/data"):
             dbs = " + ".join(str(p) for _, p in DB_SOURCES if p.exists())
-            return self._json({"status": STATE.status, "db": dbs, "rows": flatten(STATE.sessions)})
+            q = quota()  # fetch first so the fresh sample lands in history before rows are stamped
+            return self._json({"status": STATE.status, "db": dbs, "rows": flatten(STATE.sessions),
+                               "quota": q})
         if self.path.startswith("/api/status"):
             return self._json(STATE.status)
         if self.path.startswith("/api/ping"):
             last_ping[0] = time.time()
-            return self._json({"ok": True})
+            return self._json({"ok": True, "quota": quota()})
         if self.path.startswith("/api/pricing"):
             return self._json(pricing.snapshot())
+        if self.path.startswith("/api/allowance"):
+            q = parse_qs(urlsplit(self.path).query)
+            exc = {m for v in q.get("exc", []) for m in v.split(",") if m}
+            quota()  # land a fresh sample before measuring
+            return self._json(allowance(_quota_hist, STATE.sessions, exclude=exc,
+                                        from_day=q.get("from", [None])[0] or None,
+                                        to_day=q.get("to", [None])[0] or None,
+                                        hidden=q.get("hidden") == ["1"]))
         if self.path.startswith("/api/report"):
             q = parse_qs(urlsplit(self.path).query)
             group = q.get("group", ["model"])[0]

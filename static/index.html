@@ -95,7 +95,7 @@
     </div>
     <div class="prices-foot">
       <p id="session-cost-note"></p>
-      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks. TPS = output tokens ÷ generation time.</p>
+      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks. TPS = output tokens ÷ generation time. Quota = account quota remaining at the session's last activity.</p>
     </div>
   </dialog>
 
@@ -130,6 +130,7 @@
       <label class="toggle"><input id="r-hidden" type="checkbox"><span></span>Include hidden</label>
       <button id="r-clear" class="btn ghost">Clear</button>
       <button id="r-run" class="btn">Run report</button>
+      <button id="r-allow" class="btn ghost" title="Estimate the weekly/monthly dollar value of the quota allowance">Allowance value</button>
       <button id="r-csv" class="btn ghost" disabled>Download CSV</button>
     </div>
     <div class="totals report-totals" id="report-totals"></div>
@@ -140,6 +141,7 @@
       </table>
       <p class="empty" id="report-empty" hidden>No usage matches these filters.</p>
       <p class="empty" id="report-hint">Pick filters, then Run report.</p>
+      <p class="empty" id="allowance-note" hidden></p>
     </div>
     <p class="prices-foot">Response dates use your local timezone · deduplicated across forks · unpriced models excluded from cost · TPS = output tokens ÷ generation time</p>
   </dialog>
@@ -186,6 +188,8 @@
           <th data-k="cached" class="num">Cached</th>
           <th data-k="price" class="num">Est. cost</th>
           <th data-k="hit" class="num" title="cached ÷ (input + cached)">Cache hit</th>
+          <th data-k="quota_day" class="num" title="Daily quota remaining at the session's last activity">Daily %</th>
+          <th data-k="quota_week" class="num" title="Weekly quota remaining at the session's last activity">Weekly %</th>
         </tr>
       </thead>
       <tbody id="rows"></tbody>

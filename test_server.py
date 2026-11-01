@@ -309,13 +309,13 @@ assert.equal(element("f-cols-label").textContent, "Columns");
 element("f-cols-options").listeners.change({ target: { type: "checkbox", value: "model", checked: false } });
 assert.ok(!element("rows").innerHTML.includes('class="model"'));
 assert.ok(element("rows").innerHTML.includes('class="ws"'));
-assert.equal(element("f-cols-label").textContent, "12 of 13 columns");
+assert.equal(element("f-cols-label").textContent, "14 of 15 columns");
 const target = { type: "checkbox", value: "hit", checked: false };
-for (const k of ["created", "last_activity", "title", "workspace", "src", "messages", "input", "output", "tps", "cached", "price"])
+for (const k of ["created", "last_activity", "title", "workspace", "src", "messages", "input", "output", "tps", "cached", "price", "quota_day", "quota_week"])
   element("f-cols-options").listeners.change({ target: { type: "checkbox", value: k, checked: false } });
 element("f-cols-options").listeners.change({ target });
 assert.equal(target.checked, true);  // last visible column can't be hidden
-assert.equal(vm.runInContext("state.hiddenCols.size", context), 12);
+assert.equal(vm.runInContext("state.hiddenCols.size", context), 14);
 element("f-cols-all").listeners.click();
 assert.equal(element("f-cols-label").textContent, "Columns");
 assert.ok(element("rows").innerHTML.includes('class="model"'));
@@ -750,6 +750,192 @@ class OpenDashboardTest(unittest.TestCase):
                  mock.patch.object(server.webbrowser, "open") as browser:
                 server.open_dashboard("http://127.0.0.1:8765/")
             browser.assert_called_once_with("http://127.0.0.1:8765/")
+
+
+class QuotaTest(unittest.TestCase):
+    def setUp(self):
+        server._quota.update(at=0.0, data=None)
+        self._hist = server._quota_hist
+        server._quota_hist = []
+
+    def tearDown(self):
+        server._quota_hist = self._hist
+
+    def _http(self, plan_status):
+        resp = mock.MagicMock()
+        resp.__enter__.return_value.read.return_value = json.dumps(
+            {"userStatus": {"planStatus": plan_status}}).encode()
+        return resp
+
+    def test_fetch_quota_maps_plan_status(self):
+        ps = {"planInfo": {"planName": "Pro"},
+              "dailyQuotaRemainingPercent": 92, "weeklyQuotaRemainingPercent": "78",
+              "dailyQuotaResetAtUnix": "1793520000", "weeklyQuotaResetAtUnix": "1794100000"}
+        with mock.patch("urllib.request.urlopen", return_value=self._http(ps)) as uo:
+            q = server.fetch_quota(("KEY", "https://server.example"))
+        self.assertEqual((q["daily"], q["weekly"]), (92, 78))
+        self.assertEqual((q["daily_reset"], q["weekly_reset"]), (1793520000, 1794100000))
+        self.assertEqual(q["plan"], "Pro")
+        req = uo.call_args[0][0]
+        self.assertIn("GetUserStatus", req.full_url)
+        self.assertEqual(json.loads(req.data)["metadata"]["api_key"], "KEY")
+
+    def test_fetch_quota_omits_absent_fields(self):
+        with mock.patch("urllib.request.urlopen", return_value=self._http({})):
+            q = server.fetch_quota(("K", "https://server.example"))
+        self.assertNotIn("daily", q)
+        self.assertIsNone(q["plan"])
+
+    def test_quota_caches_within_ttl(self):
+        with mock.patch.object(server, "_credentials", return_value=("K", "https://x")), \
+             mock.patch.object(server, "fetch_quota", return_value={"daily": 5}) as fq, \
+             mock.patch.object(server, "record_quota"):
+            self.assertEqual(server.quota()["daily"], 5)
+            self.assertEqual(server.quota()["daily"], 5)
+            self.assertEqual(fq.call_count, 1)
+
+    def test_quota_reports_missing_credentials(self):
+        q = server.quota(path=Path("does/not/exist.toml"))
+        self.assertIn("error", q)
+
+    def test_record_quota_appends_changes_and_persists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "h.json"
+            server.record_quota({"daily": 92, "weekly": 78, "fetched": 1000,
+                                 "daily_reset": 2000, "weekly_reset": 9000}, path=path)
+            server.record_quota({"daily": 92, "weekly": 78, "fetched": 1100,
+                                 "daily_reset": 2000, "weekly_reset": 9000}, path=path)  # unchanged: skipped
+            server.record_quota({"daily": 90, "weekly": 78, "fetched": 1200,
+                                 "daily_reset": 2000, "weekly_reset": 9000}, path=path)
+            server.record_quota({"error": "x"}, path=path)  # errors not recorded
+            self.assertEqual(server._quota_hist, [(1000, 92, 78, 2000, 9000), (1200, 90, 78, 2000, 9000)])
+            self.assertEqual(json.loads(path.read_text())["samples"],
+                             [[1000, 92, 78, 2000, 9000], [1200, 90, 78, 2000, 9000]])
+
+    def test_record_quota_rerecords_same_percent_after_reset(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "h.json"
+            server.record_quota({"daily": 92, "fetched": 1000, "daily_reset": 2000}, path=path)
+            server.record_quota({"daily": 92, "fetched": 3000, "daily_reset": 4000}, path=path)
+            self.assertEqual(len(server._quota_hist), 2)  # new cycle: validity extended
+
+    def test_history_load_preserves_missing_values_and_legacy_shape(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "h.json"
+            path.write_text(json.dumps({"samples": [[100, 90, None, 200, None],  # weekly missing
+                                                    [50, 92, 78],              # legacy 3-tuple
+                                                    [100, 90, 80, 200, 400]]}))  # timestamp tie with Nones
+            self.assertEqual(server.load_quota_history(path),
+                             [(50, 92, 78, None, None), (100, 90, None, 200, None), (100, 90, 80, 200, 400)])
+
+    def test_sample_at_returns_latest_at_or_before(self):
+        samples = [(100, 90, 80, None, None), (300, 85, 75, None, None)]
+        self.assertEqual(server._sample_at(samples, 250), (100, 90, 80))
+        self.assertEqual(server._sample_at(samples, 300), (300, 85, 75))
+        self.assertIsNone(server._sample_at(samples, 50))
+
+    def test_sample_at_handles_missing_values_and_exact_match(self):
+        samples = [(100, 90, None, None, None)]
+        self.assertEqual(server._sample_at(samples, 100), (100, 90, None))
+
+    def test_sample_at_expires_values_past_their_reset(self):
+        samples = [(100, 90, 80, 200, 400)]
+        self.assertEqual(server._sample_at(samples, 250), (100, None, 80))  # daily reset passed
+        self.assertEqual(server._sample_at(samples, 500), (100, None, None))  # both reset
+        self.assertEqual(server._sample_at(samples, 150), (100, 90, 80))
+
+    def test_flatten_stamps_quota_at_last_activity(self):
+        server._quota_hist = [(100, 90, 80, 500, 500)]
+        sessions = {"cli:s": {"id": "s", "src": "cli", "title": "", "workspace": "", "created": 50,
+                              "last_activity": 200, "hidden": False, "models": [], "daily": []}}
+        row = server.flatten(sessions)[0]
+        self.assertEqual((row["quota_day"], row["quota_week"], row["quota_t"]), (90, 80, 100))
+        sessions["cli:s"]["last_activity"] = 10  # before the first sample
+        row = server.flatten(sessions)[0]
+        self.assertIsNone(row["quota_day"])
+        self.assertIsNone(row["quota_t"])
+        sessions["cli:s"]["last_activity"] = 600  # after the sample's resets
+        row = server.flatten(sessions)[0]
+        self.assertIsNone(row["quota_day"])
+        self.assertEqual(row["quota_t"], 100)  # sample exists but expired
+
+
+class AllowanceTest(unittest.TestCase):
+    DAY = "2026-10-20"
+
+    def _t(self, offset=0):
+        return int(datetime.fromisoformat(self.DAY).timestamp()) + offset
+
+    def _bucket(self, model="claude-sonnet-4-6", day=DAY, **kw):
+        b = {"day": day, "model": model, "messages": 1, "input": 110, "output": 20,
+             "cached": 0, "cache_write": 10, "gen_ms": 0,
+             "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
+        b.update(kw)
+        return b
+
+    def _sessions(self, *buckets, hidden=False):
+        return {"cli:s": {"id": "s", "src": "cli", "title": "", "workspace": "",
+                          "created": 0, "last_activity": 0, "hidden": hidden,
+                          "models": [], "daily": list(buckets)}}
+
+    def _usd(self, b):
+        parts = {"input": b["input"] - b["cache_write"], "output": b["output"],
+                 "cache_write": b["cache_write"], "cache_read": b["cached"]}
+        return pricing.cost(b["model"], parts, b["long"])[1]
+
+    def test_weekly_value_from_sample_window(self):
+        d0, d1 = self._t(), self._t(86400)
+        samples = [(d0, 90, 90, d1, 9999), (d1, 90, 80, d1 + 86400, 9999)]
+        b = self._bucket()
+        r = server.allowance(samples, self._sessions(b))
+        usd = self._usd(b)
+        self.assertEqual(r["weekly_delta"], 10)
+        self.assertAlmostEqual(r["cost"], usd, places=4)
+        self.assertAlmostEqual(r["weekly_usd"], round(usd * 10, 2), places=4)
+        self.assertAlmostEqual(r["monthly_usd"], round(usd * 10 * 4.33, 2), places=4)
+
+    def test_window_spanning_weekly_reset_skipped(self):
+        d0, d1 = self._t(), self._t(86400)
+        samples = [(d0, 90, 90, d1, 111), (d1, 90, 100, d1 + 86400, 222)]  # reset rolled: wr changed
+        r = server.allowance(samples, self._sessions(self._bucket()))
+        self.assertEqual(r["windows"], 0)
+        self.assertIsNone(r["weekly_usd"])
+
+    def test_excluded_and_unpriced_models_not_costed(self):
+        d0, d1 = self._t(), self._t(86400)
+        samples = [(d0, 90, 90, d1, 999), (d1, 90, 85, d1 + 86400, 999)]
+        sess = self._sessions(self._bucket(), self._bucket(model="MODEL_SWE_1_5"))
+        r = server.allowance(samples, sess, exclude={"claude-sonnet-4-6"})
+        self.assertEqual(r["unpriced"], 1)
+        self.assertEqual(r["cost"], 0)
+        r = server.allowance(samples, sess)
+        self.assertAlmostEqual(r["cost"], self._usd(self._bucket()), places=4)
+
+    def test_hidden_sessions_skipped_unless_requested(self):
+        d0, d1 = self._t(), self._t(86400)
+        samples = [(d0, 90, 90, d1, 999), (d1, 90, 85, d1 + 86400, 999)]
+        sess = self._sessions(self._bucket(), hidden=True)
+        self.assertEqual(server.allowance(samples, sess)["cost"], 0)
+        self.assertGreater(server.allowance(samples, sess, hidden=True)["cost"], 0)
+
+    def test_partial_day_overlap_is_apportioned(self):
+        d0, half = self._t(), self._t(43200)
+        samples = [(d0, 90, 90, 999, 999), (half, 90, 88, 999, 999)]
+        r = server.allowance(samples, self._sessions(self._bucket()))
+        self.assertAlmostEqual(r["cost"], self._usd(self._bucket()) / 2, places=4)
+
+    def test_date_range_limits_samples(self):
+        d0, mid, d2 = self._t(), self._t(43200), self._t(172800)
+        samples = [(d0, 90, 90, 999, 999), (mid, 90, 85, 999, 999), (d2, 90, 80, 999, 999)]
+        r = server.allowance(samples, self._sessions(self._bucket()),
+                             from_day=self.DAY, to_day=self.DAY)
+        self.assertEqual(r["samples_in_range"], 2)  # sample at d2 falls outside the inclusive range
+        self.assertEqual(r["weekly_delta"], 5)
+
+    def test_no_drop_or_history_yields_null_estimate(self):
+        r = server.allowance([], self._sessions(self._bucket()))
+        self.assertIsNone(r["weekly_usd"])
+        self.assertEqual(r["samples_in_range"], 0)
 
 
 if __name__ == "__main__":
