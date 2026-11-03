@@ -244,7 +244,8 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
                 key, label = _period(b["day"], group)
             g = meta.setdefault(key, {"key": key, "label": label, "sessions": set(), "models": set(),
                                       "messages": 0, "input": 0, "output": 0, "cached": 0,
-                                      "cache_write": 0, "gen_ms": 0, "price": 0.0, "priced": 0, "unpriced": 0})
+                                      "cache_write": 0, "gen_ms": 0, "price": 0.0, "priced": 0,
+                                      "unpriced": 0, "series": []})
             g["sessions"].add(s["id"])
             g["models"].add(b["model"])
             all_sessions.add(s["id"])
@@ -269,12 +270,15 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
             g["priced"], g["price"] = g["priced"] + 1, g["price"] + usd
         if group == "model":
             g["price_model"] = label
+        g["series"].append({"model": model, "price": usd,
+                            "tokens": c["input"] + c["output"] + c["cache_write"] + c["cache_read"]})
     rows = [{"key": g["key"], "label": g["label"], "sessions": len(g["sessions"]),
              "models": len(g["models"]), "messages": g["messages"], "input": g["input"],
              "output": g["output"], "cached": g["cached"], "cache_write": g["cache_write"],
              "tps": round(g["output"] * 1000.0 / g["gen_ms"], 1) if g["gen_ms"] else None,
              "price": g["price"] if g["priced"] else None, "unpriced": g["unpriced"],
-             "price_model": g.get("price_model")} for g in meta.values()]
+             "price_model": g.get("price_model"),
+             "series": sorted(g["series"], key=lambda s: s["model"])} for g in meta.values()]
     rows.sort(key=lambda r: r["key"])
     priced = [r["price"] for r in rows if r["price"] is not None]
     tot_gen = sum(g["gen_ms"] for g in meta.values())

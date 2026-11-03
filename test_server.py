@@ -257,6 +257,7 @@ const element = (id) => {
   if (!elements.has(id)) elements.set(id, {
     value: "", checked: false, textContent: "", innerHTML: "", open: false,
     style: {}, listeners: {},
+    classList: { _s: new Set(), toggle(c, on) { on ? this._s.add(c) : this._s.delete(c); }, contains(c) { return this._s.has(c); } },
     addEventListener(type, fn) { this.listeners[type] = fn; },
     contains(target) { return target === this; },
     querySelectorAll() { return []; },
@@ -426,6 +427,34 @@ assert.ok(html.includes(">proj<"));               // basename shown
 assert.ok(html.includes('title="/home/u/lib"'));
 assert.ok(html.includes(">lib<"));
 assert.ok(html.includes("—"));                    // unpriced row
+assert.equal(element("report-chart").hidden, true);  // chart only for time groups
+""")
+
+    def test_report_chart_stacks_models_by_period(self):
+        self.run_script(r"""
+vm.runInContext(`
+  report.group = "day";
+  report.rows = [
+    { key: "2026-10-12", label: "Oct 12, 2026", sessions: 1, models: 2, messages: 2,
+      input: 30, output: 11, cached: 0, cache_write: 0, tps: null, price: 1.0, unpriced: 0,
+      series: [ { model: "model-a", tokens: 15, price: 0.7 }, { model: "model-b", tokens: 26, price: 0.3 } ] },
+    { key: "2026-10-13", label: "Oct 13, 2026", sessions: 1, models: 1, messages: 1,
+      input: 30, output: 7, cached: 0, cache_write: 0, tps: null, price: 0.5, unpriced: 0,
+      series: [ { model: "model-a", tokens: 37, price: 0.5 } ] },
+  ];
+  report.totals = null;
+  renderReport();
+`, context);
+assert.equal(element("report-chart").hidden, false);
+assert.ok(element("chart-legend").innerHTML.includes("model-a"));
+assert.ok(element("chart-legend").innerHTML.includes("model-b"));
+assert.ok(element("chart-plot").innerHTML.includes("background:#e8a33d"));  // top model takes first color
+assert.ok(element("chart-x").innerHTML.includes("Oct 12"));                 // year stripped from ticks
+assert.equal(element("chart-m-cost").disabled, false);
+assert.ok(element("chart-m-cost").classList.contains("on"));                // cost metric is the default
+element("chart-m-tok").listeners.click();
+assert.ok(element("chart-m-tok").classList.contains("on"));
+assert.ok(element("chart-plot").innerHTML.includes("tok"));                 // tooltips show token counts
 """)
 
     def test_session_details_include_all_models_and_handle_unpriced_usage(self):
@@ -523,6 +552,9 @@ class ReportTest(DBFixture):
         self.assertEqual((days[d12]["messages"], days[d12]["input"], days[d12]["output"]), (2, 30, 11))
         self.assertEqual((days[d12]["sessions"], days[d12]["models"]), (1, 2))
         self.assertEqual((days[d13]["messages"], days[d13]["input"]), (1, 30))
+        series = {s["model"]: s for s in days[d12]["series"]}  # per-model chart data, deduped like the totals
+        self.assertEqual(set(series), {"model-a", "model-b"})
+        self.assertEqual((series["model-a"]["tokens"], series["model-b"]["tokens"]), (15, 26))
         # token-weighted: 11 output / (5/100 + 6/200 s) and 7 / (7/70 s)
         self.assertEqual((days[d12]["tps"], days[d13]["tps"]), (137.5, 70.0))
 

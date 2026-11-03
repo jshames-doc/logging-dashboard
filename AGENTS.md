@@ -29,8 +29,14 @@
 - Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|workspace|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
   Groups the cached `daily` buckets server-side (workspace groups by the session's `working_directory`, showing the basename with the
   full path as tooltip; sessions without one fold into "—"). Price is computed per model inside each group so long-prompt tiers apply;
-  `unpriced` counts models without rates; TPS is token-weighted per group). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
+  `unpriced` counts models without rates; TPS is token-weighted per group). Each row also carries `series`: per-model
+  `{model, tokens, price}` inside the group, which drives the stacked usage-over-time chart shown for day/week/month
+  groups (columns in chronological key order regardless of table sort; top 7 models by the metric get palette colors,
+  the rest fold into "other"; Cost/Tokens toggle, Cost disabled when nothing is priced). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
   per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
+- Table view state (search text, model set, workspace, dates, show-hidden, sort) persists in the URL hash via
+  `saveView()`/`applyView()` in `app.js` (`models` is a JSON array; stale model/workspace values are pruned on restore),
+  so filtered views survive reload and can be bookmarked. Column visibility stays in localStorage `ledger.cols`.
   **Allowance value** button -> `GET /api/allowance?from&to&exc&hidden`: `server.allowance` pairs consecutive quota
   samples inside the range that share a known, unexpired `weekly_reset` into windows where `weekly` dropped, sums priced
   requests whose timestamps fall in `(start, end]`, and returns `weekly_usd = cost × 100 ÷ Δweekly%` (`monthly_usd = × 4.33`);

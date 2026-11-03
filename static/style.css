@@ -240,6 +240,21 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 .report-body .empty { font-size: 17px; padding: 34px 0; }
 .report-body td:first-child { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
 
+/* usage-over-time chart (day/week/month reports) */
+.chart { padding: 10px 18px 6px; border-top: 1px solid var(--line-2); }
+.chart-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 3px 14px; font: 400 11px var(--mono); color: var(--ink-2); min-width: 0; }
+.chart-legend .lg { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.chart-legend .lg i { width: 8px; height: 8px; flex-shrink: 0; }
+.chart-metrics { display: flex; gap: 6px; flex-shrink: 0; }
+.chart-metrics .btn { padding: 3px 9px; font-size: 10px; }
+.chart-metrics .btn.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chart-plot { display: flex; align-items: flex-end; gap: 2px; height: 140px; }
+.chart-col { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column-reverse; }
+.chart-seg { width: 100%; }
+.chart-x { display: flex; gap: 2px; margin-top: 5px; border-top: 1px solid var(--line); padding-top: 4px; }
+.chart-x span { flex: 1 1 0; min-width: 0; font: 400 9px var(--mono); color: var(--ink-3); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 @media (max-width: 600px) {
   .session-meta { grid-template-columns: 1fr; }
   .session-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

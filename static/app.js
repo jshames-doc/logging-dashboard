@@ -109,6 +109,59 @@ function render() {
     th.classList.toggle("sorted", th.dataset.k === state.sortKey);
     th.classList.toggle("asc", th.dataset.k === state.sortKey && state.asc);
   });
+  saveView();
+}
+
+/* table filters + sort persist in the URL hash so views survive reload and can be bookmarked */
+function saveView() {
+  try {
+    const p = [];
+    const put = (k, v) => p.push(`${k}=${encodeURIComponent(v)}`);
+    if ($("q").value.trim()) put("q", $("q").value.trim());
+    if (state.models.size) put("models", JSON.stringify([...state.models]));
+    if ($("f-ws").value) put("ws", $("f-ws").value);
+    if ($("f-from").value) put("from", $("f-from").value);
+    if ($("f-to").value) put("to", $("f-to").value);
+    if ($("f-hidden").checked) put("hidden", "1");
+    if (state.sortKey !== "created" || state.asc) {
+      put("sort", state.sortKey);
+      if (state.asc) put("asc", "1");
+    }
+    history.replaceState(null, "", p.length ? "#" + p.join("&") : location.pathname + location.search);
+  } catch {}
+}
+
+let viewLoaded = false;
+
+function applyView() {
+  let h;
+  try { h = location.hash.slice(1); } catch { return; }
+  if (!h) return;
+  const p = {};
+  for (const kv of h.split("&")) {
+    const i = kv.indexOf("=");
+    if (i < 1) continue;
+    try { p[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1)); } catch {}
+  }
+  if (p.q != null) $("q").value = p.q;
+  if (p.from) $("f-from").value = p.from;
+  if (p.to) $("f-to").value = p.to;
+  $("f-hidden").checked = p.hidden === "1";
+  if (p.models) {
+    try {
+      const avail = new Set(state.rows.map((r) => r.model));
+      state.models = new Set(JSON.parse(p.models).filter((m) => avail.has(m)));
+      updateModelFilter();
+    } catch {}
+  }
+  if (p.ws) {
+    $("f-ws").value = p.ws;
+    if ($("f-ws").value !== p.ws) $("f-ws").value = "";  // workspace no longer in the data
+  }
+  if (p.sort && COLS.some(([k]) => k === p.sort)) {
+    state.sortKey = p.sort;
+    state.asc = p.asc === "1";
+  }
 }
 
 let sessionOpener = null;
@@ -237,6 +290,7 @@ function setData(data) {
   $("dbpath").textContent = data.db;
   fillModels([...new Set(data.rows.map((r) => r.model))].sort());
   fillSelect($("f-ws"), [...new Set(data.rows.map((r) => r.workspace))].sort((a, b) => base(a).localeCompare(base(b))), "All workspaces");
+  if (!viewLoaded) { viewLoaded = true; applyView(); }
   render();
 }
 
@@ -373,8 +427,11 @@ document.querySelectorAll("#prices th[data-pk]").forEach((th) =>
   }));
 
 /* report maker */
-const report = { models: [], excluded: new Set(), rows: [], totals: null, group: "model", sortKey: "price", asc: false };
+const report = { models: [], excluded: new Set(), rows: [], totals: null, group: "model", sortKey: "price", asc: false, chartMetric: "price" };
 const GROUP_LABEL = { model: "Model", workspace: "Workspace", day: "Day", week: "Week", month: "Month" };
+const TIME_GROUPS = new Set(["day", "week", "month"]);
+const CHART_COLORS = ["#e8a33d", "#d4573b", "#6fa89a", "#8f7ab8", "#5b8dc9", "#a8b56f", "#c96f9a"];
+const OTHER_COLOR = "#6e6759", OTHER_KEY = "·other·";
 
 function fillReportModels() {
   report.models = [...new Set(state.rows.map((r) => r.model).filter((m) => m !== "—"))].sort();
@@ -431,6 +488,7 @@ function renderReport() {
       <td class="num ca">${fmt.format(r.cached)}</td>
       <td class="num price"${r.unpriced ? ` title="excludes ${r.unpriced} unpriced model${r.unpriced === 1 ? "" : "s"}"` : ""}>${r.price == null ? "—" : fmtPrice(r.price)}</td>
     </tr>`).join("");
+  renderChart();
   const t = report.totals;
   if (t) {
     const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
@@ -469,6 +527,59 @@ async function runReport() {
   }
 }
 
+/* stacked usage-over-time chart for day/week/month reports.
+   Rows are ordered by period key (chronological), not by the table sort. */
+function renderChart() {
+  const el = $("report-chart");
+  const rows = [...report.rows].sort((a, b) => String(a.key).localeCompare(String(b.key)));
+  if (!TIME_GROUPS.has(report.group) || !rows.length) { el.hidden = true; return; }
+  const per = new Map();  // model -> {price, tokens} across all periods
+  for (const r of rows)
+    for (const s of r.series || []) {
+      const t = per.get(s.model) || { price: 0, tokens: 0 };
+      t.price += s.price || 0;
+      t.tokens += s.tokens;
+      per.set(s.model, t);
+    }
+  const hasCost = [...per.values()].some((t) => t.price > 0);
+  const metric = report.chartMetric === "price" && hasCost ? "price" : "tokens";
+  const order = [...per].sort((a, b) => b[1][metric] - a[1][metric]).map(([k]) => k);
+  const named = new Set(order.slice(0, CHART_COLORS.length));
+  const keys = [...named, ...(order.length > named.size ? [OTHER_KEY] : [])];
+  const color = new Map(keys.map((k, i) => [k, k === OTHER_KEY ? OTHER_COLOR : CHART_COLORS[i]]));
+  const segOf = (r, k) => {
+    const t = { price: 0, tokens: 0 };
+    for (const s of r.series || [])
+      if (k === OTHER_KEY ? !named.has(s.model) : s.model === k) {
+        t.price += s.price || 0;
+        t.tokens += s.tokens;
+      }
+    return t;
+  };
+  const cols = rows.map((r) => keys.map((k) => ({ k, ...segOf(r, k) })));
+  const totals = cols.map((cs) => cs.reduce((a, s) => a + (metric === "price" ? s.price : s.tokens), 0));
+  const max = Math.max(0, ...totals);
+  const fmtTotal = (v) => (metric === "price" ? fmtPrice(v) : compact.format(v) + " tok");
+  $("chart-legend").innerHTML = keys.map((k) =>
+    `<span class="lg"><i style="background:${color.get(k)}"></i>${esc(k === OTHER_KEY ? "other" : k)}</span>`).join("");
+  $("chart-plot").innerHTML = cols.map((cs, i) =>
+    `<div class="chart-col" title="${esc(rows[i].label)} · ${fmtTotal(totals[i])}">` +
+    cs.filter((s) => (metric === "price" ? s.price : s.tokens) > 0).map((s) =>
+      `<div class="chart-seg" style="height:${max ? (metric === "price" ? s.price : s.tokens) / max * 100 : 0}%;background:${color.get(s.k)}" title="${esc((s.k === OTHER_KEY ? "other" : s.k) + ": " + (s.price ? fmtPrice(s.price) : "—") + " · " + compact.format(s.tokens) + " tok")}"></div>`).join("") +
+    `</div>`).join("");
+  const step = Math.ceil(rows.length / 12);
+  const short = (l) => l.replace(/, \d{4}$/, "");
+  $("chart-x").innerHTML = rows.map((r, i) =>
+    `<span title="${esc(r.label)}">${i % step === 0 ? esc(short(r.label)) : ""}</span>`).join("");
+  $("chart-m-cost").disabled = !hasCost;
+  $("chart-m-cost").classList.toggle("on", metric === "price");
+  $("chart-m-tok").classList.toggle("on", metric === "tokens");
+  el.hidden = false;
+}
+
+[["chart-m-cost", "price"], ["chart-m-tok", "tokens"]].forEach(([id, m]) =>
+  $(id).addEventListener("click", () => { report.chartMetric = m; renderChart(); }));
+
 async function runAllowance() {
   const p = new URLSearchParams();
   if ($("r-from").value) p.set("from", $("r-from").value);
@@ -480,6 +591,7 @@ async function runAllowance() {
     const d = await (await fetch("/api/allowance?" + p)).json();
     $("report-hint").hidden = true;
     $("report-empty").hidden = true;
+    $("report-chart").hidden = true;
     $("report-head").innerHTML = "";
     $("report-rows").innerHTML = "";
     $("r-csv").disabled = true;
