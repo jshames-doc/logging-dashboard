@@ -428,6 +428,8 @@ assert.ok(html.includes('title="/home/u/lib"'));
 assert.ok(html.includes(">lib<"));
 assert.ok(html.includes("—"));                    // unpriced row
 assert.equal(element("report-chart").hidden, true);  // chart only for time groups
+assert.equal(element("report-view").hidden, true);   // so is the chart/list toggle
+assert.equal(element("report-body").hidden, false);  // list always shown for other groups
 """)
 
     def test_report_chart_stacks_models_by_period(self):
@@ -455,6 +457,15 @@ assert.ok(element("chart-m-cost").classList.contains("on"));                // c
 element("chart-m-tok").listeners.click();
 assert.ok(element("chart-m-tok").classList.contains("on"));
 assert.ok(element("chart-plot").innerHTML.includes("tok"));                 // tooltips show token counts
+assert.equal(element("report-view").hidden, false);
+assert.equal(element("report-body").hidden, true);                          // chart replaces the list
+element("rv-list").listeners.click();
+assert.equal(element("report-chart").hidden, true);
+assert.equal(element("report-body").hidden, false);                         // back to the sortable list
+assert.ok(element("rv-list").classList.contains("on"));
+element("rv-chart").listeners.click();
+assert.equal(element("report-chart").hidden, false);
+assert.equal(element("report-body").hidden, true);
 """)
 
     def test_session_details_include_all_models_and_handle_unpriced_usage(self):

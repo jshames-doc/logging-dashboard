@@ -134,6 +134,13 @@
       <button id="r-csv" class="btn ghost" disabled>Download CSV</button>
     </div>
     <div class="totals report-totals" id="report-totals"></div>
+    <div class="report-view" id="report-view" hidden>
+      <span class="lbl">View</span>
+      <div class="chart-metrics" role="group" aria-label="Report view">
+        <button id="rv-chart" class="btn ghost" type="button">Chart</button>
+        <button id="rv-list" class="btn ghost" type="button">List</button>
+      </div>
+    </div>
     <div class="chart" id="report-chart" hidden>
       <div class="chart-head">
         <div class="chart-legend" id="chart-legend"></div>
@@ -145,7 +152,7 @@
       <div class="chart-plot" id="chart-plot"></div>
       <div class="chart-x" id="chart-x"></div>
     </div>
-    <div class="prices-body report-body">
+    <div class="prices-body report-body" id="report-body">
       <table>
         <thead><tr id="report-head"></tr></thead>
         <tbody id="report-rows"></tbody>

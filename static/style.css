@@ -240,6 +240,11 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 .report-body .empty { font-size: 17px; padding: 34px 0; }
 .report-body td:first-child { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
 
+/* chart/list view toggle (day/week/month reports) */
+.report-view { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 18px 0; }
+.report-view[hidden] { display: none; }
+.report-view .lbl { font: 500 10px var(--mono); text-transform: uppercase; letter-spacing: .14em; color: var(--ink-3); }
+
 /* usage-over-time chart (day/week/month reports) */
 .chart { padding: 10px 18px 6px; border-top: 1px solid var(--line-2); }
 .chart-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }

@@ -32,7 +32,8 @@
   `unpriced` counts models without rates; TPS is token-weighted per group). Each row also carries `series`: per-model
   `{model, tokens, price}` inside the group, which drives the stacked usage-over-time chart shown for day/week/month
   groups (columns in chronological key order regardless of table sort; top 7 models by the metric get palette colors,
-  the rest fold into "other"; Cost/Tokens toggle, Cost disabled when nothing is priced). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
+  the rest fold into "other"; Cost/Tokens toggle, Cost disabled when nothing is priced). A View toggle swaps the chart
+  for the sortable list (`report.view`, persisted in localStorage `ledger.reportView`, default chart). The model dropdown is Excel-style: all checked = included, "(Select all)" tri-state box,
   per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
 - Table view state (search text, model set, workspace, dates, show-hidden, sort) persists in the URL hash via
   `saveView()`/`applyView()` in `app.js` (`models` is a JSON array; stale model/workspace values are pruned on restore),

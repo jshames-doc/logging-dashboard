@@ -427,7 +427,9 @@ document.querySelectorAll("#prices th[data-pk]").forEach((th) =>
   }));
 
 /* report maker */
-const report = { models: [], excluded: new Set(), rows: [], totals: null, group: "model", sortKey: "price", asc: false, chartMetric: "price" };
+const savedReportView = () => { try { return localStorage.getItem("ledger.reportView") === "list" ? "list" : "chart"; } catch { return "chart"; } };
+const report = { models: [], excluded: new Set(), rows: [], totals: null, group: "model", sortKey: "price", asc: false,
+                 chartMetric: "price", view: savedReportView() };
 const GROUP_LABEL = { model: "Model", workspace: "Workspace", day: "Day", week: "Week", month: "Month" };
 const TIME_GROUPS = new Set(["day", "week", "month"]);
 const CHART_COLORS = ["#e8a33d", "#d4573b", "#6fa89a", "#8f7ab8", "#5b8dc9", "#a8b56f", "#c96f9a"];
@@ -527,12 +529,20 @@ async function runReport() {
   }
 }
 
-/* stacked usage-over-time chart for day/week/month reports.
-   Rows are ordered by period key (chronological), not by the table sort. */
+/* stacked usage-over-time chart for day/week/month reports; the View toggle
+   switches between it and the sortable list. Rows are ordered by period key
+   (chronological), not by the table sort. */
 function renderChart() {
   const el = $("report-chart");
+  const time = TIME_GROUPS.has(report.group) && report.rows.length > 0;
+  const show = time && report.view === "chart";
+  $("report-view").hidden = !time;
+  $("rv-chart").classList.toggle("on", report.view !== "list");
+  $("rv-list").classList.toggle("on", report.view === "list");
+  $("report-body").hidden = show;
+  el.hidden = !show;
+  if (!show) return;
   const rows = [...report.rows].sort((a, b) => String(a.key).localeCompare(String(b.key)));
-  if (!TIME_GROUPS.has(report.group) || !rows.length) { el.hidden = true; return; }
   const per = new Map();  // model -> {price, tokens} across all periods
   for (const r of rows)
     for (const s of r.series || []) {
@@ -574,11 +584,16 @@ function renderChart() {
   $("chart-m-cost").disabled = !hasCost;
   $("chart-m-cost").classList.toggle("on", metric === "price");
   $("chart-m-tok").classList.toggle("on", metric === "tokens");
-  el.hidden = false;
 }
 
 [["chart-m-cost", "price"], ["chart-m-tok", "tokens"]].forEach(([id, m]) =>
   $(id).addEventListener("click", () => { report.chartMetric = m; renderChart(); }));
+[["rv-chart", "chart"], ["rv-list", "list"]].forEach(([id, v]) =>
+  $(id).addEventListener("click", () => {
+    report.view = v;
+    try { localStorage.setItem("ledger.reportView", v); } catch {}
+    renderChart();
+  }));
 
 async function runAllowance() {
   const p = new URLSearchParams();
@@ -592,6 +607,8 @@ async function runAllowance() {
     $("report-hint").hidden = true;
     $("report-empty").hidden = true;
     $("report-chart").hidden = true;
+    $("report-view").hidden = true;
+    $("report-body").hidden = false;
     $("report-head").innerHTML = "";
     $("report-rows").innerHTML = "";
     $("r-csv").disabled = true;
