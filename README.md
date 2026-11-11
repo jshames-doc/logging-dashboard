@@ -132,3 +132,7 @@ to fill the quota columns, using the API key in
 and never leaves the server otherwise. The only other outbound call is
 `update_prices.py` fetching the public pricing page. Your session data stays
 in `%APPDATA%` and is never copied into this repo.
+
+## License
+
+[MIT](LICENSE)
