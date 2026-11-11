@@ -44,10 +44,14 @@
   `None` when no usable windows (too few samples or no drop — note tells the user why). Quota is account-wide while cost
   is local-only, so other clients' and excluded models' drain stay in the denominator.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,
-  parses the embedded `modelCostData` array (Enterprise SaaS tier, Pro-tier fallback for models only published there), prints a diff
-  and writes `pricing_data.json`. `pricing.py` hot-reloads that file on mtime change; no restart or cache bump needed.
-- `pricing_manual.json`: hand-entered rates for models Devin doesn't publish (e.g. Claude Haiku 5.5 from Anthropic's pricing page).
-  Never overwritten by the updater; published rates win if the model appears later. Entries list DB slugs in `uids` and may set
+  parses the embedded `modelCostData` array (Devin Enterprise tier — accepts the legacy `TEAMS_TIER_ENTERPRISE_SAAS` name too —
+  Pro-tier fallback for models only published there), prints a diff
+  and writes `pricing_data.json`. Models dropped from the page are kept at their last-known rates marked tier `"Legacy"`
+  (`merge_legacy`), so historical sessions stay priced. `pricing.py` hot-reloads that file on mtime change; no restart or cache bump needed.
+- `pricing_manual.json`: hand-entered rates for models Devin doesn't publish (e.g. Claude Haiku 5.5 from Anthropic's pricing page;
+  now only covers the plain `claude-haiku-5-5` slug — the effort-suffixed slugs are published and take precedence).
+  Never overwritten by the updater; published rates win if the model appears later (a manual entry whose `uids` intersect
+  published uids is dropped entirely). Entries list DB slugs in `uids` and may set
   `long_prompt` rates for requests whose prompt (input + cache write + cache read) > 100K; the aggregator tracks those requests
   separately per model in the `long` bucket.
 - `pricing.resolve()` maps DB model slugs: OVERRIDES -> published `model_uid` (most slugs) -> ordered-token label match ignoring

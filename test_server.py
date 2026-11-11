@@ -684,12 +684,14 @@ class PricingTest(DBFixture):
             self.assertIsNone(pricing.resolve(slug), slug)
 
     def test_manual_price_with_long_prompt_tier(self):
-        self.assertEqual(pricing.resolve("claude-haiku-5-5-high"), "Claude Haiku 5.5")
+        # Effort-suffixed haiku slugs are published now; the manual entry covers the plain slug.
+        self.assertEqual(pricing.resolve("claude-haiku-5-5-high"), "Claude Haiku 5.5 High")
+        self.assertEqual(pricing.resolve("claude-haiku-5-5"), "Claude Haiku 5.5")
         r, lr = pricing.RATES["Claude Haiku 5.5"], pricing.LONG_RATES["Claude Haiku 5.5"]
         c = sqlite3.connect(self.db)
         nodes = [  # prompt = input + cache write + cache read; only the second exceeds 100K
-            msg("assistant", "h1", "h1", "claude-haiku-5-5-high", inp=10, out=100, cw=1_000, cr=50_000),
-            msg("assistant", "h2", "h2", "claude-haiku-5-5-high", inp=20, out=200, cw=2_000, cr=150_000),
+            msg("assistant", "h1", "h1", "claude-haiku-5-5", inp=10, out=100, cw=1_000, cr=50_000),
+            msg("assistant", "h2", "h2", "claude-haiku-5-5", inp=20, out=200, cw=2_000, cr=150_000),
         ]
         c.executemany("INSERT INTO message_nodes (session_id,node_id,chat_message,created_at) VALUES ('s3',?,?,?)",
                       [(i, n, 300 + i) for i, n in enumerate(nodes)])
@@ -730,8 +732,8 @@ class PricingTest(DBFixture):
         self.assertIsNone(res["model-a"]["price_model"])
 
 
-PAGE = r"""<script>self.__next_f.push([1,"...modelCostData=[{\"tier\":`TEAMS_TIER_ENTERPRISE_SAAS`,\"model_uid\":`m-a`,\"label\":`Model A`,\"model_provider\":`P`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25,\"credit_multiplier\":1,\"is_recommended\":false},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":9,\"output_cost_per_million_usd\":9,\"cache_write_cost_per_million_usd\":9,\"cache_read_cost_per_million_usd\":9},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-b`,\"label\":`Model B`,\"input_cost_per_million_usd\":1,\"output_cost_per_million_usd\":2,\"cache_write_cost_per_million_usd\":3,\"cache_read_cost_per_million_usd\":4}]"])</script>
-<script>modelCostData=[{\"tier\":`TEAMS_TIER_ENTERPRISE_SAAS`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25}]</script>"""
+PAGE = r"""<script>self.__next_f.push([1,"...modelCostData=[{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-a`,\"label\":`Model A`,\"model_provider\":`P`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25,\"credit_multiplier\":1,\"is_recommended\":false},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":9,\"output_cost_per_million_usd\":9,\"cache_write_cost_per_million_usd\":9,\"cache_read_cost_per_million_usd\":9},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-b`,\"label\":`Model B`,\"input_cost_per_million_usd\":1,\"output_cost_per_million_usd\":2,\"cache_write_cost_per_million_usd\":3,\"cache_read_cost_per_million_usd\":4}]"])</script>
+<script>modelCostData=[{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25}]</script>"""
 
 
 class UpdatePricesTest(unittest.TestCase):
@@ -744,7 +746,7 @@ class UpdatePricesTest(unittest.TestCase):
         self.assertEqual(set(models), {"Model A", "Model B"})
         a, b = models["Model A"], models["Model B"]
         self.assertEqual((a["uid"], a["tier"], a["input"], a["output"], a["cache_write"], a["cache_read"]),
-                         ("m-a", "Enterprise SaaS", 2.5, 10.0, 0.0, 0.25))
+                         ("m-a", "Devin Enterprise", 2.5, 10.0, 0.0, 0.25))
         self.assertEqual((b["tier"], b["cache_read"]), ("Pro", 4.0))
 
     def test_diff_reports_changes(self):
@@ -752,6 +754,16 @@ class UpdatePricesTest(unittest.TestCase):
         m = lambda label, i: {"label": label, "input": i, "output": 1, "cache_write": 0, "cache_read": 0}
         lines = update_prices.diff({"models": [m("A", 1), m("B", 1)]}, {"models": [m("A", 2), m("C", 1)]})
         self.assertEqual([l[0] for l in lines], ["+", "-", "~"])
+
+    def test_merge_legacy_keeps_unpublished_models(self):
+        import update_prices
+        m = lambda label, uid=None, tier="Devin Enterprise": {"label": label, "uid": uid or label.lower(),
+            "input": 1, "output": 1, "cache_write": 0, "cache_read": 0, "tier": tier}
+        old = {"models": [m("A"), m("B"), m("C", uid="shared-uid")]}
+        new = {"models": [m("A"), m("Z", uid="shared-uid")]}
+        kept = update_prices.merge_legacy(old, new)
+        self.assertEqual([(k["label"], k["tier"]) for k in kept], [("B", "Legacy")])
+        self.assertEqual([x["label"] for x in new["models"]], ["A", "B", "Z"])
 
     def test_pricing_survives_malformed_files(self):
         with tempfile.TemporaryDirectory() as tmp:

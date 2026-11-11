@@ -6,8 +6,10 @@
 
 The page embeds a `modelCostData` array of
 {tier, model_uid, label, *_cost_per_million_usd, ...} objects. We keep the
-Enterprise SaaS tier, and fall back to the Pro tier for models only published
-there. The dashboard reloads pricing_data.json automatically; just refresh the page.
+Devin Enterprise tier, and fall back to the Pro tier for models only published
+there. Models that vanish from the page are kept at their last-known rates with
+tier "Legacy", so historical sessions stay priced. The dashboard reloads
+pricing_data.json automatically; just refresh the page.
 """
 import argparse
 import json
@@ -18,8 +20,11 @@ from datetime import date
 from pathlib import Path
 
 URL = "https://docs.devin.ai/desktop/models"
-TIER, FALLBACK_TIER = "TEAMS_TIER_ENTERPRISE_SAAS", "TEAMS_TIER_PRO"
-TIER_NAMES = {TIER: "Enterprise SaaS", FALLBACK_TIER: "Pro"}
+# Primary tier candidates in preference order (the site renamed
+# TEAMS_TIER_ENTERPRISE_SAAS to TEAMS_TIER_DEVIN_ENTERPRISE in late 2025).
+TIERS = {"TEAMS_TIER_DEVIN_ENTERPRISE": "Devin Enterprise",
+         "TEAMS_TIER_ENTERPRISE_SAAS": "Enterprise SaaS"}
+FALLBACK_TIER, FALLBACK_NAME = "TEAMS_TIER_PRO", "Pro"
 OUT = Path(__file__).resolve().parent / "pricing_data.json"
 COSTS = ("input", "output", "cache_write", "cache_read")
 
@@ -55,13 +60,27 @@ def parse(html):
 
 def build(entries, fetched=None):
     """Primary-tier entries, plus fallback-tier entries for labels/uids missing from the primary tier."""
-    primary = [e for e in entries if e["tier"] == TIER]
+    tier = next((t for t in TIERS if any(e["tier"] == t for e in entries)), None)
+    primary = [e for e in entries if e["tier"] == tier]
     labels, uids = {e["label"] for e in primary}, {e["uid"] for e in primary}
     extra = [e for e in entries if e["tier"] == FALLBACK_TIER and e["label"] not in labels and e["uid"] not in uids]
-    models = [{**{k: e[k] for k in ("uid", "label", *COSTS)}, "tier": TIER_NAMES[e["tier"]]}
+    names = {**TIERS, FALLBACK_TIER: FALLBACK_NAME}
+    models = [{**{k: e[k] for k in ("uid", "label", *COSTS)}, "tier": names[e["tier"]]}
               for e in sorted(primary + extra, key=lambda e: (e["label"].lower(), e["uid"]))]
-    return {"source": URL, "tier": TIER_NAMES[TIER], "fallback_tier": TIER_NAMES[FALLBACK_TIER],
+    return {"source": URL, "tier": TIERS.get(tier, "?"), "fallback_tier": FALLBACK_NAME,
             "fetched": fetched or date.today().isoformat(), "models": models}
+
+
+def merge_legacy(old, new):
+    """Append models from the previous snapshot that the page no longer publishes,
+    marked tier "Legacy" at their last-known rates. Returns the kept entries."""
+    labels = {m["label"] for m in new["models"]}
+    uids = {m["uid"] for m in new["models"]}
+    kept = [{**m, "tier": "Legacy"} for m in (old or {}).get("models", [])
+            if m["label"] not in labels and m.get("uid") not in uids]
+    new["models"] = sorted(new["models"] + kept,
+                           key=lambda m: (m["label"].lower(), m.get("uid") or ""))
+    return kept
 
 
 def diff(old, new):
@@ -89,14 +108,17 @@ def main(argv=None):
 
     html = Path(args.file).read_text(encoding="utf-8", errors="replace") if args.file else fetch()
     entries = parse(html)
-    if not any(e["tier"] == TIER for e in entries):
-        sys.exit("No Enterprise SaaS prices found - the page layout may have changed. pricing_data.json left untouched.")
+    if not any(e["tier"] in TIERS for e in entries):
+        sys.exit("No primary-tier prices found - the page layout may have changed. pricing_data.json left untouched.")
     new = build(entries)
     old = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else None
 
     changes = diff(old, new)
-    print(f"{len(new['models'])} models parsed (USD per 1M tokens: input/output/cache write/cache read)")
+    print(f"{len(new['models'])} models published (USD per 1M tokens: input/output/cache write/cache read)")
     print("\n".join(changes) if changes else "No price changes.")
+    kept = merge_legacy(old, new)
+    if kept:
+        print(f"{len(kept)} models no longer published - retained at last rates (tier \"Legacy\")")
     if args.dry_run:
         return
     OUT.write_text(json.dumps(new, indent=1) + "\n", encoding="utf-8")

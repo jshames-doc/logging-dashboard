@@ -1,8 +1,8 @@
 {
  "source": "https://docs.devin.ai/desktop/models",
- "tier": "Enterprise SaaS",
+ "tier": "Devin Enterprise",
  "fallback_tier": "Pro",
- "fetched": "2026-10-19",
+ "fetched": "2026-11-11",
  "models": [
   {
    "uid": "adaptive",
@@ -11,7 +11,7 @@
    "output": 2.0,
    "cache_write": 0.5,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-5-fable-high",
@@ -20,7 +20,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-5-fable-low",
@@ -29,7 +29,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-5-fable-max",
@@ -38,7 +38,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-5-fable-medium",
@@ -47,7 +47,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-5-fable-xhigh",
@@ -56,7 +56,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-fable-5-1-high",
@@ -65,7 +65,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-fable-5-1-low",
@@ -74,7 +74,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-fable-5-1-max",
@@ -83,7 +83,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-fable-5-1-medium",
@@ -92,7 +92,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-fable-5-1-xhigh",
@@ -101,7 +101,97 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-high",
+   "label": "Claude Fable 5.2 High",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-high-fast",
+   "label": "Claude Fable 5.2 High Fast",
+   "input": 16.0,
+   "output": 80.0,
+   "cache_write": 20.0,
+   "cache_read": 0.4,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-low",
+   "label": "Claude Fable 5.2 Low",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-low-fast",
+   "label": "Claude Fable 5.2 Low Fast",
+   "input": 16.0,
+   "output": 80.0,
+   "cache_write": 20.0,
+   "cache_read": 0.4,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-max",
+   "label": "Claude Fable 5.2 Max",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-max-fast",
+   "label": "Claude Fable 5.2 Max Fast",
+   "input": 16.0,
+   "output": 80.0,
+   "cache_write": 20.0,
+   "cache_read": 0.4,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-medium",
+   "label": "Claude Fable 5.2 Medium",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-medium-fast",
+   "label": "Claude Fable 5.2 Medium Fast",
+   "input": 16.0,
+   "output": 80.0,
+   "cache_write": 20.0,
+   "cache_read": 0.4,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-xhigh",
+   "label": "Claude Fable 5.2 XHigh",
+   "input": 8.0,
+   "output": 40.0,
+   "cache_write": 10.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-fable-5-2-xhigh-fast",
+   "label": "Claude Fable 5.2 XHigh Fast",
+   "input": 16.0,
+   "output": 80.0,
+   "cache_write": 20.0,
+   "cache_read": 0.4,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_PRIVATE_11",
@@ -110,7 +200,52 @@
    "output": 5.0,
    "cache_write": 1.25,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
+  },
+  {
+   "uid": "claude-haiku-5-5-high",
+   "label": "Claude Haiku 5.5 High",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-haiku-5-5-low",
+   "label": "Claude Haiku 5.5 Low",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-haiku-5-5-max",
+   "label": "Claude Haiku 5.5 Max",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-haiku-5-5-medium",
+   "label": "Claude Haiku 5.5 Medium",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "claude-haiku-5-5-xhigh",
+   "label": "Claude Haiku 5.5 XHigh",
+   "input": 0.1,
+   "output": 0.5,
+   "cache_write": 0.125,
+   "cache_read": 0.01,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_CLAUDE_4_5_OPUS",
@@ -119,7 +254,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_CLAUDE_4_5_OPUS_THINKING",
@@ -128,7 +263,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "claude-opus-4-6",
@@ -137,7 +272,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-6-1m",
@@ -146,7 +281,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-6-thinking",
@@ -155,7 +290,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-6-thinking-1m",
@@ -164,7 +299,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-7-high",
@@ -173,7 +308,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-7-low",
@@ -182,7 +317,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-7-max",
@@ -191,7 +326,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-7-medium",
@@ -200,7 +335,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-7-xhigh",
@@ -209,7 +344,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-high",
@@ -218,7 +353,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-high-fast",
@@ -227,7 +362,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-low",
@@ -236,7 +371,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-low-fast",
@@ -245,7 +380,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-max",
@@ -254,7 +389,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-max-fast",
@@ -263,7 +398,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-medium",
@@ -272,7 +407,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-medium-fast",
@@ -281,7 +416,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-xhigh",
@@ -290,7 +425,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-4-8-xhigh-fast",
@@ -299,7 +434,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-high",
@@ -308,7 +443,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-high-fast",
@@ -317,7 +452,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-low",
@@ -326,7 +461,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-low-fast",
@@ -335,7 +470,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-max",
@@ -344,7 +479,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-max-fast",
@@ -353,7 +488,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-medium",
@@ -362,7 +497,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-medium-fast",
@@ -371,7 +506,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-xhigh",
@@ -380,7 +515,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-xhigh-fast",
@@ -389,7 +524,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-high",
@@ -398,7 +533,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-high-fast",
@@ -407,7 +542,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-low",
@@ -416,7 +551,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-low-fast",
@@ -425,7 +560,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-max",
@@ -434,7 +569,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-max-fast",
@@ -443,7 +578,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-medium",
@@ -452,7 +587,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-medium-fast",
@@ -461,7 +596,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-xhigh",
@@ -470,7 +605,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-opus-5-5-xhigh-fast",
@@ -479,7 +614,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-4-6",
@@ -488,7 +623,7 @@
    "output": 15.0,
    "cache_write": 3.75,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-4-6-1m",
@@ -497,7 +632,7 @@
    "output": 15.0,
    "cache_write": 3.75,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-4-6-thinking",
@@ -506,7 +641,7 @@
    "output": 15.0,
    "cache_write": 3.75,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-4-6-thinking-1m",
@@ -515,7 +650,7 @@
    "output": 15.0,
    "cache_write": 3.75,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-high",
@@ -524,7 +659,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-low",
@@ -533,7 +668,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-max",
@@ -542,7 +677,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-medium",
@@ -551,7 +686,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-xhigh",
@@ -560,7 +695,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-5-high",
@@ -568,8 +703,8 @@
    "input": 2.0,
    "output": 10.0,
    "cache_write": 2.5,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-5-low",
@@ -577,8 +712,8 @@
    "input": 2.0,
    "output": 10.0,
    "cache_write": 2.5,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-5-max",
@@ -586,8 +721,8 @@
    "input": 2.0,
    "output": 10.0,
    "cache_write": 2.5,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-5-medium",
@@ -595,8 +730,8 @@
    "input": 2.0,
    "output": 10.0,
    "cache_write": 2.5,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "claude-sonnet-5-5-xhigh",
@@ -604,8 +739,8 @@
    "input": 2.0,
    "output": 10.0,
    "cache_write": 2.5,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "deepseek-v4-flash-high",
@@ -614,7 +749,7 @@
    "output": 0.28,
    "cache_write": 0.0,
    "cache_read": 0.028,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "deepseek-v4-flash-low",
@@ -623,7 +758,7 @@
    "output": 0.28,
    "cache_write": 0.0,
    "cache_read": 0.028,
-   "tier": "Pro"
+   "tier": "Legacy"
   },
   {
    "uid": "deepseek-v4-flash-max",
@@ -632,7 +767,7 @@
    "output": 0.28,
    "cache_write": 0.0,
    "cache_read": 0.028,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "deepseek-v4-pro-high",
@@ -641,7 +776,7 @@
    "output": 3.96,
    "cache_write": 0.0,
    "cache_read": 0.044,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "deepseek-v4-pro-low",
@@ -650,7 +785,7 @@
    "output": 3.96,
    "cache_write": 0.0,
    "cache_read": 0.044,
-   "tier": "Pro"
+   "tier": "Legacy"
   },
   {
    "uid": "deepseek-v4-pro-max",
@@ -659,25 +794,43 @@
    "output": 3.96,
    "cache_write": 0.0,
    "cache_read": 0.044,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
-   "uid": "deepseek-v4-1-flash-high",
+   "uid": "deepseek-v4-1-flash-1017-high",
    "label": "DeepSeek V4.1 Flash High",
    "input": 0.22,
    "output": 0.66,
    "cache_write": 0.0,
    "cache_read": 0.007,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
-   "uid": "deepseek-v4-1-flash-max",
+   "uid": "deepseek-v4-1-flash-1017-low",
+   "label": "DeepSeek V4.1 Flash Low",
+   "input": 0.22,
+   "output": 0.66,
+   "cache_write": 0.0,
+   "cache_read": 0.007,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "deepseek-v4-1-flash-1017-max",
    "label": "DeepSeek V4.1 Flash Max",
    "input": 0.22,
    "output": 0.66,
    "cache_write": 0.0,
    "cache_read": 0.007,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "deepseek-v4-1-flash-1017-none",
+   "label": "DeepSeek V4.1 Flash None",
+   "input": 0.22,
+   "output": 0.66,
+   "cache_write": 0.0,
+   "cache_read": 0.007,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "arena-fast",
@@ -686,7 +839,7 @@
    "output": 0.5,
    "cache_write": 0.0,
    "cache_read": 0.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "arena-smart",
@@ -695,7 +848,7 @@
    "output": 15.0,
    "cache_write": 3.75,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_GOOGLE_GEMINI_2_5_PRO",
@@ -704,7 +857,7 @@
    "output": 10.0,
    "cache_write": 4.5,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_HIGH",
@@ -713,7 +866,7 @@
    "output": 3.0,
    "cache_write": 1.0,
    "cache_read": 0.05,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_LOW",
@@ -722,7 +875,7 @@
    "output": 3.0,
    "cache_write": 1.0,
    "cache_read": 0.05,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_MEDIUM",
@@ -731,7 +884,7 @@
    "output": 3.0,
    "cache_write": 1.0,
    "cache_read": 0.05,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GOOGLE_GEMINI_3_0_FLASH_MINIMAL",
@@ -740,7 +893,7 @@
    "output": 3.0,
    "cache_write": 1.0,
    "cache_read": 0.05,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gemini-3-1-pro-high",
@@ -749,7 +902,7 @@
    "output": 12.0,
    "cache_write": 4.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gemini-3-1-pro-low",
@@ -758,7 +911,7 @@
    "output": 12.0,
    "cache_write": 4.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gemini-3-5-flash-high",
@@ -767,7 +920,7 @@
    "output": 9.0,
    "cache_write": 1.0,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-5-flash-low",
@@ -776,7 +929,7 @@
    "output": 9.0,
    "cache_write": 1.0,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-5-flash-medium",
@@ -785,7 +938,7 @@
    "output": 9.0,
    "cache_write": 1.0,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-5-flash-minimal",
@@ -794,7 +947,7 @@
    "output": 9.0,
    "cache_write": 1.0,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-6-flash-high",
@@ -803,7 +956,7 @@
    "output": 7.5,
    "cache_write": 1.5,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-6-flash-low",
@@ -812,7 +965,7 @@
    "output": 7.5,
    "cache_write": 1.5,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-6-flash-medium",
@@ -821,7 +974,7 @@
    "output": 7.5,
    "cache_write": 1.5,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-6-flash-minimal",
@@ -830,88 +983,88 @@
    "output": 7.5,
    "cache_write": 1.5,
    "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-7-flash-high",
    "label": "Gemini 3.7 Flash High",
-   "input": 1.5,
-   "output": 7.5,
-   "cache_write": 1.5,
-   "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.75,
+   "cache_read": 0.075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-7-flash-low",
    "label": "Gemini 3.7 Flash Low",
-   "input": 1.5,
-   "output": 7.5,
-   "cache_write": 1.5,
-   "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.75,
+   "cache_read": 0.075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-7-flash-medium",
    "label": "Gemini 3.7 Flash Medium",
-   "input": 1.5,
-   "output": 7.5,
-   "cache_write": 1.5,
-   "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.75,
+   "cache_read": 0.075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-8-flash-high",
    "label": "Gemini 3.8 Flash High",
-   "input": 1.5,
-   "output": 7.5,
-   "cache_write": 1.5,
-   "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.75,
+   "cache_read": 0.075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-8-flash-low",
    "label": "Gemini 3.8 Flash Low",
-   "input": 1.5,
-   "output": 7.5,
-   "cache_write": 1.5,
-   "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.75,
+   "cache_read": 0.075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-3-8-flash-medium",
    "label": "Gemini 3.8 Flash Medium",
-   "input": 1.5,
-   "output": 7.5,
-   "cache_write": 1.5,
-   "cache_read": 0.15,
-   "tier": "Enterprise SaaS"
+   "input": 0.75,
+   "output": 3.75,
+   "cache_write": 0.75,
+   "cache_read": 0.075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-4-argon-high",
    "label": "Gemini 4 Argon High",
-   "input": 4.0,
-   "output": 20.0,
-   "cache_write": 4.0,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.0,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-4-argon-low",
    "label": "Gemini 4 Argon Low",
-   "input": 4.0,
-   "output": 20.0,
-   "cache_write": 4.0,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.0,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gemini-4-argon-medium",
    "label": "Gemini 4 Argon Medium",
-   "input": 4.0,
-   "output": 20.0,
-   "cache_write": 4.0,
-   "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.0,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-2",
@@ -920,7 +1073,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-2-1m",
@@ -929,7 +1082,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-2-max",
@@ -938,7 +1091,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-2-max-1m",
@@ -947,7 +1100,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-2-none",
@@ -956,7 +1109,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-2-none-1m",
@@ -965,7 +1118,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-3-flash-high",
@@ -974,7 +1127,7 @@
    "output": 0.5,
    "cache_write": 0.0,
    "cache_read": 0.029,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-3-flash-low",
@@ -983,7 +1136,7 @@
    "output": 0.5,
    "cache_write": 0.0,
    "cache_read": 0.029,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-3-flash-max",
@@ -992,7 +1145,7 @@
    "output": 0.5,
    "cache_write": 0.0,
    "cache_read": 0.029,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-3-high",
@@ -1001,7 +1154,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-3-low",
@@ -1010,7 +1163,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "glm-5-3-max",
@@ -1019,7 +1172,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_CHAT_GPT_4_1_2025_04_14",
@@ -1028,7 +1181,7 @@
    "output": 8.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_CHAT_GPT_4O_2024_08_06",
@@ -1037,7 +1190,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 1.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_8",
@@ -1046,7 +1199,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_6",
@@ -1055,7 +1208,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_7",
@@ -1064,7 +1217,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_15",
@@ -1073,7 +1226,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_23",
@@ -1082,7 +1235,7 @@
    "output": 20.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_13",
@@ -1091,7 +1244,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_21",
@@ -1100,7 +1253,7 @@
    "output": 20.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_14",
@@ -1109,7 +1262,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_22",
@@ -1118,7 +1271,7 @@
    "output": 20.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_12",
@@ -1127,7 +1280,7 @@
    "output": 10.0,
    "cache_write": 0.0,
    "cache_read": 0.125,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_PRIVATE_20",
@@ -1136,7 +1289,7 @@
    "output": 20.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_HIGH",
@@ -1145,7 +1298,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_HIGH_PRIORITY",
@@ -1154,7 +1307,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_LOW",
@@ -1163,7 +1316,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_LOW_PRIORITY",
@@ -1172,7 +1325,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_MEDIUM",
@@ -1181,7 +1334,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_MEDIUM_PRIORITY",
@@ -1190,7 +1343,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_NONE",
@@ -1199,7 +1352,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_NONE_PRIORITY",
@@ -1208,7 +1361,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_XHIGH",
@@ -1217,7 +1370,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_GPT_5_2_XHIGH_PRIORITY",
@@ -1226,7 +1379,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-high",
@@ -1235,7 +1388,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-high-priority",
@@ -1244,7 +1397,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-low",
@@ -1253,7 +1406,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-low-priority",
@@ -1262,7 +1415,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-medium",
@@ -1271,7 +1424,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-medium-priority",
@@ -1280,7 +1433,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-spark-medium",
@@ -1289,7 +1442,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-xhigh",
@@ -1298,7 +1451,7 @@
    "output": 14.0,
    "cache_write": 0.0,
    "cache_read": 0.175,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-3-codex-xhigh-priority",
@@ -1307,7 +1460,7 @@
    "output": 28.0,
    "cache_write": 0.0,
    "cache_read": 0.35,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "gpt-5-4-high",
@@ -1316,7 +1469,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-high-priority",
@@ -1325,7 +1478,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-low",
@@ -1334,7 +1487,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-low-priority",
@@ -1343,7 +1496,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-medium",
@@ -1352,7 +1505,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-medium-priority",
@@ -1361,7 +1514,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-mini-high",
@@ -1370,7 +1523,7 @@
    "output": 4.5,
    "cache_write": 0.0,
    "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-mini-low",
@@ -1379,7 +1532,7 @@
    "output": 4.5,
    "cache_write": 0.0,
    "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-mini-medium",
@@ -1388,7 +1541,7 @@
    "output": 4.5,
    "cache_write": 0.0,
    "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-mini-xhigh",
@@ -1397,7 +1550,7 @@
    "output": 4.5,
    "cache_write": 0.0,
    "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-none",
@@ -1406,7 +1559,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-none-priority",
@@ -1415,7 +1568,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-xhigh",
@@ -1424,7 +1577,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-4-xhigh-priority",
@@ -1433,7 +1586,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-high",
@@ -1442,7 +1595,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-high-priority",
@@ -1451,7 +1604,7 @@
    "output": 75.0,
    "cache_write": 0.0,
    "cache_read": 1.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-low",
@@ -1460,7 +1613,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-low-priority",
@@ -1469,7 +1622,7 @@
    "output": 75.0,
    "cache_write": 0.0,
    "cache_read": 1.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-medium",
@@ -1478,7 +1631,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-medium-priority",
@@ -1487,7 +1640,7 @@
    "output": 75.0,
    "cache_write": 0.0,
    "cache_read": 1.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-none",
@@ -1496,7 +1649,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-none-priority",
@@ -1505,7 +1658,7 @@
    "output": 75.0,
    "cache_write": 0.0,
    "cache_read": 1.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-review",
@@ -1514,7 +1667,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-xhigh",
@@ -1523,7 +1676,7 @@
    "output": 30.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-5-xhigh-priority",
@@ -1532,7 +1685,7 @@
    "output": 75.0,
    "cache_write": 0.0,
    "cache_read": 1.25,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-high",
@@ -1541,7 +1694,7 @@
    "output": 1.2,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-high-priority",
@@ -1550,7 +1703,7 @@
    "output": 2.4,
    "cache_write": 0.5,
    "cache_read": 0.04,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-low",
@@ -1559,7 +1712,7 @@
    "output": 1.2,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-low-priority",
@@ -1568,7 +1721,7 @@
    "output": 2.4,
    "cache_write": 0.5,
    "cache_read": 0.04,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-max",
@@ -1577,7 +1730,7 @@
    "output": 1.2,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-max-priority",
@@ -1586,7 +1739,7 @@
    "output": 2.4,
    "cache_write": 0.5,
    "cache_read": 0.04,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-medium",
@@ -1595,7 +1748,7 @@
    "output": 1.2,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-medium-priority",
@@ -1604,7 +1757,7 @@
    "output": 2.4,
    "cache_write": 0.5,
    "cache_read": 0.04,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-none",
@@ -1613,7 +1766,7 @@
    "output": 1.2,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-none-priority",
@@ -1622,7 +1775,7 @@
    "output": 2.4,
    "cache_write": 0.5,
    "cache_read": 0.04,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-xhigh",
@@ -1631,7 +1784,7 @@
    "output": 1.2,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-luna-xhigh-priority",
@@ -1640,7 +1793,7 @@
    "output": 2.4,
    "cache_write": 0.5,
    "cache_read": 0.04,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-high",
@@ -1649,7 +1802,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-high-priority",
@@ -1658,7 +1811,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.8,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-low",
@@ -1667,7 +1820,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-low-priority",
@@ -1676,7 +1829,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.8,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-max",
@@ -1685,7 +1838,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-max-priority",
@@ -1694,7 +1847,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.8,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-medium",
@@ -1703,7 +1856,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-medium-priority",
@@ -1712,7 +1865,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.8,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-none",
@@ -1721,7 +1874,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-none-priority",
@@ -1730,7 +1883,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.8,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-xhigh",
@@ -1739,7 +1892,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-sol-xhigh-priority",
@@ -1748,7 +1901,7 @@
    "output": 40.0,
    "cache_write": 10.0,
    "cache_read": 0.8,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-high",
@@ -1757,7 +1910,7 @@
    "output": 12.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-high-priority",
@@ -1766,7 +1919,7 @@
    "output": 24.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-low",
@@ -1775,7 +1928,7 @@
    "output": 12.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-low-priority",
@@ -1784,7 +1937,7 @@
    "output": 24.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-max",
@@ -1793,7 +1946,7 @@
    "output": 12.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-max-priority",
@@ -1802,7 +1955,7 @@
    "output": 24.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-medium",
@@ -1811,7 +1964,7 @@
    "output": 12.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-medium-priority",
@@ -1820,7 +1973,7 @@
    "output": 24.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-none",
@@ -1829,7 +1982,7 @@
    "output": 12.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-none-priority",
@@ -1838,7 +1991,7 @@
    "output": 24.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-xhigh",
@@ -1847,7 +2000,7 @@
    "output": 12.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-5-6-terra-xhigh-priority",
@@ -1856,7 +2009,7 @@
    "output": 24.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-high",
@@ -1865,7 +2018,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-high-priority",
@@ -1874,7 +2027,7 @@
    "output": 100.0,
    "cache_write": 25.0,
    "cache_read": 2.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-low",
@@ -1883,7 +2036,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-low-priority",
@@ -1892,7 +2045,7 @@
    "output": 100.0,
    "cache_write": 25.0,
    "cache_read": 2.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-max",
@@ -1901,7 +2054,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-max-priority",
@@ -1910,7 +2063,7 @@
    "output": 100.0,
    "cache_write": 25.0,
    "cache_read": 2.0,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-medium",
@@ -1919,7 +2072,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-medium-priority",
@@ -1928,7 +2081,7 @@
    "output": 100.0,
    "cache_write": 25.0,
    "cache_read": 2.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-xhigh",
@@ -1937,7 +2090,7 @@
    "output": 50.0,
    "cache_write": 12.5,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-astra-xhigh-priority",
@@ -1946,7 +2099,7 @@
    "output": 100.0,
    "cache_write": 25.0,
    "cache_read": 2.0,
-   "tier": "Pro"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-high",
@@ -1955,7 +2108,7 @@
    "output": 0.5,
    "cache_write": 0.125,
    "cache_read": 0.01,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-high-priority",
@@ -1964,7 +2117,7 @@
    "output": 1.0,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-low",
@@ -1973,7 +2126,7 @@
    "output": 0.5,
    "cache_write": 0.125,
    "cache_read": 0.01,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-low-priority",
@@ -1982,7 +2135,7 @@
    "output": 1.0,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-max",
@@ -1991,7 +2144,7 @@
    "output": 0.5,
    "cache_write": 0.125,
    "cache_read": 0.01,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-max-priority",
@@ -2000,7 +2153,7 @@
    "output": 1.0,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-medium",
@@ -2009,7 +2162,7 @@
    "output": 0.5,
    "cache_write": 0.125,
    "cache_read": 0.01,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-medium-priority",
@@ -2018,7 +2171,7 @@
    "output": 1.0,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-none",
@@ -2027,7 +2180,7 @@
    "output": 0.5,
    "cache_write": 0.125,
    "cache_read": 0.01,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-none-priority",
@@ -2036,7 +2189,7 @@
    "output": 1.0,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-xhigh",
@@ -2045,7 +2198,7 @@
    "output": 0.5,
    "cache_write": 0.125,
    "cache_read": 0.01,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-luna-xhigh-priority",
@@ -2054,7 +2207,7 @@
    "output": 1.0,
    "cache_write": 0.25,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-high",
@@ -2063,7 +2216,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-high-priority",
@@ -2072,7 +2225,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-low",
@@ -2081,7 +2234,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-low-priority",
@@ -2090,7 +2243,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-max",
@@ -2099,7 +2252,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-max-priority",
@@ -2108,7 +2261,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-medium",
@@ -2117,7 +2270,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-medium-priority",
@@ -2126,7 +2279,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-none",
@@ -2135,7 +2288,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-none-priority",
@@ -2144,7 +2297,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-xhigh",
@@ -2153,7 +2306,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-sol-xhigh-priority",
@@ -2162,7 +2315,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.4,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-high",
@@ -2171,7 +2324,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-high-priority",
@@ -2180,7 +2333,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-low",
@@ -2189,7 +2342,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-low-priority",
@@ -2198,7 +2351,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-max",
@@ -2207,7 +2360,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-max-priority",
@@ -2216,7 +2369,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-medium",
@@ -2225,7 +2378,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-medium-priority",
@@ -2234,7 +2387,7 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-xhigh",
@@ -2243,7 +2396,7 @@
    "output": 10.0,
    "cache_write": 2.5,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "gpt-6-1-sol-xhigh-priority",
@@ -2252,7 +2405,97 @@
    "output": 20.0,
    "cache_write": 5.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-high",
+   "label": "GPT-6.1 Terra High Thinking",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-high-priority",
+   "label": "GPT-6.1 Terra High Thinking Fast",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-low",
+   "label": "GPT-6.1 Terra Low Thinking",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-low-priority",
+   "label": "GPT-6.1 Terra Low Thinking Fast",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-max",
+   "label": "GPT-6.1 Terra Max Thinking",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-max-priority",
+   "label": "GPT-6.1 Terra Max Thinking Fast",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-medium",
+   "label": "GPT-6.1 Terra Medium Thinking",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-medium-priority",
+   "label": "GPT-6.1 Terra Medium Thinking Fast",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-xhigh",
+   "label": "GPT-6.1 Terra XHigh Thinking",
+   "input": 1.0,
+   "output": 5.0,
+   "cache_write": 1.25,
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "gpt-6-1-terra-xhigh-priority",
+   "label": "GPT-6.1 Terra XHigh Thinking Fast",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 2.5,
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_GPT_OSS_120B",
@@ -2261,7 +2504,7 @@
    "output": 0.6,
    "cache_write": 0.0,
    "cache_read": 0.07,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-5-high",
@@ -2270,7 +2513,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "grok-4-5-low",
@@ -2279,7 +2522,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "grok-4-5-medium",
@@ -2288,7 +2531,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "grok-4-6-high",
@@ -2297,7 +2540,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-6-low",
@@ -2306,7 +2549,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-6-medium",
@@ -2315,7 +2558,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-6-xhigh",
@@ -2324,7 +2567,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-7-high",
@@ -2333,7 +2576,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-7-low",
@@ -2342,7 +2585,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-7-medium",
@@ -2351,7 +2594,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "grok-4-7-xhigh",
@@ -2360,7 +2603,7 @@
    "output": 6.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_PRIVATE_4",
@@ -2369,7 +2612,7 @@
    "output": 1.5,
    "cache_write": 0.0,
    "cache_read": 0.02,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "arena-mixed",
@@ -2378,7 +2621,7 @@
    "output": 5.0,
    "cache_write": 1.25,
    "cache_read": 0.1,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "inkling-high",
@@ -2387,7 +2630,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "inkling-low",
@@ -2396,7 +2639,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "inkling-max",
@@ -2405,7 +2648,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "inkling-medium",
@@ -2414,7 +2657,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "inkling-none",
@@ -2423,7 +2666,7 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "inkling-xhigh",
@@ -2432,16 +2675,16 @@
    "output": 4.4,
    "cache_write": 0.0,
    "cache_read": 0.26,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "kimi-k2-6",
    "label": "Kimi K2.6",
-   "input": 0.95,
-   "output": 4.0,
+   "input": 0.8,
+   "output": 2.0,
    "cache_write": 0.0,
-   "cache_read": 0.16,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.1,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "kimi-k2-7",
@@ -2450,7 +2693,7 @@
    "output": 4.0,
    "cache_write": 0.0,
    "cache_read": 0.19,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "kimi-k3-high",
@@ -2459,7 +2702,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "kimi-k3-low",
@@ -2468,7 +2711,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "kimi-k3-max",
@@ -2477,7 +2720,43 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.3,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "kimi-k3-1-pro-high",
+   "label": "Kimi K3.1 Pro High",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "kimi-k3-1-pro-low",
+   "label": "Kimi K3.1 Pro Low",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "kimi-k3-1-pro-max",
+   "label": "Kimi K3.1 Pro Max",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "kimi-k3-1-pro-medium",
+   "label": "Kimi K3.1 Pro Medium",
+   "input": 2.0,
+   "output": 10.0,
+   "cache_write": 0.0,
+   "cache_read": 0.2,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "nemotron-3-ultra-high",
@@ -2486,7 +2765,7 @@
    "output": 2.4,
    "cache_write": 0.0,
    "cache_read": 0.12,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "nemotron-3-ultra-medium",
@@ -2495,7 +2774,7 @@
    "output": 2.4,
    "cache_write": 0.0,
    "cache_read": 0.12,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "nemotron-3-ultra-none",
@@ -2504,7 +2783,34 @@
    "output": 2.4,
    "cache_write": 0.0,
    "cache_read": 0.12,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "nemotron-3-5-super-high",
+   "label": "Nemotron 3.5 Super High",
+   "input": 0.2,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.04,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "nemotron-3-5-super-medium",
+   "label": "Nemotron 3.5 Super Medium",
+   "input": 0.2,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.04,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "nemotron-3-5-super-none",
+   "label": "Nemotron 3.5 Super None",
+   "input": 0.2,
+   "output": 0.5,
+   "cache_write": 0.0,
+   "cache_read": 0.04,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_CHAT_O3",
@@ -2513,7 +2819,7 @@
    "output": 8.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_CHAT_O3_HIGH",
@@ -2522,7 +2828,7 @@
    "output": 8.0,
    "cache_write": 0.0,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "opus-4-7-review",
@@ -2531,7 +2837,7 @@
    "output": 25.0,
    "cache_write": 6.25,
    "cache_read": 0.5,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "penguin-high",
@@ -2540,7 +2846,7 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Pro"
+   "tier": "Legacy"
   },
   {
    "uid": "penguin-max",
@@ -2549,7 +2855,7 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Pro"
+   "tier": "Legacy"
   },
   {
    "uid": "penguin-medium",
@@ -2558,7 +2864,7 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Pro"
+   "tier": "Legacy"
   },
   {
    "uid": "swe-1-6",
@@ -2567,7 +2873,7 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "swe-1-6-fast",
@@ -2576,7 +2882,7 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "swe-1-7-lightning",
@@ -2585,7 +2891,7 @@
    "output": 12.5,
    "cache_write": 0.0,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "swe-1-7-lightning-medium",
@@ -2594,7 +2900,7 @@
    "output": 12.5,
    "cache_write": 0.0,
    "cache_read": 1.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Legacy"
   },
   {
    "uid": "swe-1-7",
@@ -2603,7 +2909,7 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "swe-1-7-medium",
@@ -2612,34 +2918,61 @@
    "output": 2.5,
    "cache_write": 0.0,
    "cache_read": 0.2,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "swe-2-flash-high",
+   "label": "SWE-2 Flash High",
+   "input": 0.075,
+   "output": 0.375,
+   "cache_write": 0.09375,
+   "cache_read": 0.0075,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "swe-2-flash-max",
+   "label": "SWE-2 Flash Max",
+   "input": 0.075,
+   "output": 0.375,
+   "cache_write": 0.09375,
+   "cache_read": 0.0075,
+   "tier": "Devin Enterprise"
+  },
+  {
+   "uid": "swe-2-flash-medium",
+   "label": "SWE-2 Flash Medium",
+   "input": 0.075,
+   "output": 0.375,
+   "cache_write": 0.09375,
+   "cache_read": 0.0075,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "swe-2-high",
    "label": "SWE-2 High",
-   "input": 0.75,
-   "output": 3.75,
+   "input": 0.5,
+   "output": 2.5,
    "cache_write": 0.0,
-   "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "swe-2-max",
    "label": "SWE-2 Max",
-   "input": 0.75,
-   "output": 3.75,
+   "input": 0.5,
+   "output": 2.5,
    "cache_write": 0.0,
-   "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "swe-2-medium",
    "label": "SWE-2 Medium",
-   "input": 0.75,
-   "output": 3.75,
+   "input": 0.5,
+   "output": 2.5,
    "cache_write": 0.0,
-   "cache_read": 0.075,
-   "tier": "Enterprise SaaS"
+   "cache_read": 0.05,
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "swe-check",
@@ -2648,7 +2981,7 @@
    "output": 0.0,
    "cache_write": 0.0,
    "cache_read": 0.0,
-   "tier": "Enterprise SaaS"
+   "tier": "Devin Enterprise"
   },
   {
    "uid": "MODEL_XAI_GROK_3",
@@ -2657,7 +2990,7 @@
    "output": 15.0,
    "cache_write": 0.0,
    "cache_read": 0.0,
-   "tier": "Pro"
+   "tier": "Legacy"
   },
   {
    "uid": "MODEL_XAI_GROK_3_MINI_REASONING",
@@ -2666,7 +2999,7 @@
    "output": 0.5,
    "cache_write": 0.0,
    "cache_read": 0.0,
-   "tier": "Pro"
+   "tier": "Legacy"
   }
  ]
 }
