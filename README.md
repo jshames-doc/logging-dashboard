@@ -7,6 +7,8 @@ present — aggregates token metrics per session and model, estimates cost at
 published rates, and serves a single-page dashboard on `127.0.0.1`.
 Your session data never leaves your machine.
 
+![Session Ledger dashboard](screenshot.png)
+
 ## Requirements
 
 - Windows (`run.bat` / `stop_server.bat`; macOS/Linux users see below)
