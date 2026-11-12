@@ -74,6 +74,10 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
   into "other"); a View toggle swaps it for the sortable list. Results are
   exportable to CSV. **Allowance value** estimates the weekly/monthly dollar
   value of your quota from drops between consecutive quota samples.
+- Token and cost figures come straight from `sessions.db`, so they're accurate
+  regardless of when you run the dashboard. The **Allowance value** estimate is
+  different: quota is only sampled while the dashboard is open, so for the most
+  accurate result keep it running during Devin coding sessions.
 
 ## Configuration
 
