@@ -235,6 +235,8 @@ td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { co
 #f-cols { min-width: 0; }
 #f-cols .model-menu { left: auto; right: 0; }
 .report-totals { border-top: 1px solid var(--line-2); padding: 6px 18px; }
+.allowance-hint { margin: 0; padding: 8px 18px 0; font: 400 11.5px/1.55 var(--mono); color: var(--ink-2); }
+.allowance-hint b { color: var(--in); font-weight: 500; }
 .report-totals:empty { display: none; }
 .report-totals .card .val { font-size: 20px; }
 .report-body .empty { font-size: 17px; padding: 34px 0; }
