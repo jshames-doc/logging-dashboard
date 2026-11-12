@@ -1,8 +1,11 @@
+import io
 import json
 import os
 import sqlite3
 import subprocess
+import sys
 import tempfile
+import time
 import unittest
 from datetime import datetime
 from pathlib import Path
@@ -466,6 +469,44 @@ assert.ok(element("rv-list").classList.contains("on"));
 element("rv-chart").listeners.click();
 assert.equal(element("report-chart").hidden, false);
 assert.equal(element("report-body").hidden, true);
+""")
+
+    def test_runway_widget_cards_and_states(self):
+        self.run_script(r"""
+vm.runInContext(`
+  setRunway({ generated: 1000000, plan: "Pro", error: null, sample_age_s: 120,
+    history: { samples_24h: 12, samples_7d: 84, oldest: 995000, newest: 999880 },
+    daily: { remaining: 62, reset: 1008000, cycle_start: 920000, rate_per_hr: 5.2,
+             hours_left: 11.92, exhausts_at: 1042912, status: "ok", confidence: "high",
+             samples: 7, sampled_at: 999880 },
+    weekly: { remaining: 40, reset: 1604800, cycle_start: 400000, rate_per_hr: 0,
+              hours_left: null, exhausts_at: null, status: "flat", confidence: "low",
+              samples: 2, sampled_at: 999880 } });
+`, context);
+const html = element("runway").innerHTML;
+assert.equal(element("runway").hidden, false);
+assert.ok(html.includes("62%"));
+assert.ok(html.includes("Resets in"));
+assert.ok(html.includes("High confidence"));
+assert.ok(html.includes('role="meter"'));
+assert.ok(html.includes('aria-valuenow="62"'));
+const unknown = vm.runInContext(`runwayCardHTML("daily", { remaining: null, reset: null,
+  cycle_start: null, rate_per_hr: null, hours_left: null, exhausts_at: null,
+  status: "unknown", confidence: "none", samples: 0, sampled_at: null }, 1000000)`, context);
+assert.ok(unknown.includes("Reset time unknown"));
+assert.ok(unknown.includes("Quota unknown"));
+const bothUnknown = { generated: 1000000, plan: "Pro", error: null, sample_age_s: null,
+  history: { samples_24h: 0, samples_7d: 0, oldest: null, newest: null },
+  daily: { remaining: null, reset: null, cycle_start: null, rate_per_hr: null, hours_left: null,
+           exhausts_at: null, status: "unknown", confidence: "none", samples: 0, sampled_at: null },
+  weekly: { remaining: null, reset: null, cycle_start: null, rate_per_hr: null, hours_left: null,
+            exhausts_at: null, status: "unknown", confidence: "none", samples: 0, sampled_at: null } };
+vm.runInContext(`setRunway(${JSON.stringify(bothUnknown)})`, context);
+assert.ok(element("runway").innerHTML.includes("not reported"));
+vm.runInContext(`setRunway(${JSON.stringify({ ...bothUnknown, plan: null })})`, context);
+assert.equal(element("runway").hidden, true);
+vm.runInContext(`setRunway(${JSON.stringify({ ...bothUnknown, error: "nope" })})`, context);
+assert.ok(element("runway").innerHTML.includes("Quota unavailable"));
 """)
 
     def test_session_details_include_all_models_and_handle_unpriced_usage(self):
@@ -951,6 +992,350 @@ class QuotaTest(unittest.TestCase):
         row = server.flatten(sessions)[0]
         self.assertIsNone(row["quota_day"])
         self.assertEqual(row["quota_t"], 100)  # sample exists but expired
+
+
+class RunwayTest(unittest.TestCase):
+    NOW = 1_800_000_000
+
+    def r(self, samples=None, quota_data=None):
+        return server.quota_runway(samples=samples or [], quota_data=quota_data or {}, now=self.NOW)
+
+    def test_unknown_without_samples(self):
+        r = self.r([])
+        for name in ("daily", "weekly"):
+            c = r[name]
+            self.assertEqual(c["status"], "unknown")
+            self.assertEqual(c["confidence"], "none")
+            self.assertIsNone(c["remaining"])
+            self.assertIsNone(c["rate_per_hr"])
+            self.assertIsNone(c["hours_left"])
+        self.assertIsNone(r["sample_age_s"])
+        self.assertEqual(r["history"]["samples_24h"], 0)
+        self.assertIsNone(r["history"]["newest"])
+
+    def test_single_sample_cycle_average(self):
+        # one sample 1h ago at 80%, reset in 1h: cycle-average burn (~0.91/hr) still outlasts it
+        c = self.r([(self.NOW - 3600, 80, None, self.NOW + 3600, None)])["daily"]
+        self.assertEqual(c["status"], "lasts")
+        self.assertAlmostEqual(c["rate_per_hr"], 0.91, places=2)
+        self.assertEqual(c["confidence"], "low")
+        self.assertIsNone(c["hours_left"])
+
+    def test_projects_early_exhaustion(self):
+        reset = self.NOW + 28800
+        samples = [(self.NOW - 3600, 90, None, reset, None), (self.NOW, 70, None, reset, None)]
+        c = self.r(samples)["daily"]
+        self.assertAlmostEqual(c["rate_per_hr"], 20.0)
+        self.assertEqual(c["status"], "ok")
+        self.assertAlmostEqual(c["hours_left"], 3.5)
+        self.assertEqual(c["exhausts_at"], self.NOW + 12600)
+        self.assertEqual(c["confidence"], "medium")
+
+    def test_lasts_until_reset(self):
+        c = self.r([(self.NOW - 14400, 80, None, self.NOW + 7200, None)])["daily"]
+        self.assertEqual(c["status"], "lasts")
+        self.assertIsNone(c["hours_left"])
+        self.assertIsNone(c["exhausts_at"])
+
+    def test_flat_at_full_quota(self):
+        c = self.r([(self.NOW - 600, 100, None, self.NOW + 3600, None)])["daily"]
+        self.assertEqual(c["status"], "flat")
+        self.assertEqual(c["rate_per_hr"], 0.0)
+
+    def test_top_up_is_flat(self):
+        reset = self.NOW + 43200
+        samples = [(self.NOW - 3600, 60, None, reset, None), (self.NOW, 80, None, reset, None)]
+        c = self.r(samples)["daily"]
+        self.assertEqual(c["rate_per_hr"], 0.0)
+        self.assertEqual(c["status"], "flat")
+
+    def test_exhausted(self):
+        c = self.r([(self.NOW - 600, 0, None, self.NOW + 3600, None)])["daily"]
+        self.assertEqual(c["status"], "exhausted")
+        self.assertEqual(c["hours_left"], 0)
+        self.assertEqual(c["exhausts_at"], self.NOW)
+
+    def test_expired_reset_is_unknown(self):
+        c = self.r([(self.NOW - 600, 80, None, self.NOW - 60, None)])["daily"]
+        self.assertEqual(c["status"], "unknown")
+        self.assertEqual(c["reset"], self.NOW - 60)  # still reported so the UI can explain
+
+    def test_missing_reset_is_unknown(self):
+        c = self.r([(self.NOW - 600, 80, None, None, None)])["daily"]
+        self.assertEqual(c["status"], "unknown")
+        self.assertIsNone(c["reset"])
+
+    def test_uses_previous_reset_for_cycle_start(self):
+        samples = [(self.NOW - 90000, 90, None, self.NOW - 82800, None),  # previous cycle's reset
+                   (self.NOW - 3600, 80, None, self.NOW + 3600, None)]
+        c = self.r(samples)["daily"]
+        self.assertEqual(c["cycle_start"], self.NOW - 82800)
+
+    def test_weekly_period_fallback(self):
+        c = self.r([(self.NOW - 3600, None, 80, None, self.NOW + 7200)])["weekly"]
+        self.assertEqual(c["cycle_start"], self.NOW + 7200 - 604800)
+        self.assertEqual(c["remaining"], 80)
+
+    def test_confidence_levels(self):
+        reset = self.NOW + 43200
+        mk = lambda age, v: (self.NOW - age, v, None, reset, None)
+        c = self.r([mk(7200, 95), mk(3600, 90), mk(1800, 85), mk(300, 80)])["daily"]
+        self.assertEqual(c["confidence"], "high")
+        c = self.r([mk(1800, 90), mk(0, 85)])["daily"]
+        self.assertEqual(c["confidence"], "medium")
+        c = self.r([mk(3600, 80)])["daily"]
+        self.assertEqual(c["confidence"], "low")
+
+    def test_history_counts(self):
+        h = self.r([(self.NOW - 100, 90, 80, None, None),
+                    (self.NOW - 90000, 90, 80, None, None)])["history"]
+        self.assertEqual((h["samples_24h"], h["samples_7d"]), (1, 2))
+        self.assertEqual((h["oldest"], h["newest"]), (self.NOW - 90000, self.NOW - 100))
+
+    def test_skips_malformed_samples(self):
+        r = self.r([None, "junk", (self.NOW - 50, 92, 78),  # legacy 3-tuple, padded
+                    (self.NOW - 100, 90, 80, self.NOW + 3600, self.NOW + 86400)])
+        self.assertEqual(r["daily"]["remaining"], 90)
+        self.assertEqual(r["history"]["samples_7d"], 2)
+
+    def test_error_exposed_counters_compute(self):
+        r = self.r([(self.NOW - 100, 90, 80, self.NOW + 3600, self.NOW + 86400)],
+                   {"error": "boom"})
+        self.assertEqual(r["error"], "boom")
+        self.assertEqual(r["daily"]["remaining"], 90)
+
+    def test_snapshot_merges_into_cycle(self):
+        # no history, but the fresh snapshot still lands as the newest cycle point
+        r = self.r([], {"fetched": self.NOW, "daily": 75, "daily_reset": self.NOW + 3600})
+        c = r["daily"]
+        self.assertEqual(c["remaining"], 75)
+        self.assertEqual(c["samples"], 1)
+        self.assertEqual(c["sampled_at"], self.NOW)
+
+
+class RecordQuotaMergeTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.path = Path(self.tmp.name) / "h.json"
+        self._hist = server._quota_hist
+        server._quota_hist = []
+
+    def tearDown(self):
+        server._quota_hist = self._hist
+
+    def _write(self, samples):
+        self.path.write_text(json.dumps({"samples": samples}), encoding="utf-8")
+
+    def _disk(self):
+        return json.loads(self.path.read_text())["samples"]
+
+    def _hold_lock(self):
+        lock = self.path.with_suffix(".lock")
+        lock.write_text("other-process")
+        script = r"""
+import os
+import sys
+with open(sys.argv[1], "r+b") as f:
+    if os.name == "nt":
+        import msvcrt
+        msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+    else:
+        import fcntl
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    print("locked", flush=True)
+    if sys.stdin.readline().strip() == "crash":
+        os._exit(0)
+"""
+        process = subprocess.Popen([sys.executable, "-c", script, str(lock)],
+                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, text=True)
+        self.addCleanup(process.communicate, "\n", timeout=10)
+        self.assertEqual(process.stdout.readline().strip(), "locked")
+        return lock, process
+
+    def test_creates_missing_cache_directory(self):
+        path = Path(self.tmp.name) / ".cache" / "quota_history.json"
+        self.assertTrue(server.record_quota(
+            {"daily": 90, "fetched": 1000, "daily_reset": 2000}, path=path))
+        self.assertEqual(server.load_quota_history(path), [(1000, 90, None, 2000, None)])
+
+    def test_preserves_external_samples(self):
+        self._write([[100, 90, 80, 200, 9000]])
+        self.assertTrue(server.record_quota(
+            {"daily": 85, "fetched": 1000, "daily_reset": 2000}, path=self.path))
+        self.assertEqual(self._disk(), [[100, 90, 80, 200, 9000], [1000, 85, None, 2000, None]])
+
+    def test_deduplicates_last_sample(self):
+        server.record_quota({"daily": 90, "fetched": 1000, "daily_reset": 2000}, path=self.path)
+        same = server.record_quota({"daily": 90, "fetched": 1100, "daily_reset": 2000}, path=self.path)
+        self.assertFalse(same)  # unchanged values within 10 min are thinned
+        self.assertEqual(len(self._disk()), 1)
+
+    def test_thins_unchanged_samples(self):
+        server.record_quota({"daily": 90, "fetched": 1000, "daily_reset": 2000}, path=self.path)
+        self.assertTrue(server.record_quota(
+            {"daily": 90, "fetched": 1700, "daily_reset": 2000}, path=self.path))
+        self.assertEqual(len(self._disk()), 2)  # unchanged but >=10 min old: kept for coverage
+
+    def test_ignores_stale_in_memory(self):
+        self._write([[100, 90, 80, 200, 9000]])
+        server._quota_hist[:] = [(500, 50, 50, 600, 600)]  # stale: not on disk anymore
+        server.record_quota({"daily": 85, "fetched": 1000, "daily_reset": 2000}, path=self.path)
+        self.assertEqual(self._disk(), [[100, 90, 80, 200, 9000], [1000, 85, None, 2000, None]])
+        self.assertEqual(server._quota_hist,
+                         [(100, 90, 80, 200, 9000), (1000, 85, None, 2000, None)])
+
+    def test_updates_global_from_disk(self):
+        self._write([[100, 90, 80, 200, 9000]])
+        server.record_quota({"daily": 85, "fetched": 1000, "daily_reset": 2000}, path=self.path)
+        self.assertEqual(server._quota_hist,
+                         [(100, 90, 80, 200, 9000), (1000, 85, None, 2000, None)])
+
+    def test_lock_timeout_skips_write(self):
+        lock, _ = self._hold_lock()
+        self.assertFalse(server.record_quota(
+            {"daily": 90, "fetched": 1000, "daily_reset": 2000},
+            path=self.path, lock_timeout=0.05))
+        self.assertFalse(self.path.exists())  # nothing written
+        self.assertTrue(lock.exists())        # someone else's lock is left alone
+
+    def test_recovers_stale_lock(self):
+        lock = self.path.with_suffix(".lock")
+        lock.write_text("crashed")  # a crashed writer's stale lock
+        old = time.time() - 60
+        os.utime(lock, (old, old))
+        self.assertTrue(server.record_quota(
+            {"daily": 90, "fetched": 1000, "daily_reset": 2000}, path=self.path))
+        self.assertTrue(lock.exists())
+        self.assertEqual(self._disk(), [[1000, 90, None, 2000, None]])
+
+    def test_keeps_lock_file_and_releases_lock_on_success(self):
+        self.assertTrue(server.record_quota(
+            {"daily": 90, "fetched": 1000, "daily_reset": 2000}, path=self.path))
+        self.assertTrue(self.path.with_suffix(".lock").exists())
+        self.assertTrue(server.record_quota(
+            {"daily": 80, "fetched": 1100, "daily_reset": 2000}, path=self.path))
+        self.assertEqual(len(self._disk()), 2)
+
+    def test_does_not_steal_old_active_lock(self):
+        lock, _ = self._hold_lock()
+        old = time.time() - 60
+        os.utime(lock, (old, old))
+        self.assertFalse(server.record_quota(
+            {"daily": 90, "fetched": 1000, "daily_reset": 2000},
+            path=self.path, lock_timeout=0.05))
+        self.assertFalse(self.path.exists())
+
+    def test_never_unlinks_stale_lock(self):
+        lock = self.path.with_suffix(".lock")
+        lock.write_text("crashed")
+        old = time.time() - 60
+        os.utime(lock, (old, old))
+        with mock.patch.object(Path, "unlink", side_effect=AssertionError("lock must stay in place")):
+            self.assertTrue(server.record_quota(
+                {"daily": 90, "fetched": 1000, "daily_reset": 2000}, path=self.path))
+
+    def test_releases_lock_after_process_crash(self):
+        lock, process = self._hold_lock()
+        process.stdin.write("crash\n")
+        process.stdin.flush()
+        self.assertEqual(process.wait(timeout=10), 0)
+        self.assertTrue(lock.exists())
+        self.assertTrue(server.record_quota(
+            {"daily": 90, "fetched": 1000, "daily_reset": 2000},
+            path=self.path, lock_timeout=0.05))
+
+    def test_concurrent_processes_preserve_all_samples(self):
+        script = r"""
+import sys
+import server
+sys.stdin.readline()
+worker = int(sys.argv[2])
+for i in range(8):
+    if not server.record_quota({"daily": worker * 10 + i, "fetched": 1000 + worker * 100 + i},
+                               path=sys.argv[1]):
+        sys.exit(1)
+"""
+        processes = []
+        for worker in range(3):
+            process = subprocess.Popen([sys.executable, "-c", script, str(self.path), str(worker)],
+                                       cwd=Path(__file__).parent, stdin=subprocess.PIPE,
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            self.addCleanup(process.communicate, timeout=10)
+            processes.append(process)
+        for process in processes:
+            process.stdin.write("\n")
+            process.stdin.flush()
+        for process in processes:
+            out, err = process.communicate(timeout=15)
+            self.assertEqual(process.returncode, 0, out + err)
+        self.assertEqual(self._disk(), [
+            [1000 + worker * 100 + i, worker * 10 + i, None, None, None]
+            for worker in range(3) for i in range(8)
+        ])
+
+    def test_does_not_record_errors(self):
+        self.assertFalse(server.record_quota({"error": "x"}, path=self.path))
+        self.assertFalse(self.path.exists())
+
+
+class SamplerTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        old = server.QUOTA_HISTORY_PATH
+        server.QUOTA_HISTORY_PATH = Path(self.tmp.name) / "h.json"
+        self.addCleanup(setattr, server, "QUOTA_HISTORY_PATH", old)
+
+    def test_sample_only_success_logs_line(self):
+        data = {"plan": "Pro", "fetched": 1760000000, "daily": 62, "weekly": 41,
+                "daily_reset": 1760083200, "weekly_reset": 1760601600}
+        with mock.patch.object(server, "quota", return_value=data), \
+             mock.patch("sys.stdout", new=io.StringIO()) as out, \
+             mock.patch("sys.stderr", new=io.StringIO()) as err:
+            rc = server.run_sample_only()
+        self.assertEqual(rc, 0)
+        self.assertEqual(err.getvalue(), "")
+        line = out.getvalue()
+        self.assertIn("quota sampled at", line)
+        self.assertIn("plan=Pro", line)
+        self.assertIn("daily=62", line)
+        self.assertIn("daily_reset=", line)
+        self.assertIn("weekly=41", line)
+        log = (Path(self.tmp.name) / "sampler.log").read_text()
+        self.assertIn("daily=62", log)
+
+    def test_sample_only_omits_null_counters(self):
+        with mock.patch.object(server, "quota", return_value={"fetched": 1760000000, "daily": 62}), \
+             mock.patch("sys.stdout", new=io.StringIO()) as out:
+            rc = server.run_sample_only()
+        self.assertEqual(rc, 0)
+        self.assertIn("daily=62", out.getvalue())
+        self.assertNotIn("weekly=", out.getvalue())
+        self.assertNotIn("plan=", out.getvalue())
+
+    def test_sample_only_error_returns_one(self):
+        with mock.patch.object(server, "quota", return_value={"error": "nope"}), \
+             mock.patch("sys.stdout", new=io.StringIO()) as out, \
+             mock.patch("sys.stderr", new=io.StringIO()) as err:
+            rc = server.run_sample_only()
+        self.assertEqual(rc, 1)
+        self.assertEqual(out.getvalue(), "")
+        self.assertIn("nope", err.getvalue())
+        self.assertIn("quota sample failed",
+                      (Path(self.tmp.name) / "sampler.log").read_text())
+
+    def test_main_sample_only_exits_without_server(self):
+        with mock.patch.object(sys, "argv", ["server.py", "--sample-only"]), \
+             mock.patch.object(server, "run_sample_only", return_value=0) as rso, \
+             mock.patch.object(server, "DB_SOURCES", [("none", Path("no/such.db"))]), \
+             mock.patch.object(server, "Server") as srv:
+            with self.assertRaises(SystemExit) as cm:
+                server.main()
+        self.assertEqual(cm.exception.code, 0)
+        rso.assert_called_once()
+        srv.assert_not_called()
 
 
 class AllowanceTest(unittest.TestCase):

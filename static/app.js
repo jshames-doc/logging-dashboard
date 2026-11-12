@@ -7,7 +7,8 @@ const COLS = [
 ];
 const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
 const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000,
-  quota: null, hiddenCols: new Set(savedCols().filter((k) => COLS.some(([c]) => c === k))) };
+  quota: null, runway: null, runwayReceivedAt: 0, runwaySig: "",
+  hiddenCols: new Set(savedCols().filter((k) => COLS.some(([c]) => c === k))) };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
@@ -91,6 +92,85 @@ function quotaTitle(r, which) {
   const q = state.quota;
   if (q && q.error) return `Quota unavailable: ${q.error}`;
   return `No ${label.toLowerCase()} quota sample at or before this session's last activity`;
+}
+
+/* quota runway widget: countdowns use the server's `generated` clock plus
+   elapsed client time, so a skewed client clock can't corrupt them. */
+const rwDur = (s) => {
+  s = Math.max(0, Math.round(s));
+  if (s < 60) return "<1m";
+  if (s < 3600) return `${Math.round(s / 60)}m`;
+  const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
+  return m >= 60 ? `${h + 1}h` : m ? `${h}h ${m}m` : `${h}h`;
+};
+const rwDurWords = (s) => {
+  s = Math.round(s);
+  if (s < 60) return "under a minute";
+  if (s < 3600) { const m = Math.round(s / 60); return `${m} minute${m === 1 ? "" : "s"}`; }
+  const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
+  return `${h} hour${h === 1 ? "" : "s"}${m ? ` ${m} minutes` : ""}`;
+};
+const rwAgo = (s) => (s < 45 ? "just now" : s < 3600 ? `${Math.round(s / 60)} min ago` : `${rwDur(s)} ago`);
+const rwClock = (t) => new Date(t * 1000).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+const rwNow = () => (state.runway.generated || Date.now() / 1000) + (Date.now() - state.runwayReceivedAt) / 1000;
+
+function runwayCardHTML(name, c, now) {
+  const pct = c.remaining == null ? null : Math.round(Math.min(100, Math.max(0, c.remaining)));
+  const cls = pct == null || pct <= 0 ? "empty" : pct < 20 ? "low" : pct <= 50 ? "warn" : "good";
+  const resetLine = c.reset == null ? "Reset time unknown"
+    : c.reset <= now ? "Reset time passed — waiting for a fresh sample"
+    : `Resets in ${rwDur(c.reset - now)} · ${rwClock(c.reset)}`;
+  const exhaustIn = c.exhausts_at == null ? null : Math.max(0, c.exhausts_at - now);
+  const conf = { high: "High confidence", medium: "Estimated", low: "Rough estimate" }[c.confidence];
+  const meta = conf
+    ? `${conf} · ${c.samples || 0} sample${c.samples === 1 ? "" : "s"} this cycle${c.sampled_at != null ? ` · as of ${rwAgo(now - c.sampled_at)}` : ""}`
+    : "";
+  const aria = pct == null ? 'aria-valuetext="Quota unknown"'
+    : `aria-valuenow="${pct}" aria-valuetext="${pct} percent remaining${c.status === "ok" && exhaustIn ? `; projected to run out in ${rwDurWords(exhaustIn)}` : ""}"`;
+  return `<div class="runway-card">
+    <div class="rw-top"><span class="rw-lbl">${name[0].toUpperCase() + name.slice(1)} quota</span><span class="rw-val">${pct == null ? "—" : `${pct}% <span class="rw-left">left</span>`}</span></div>
+    <div class="meter ${cls}" role="meter" aria-valuemin="0" aria-valuemax="100" ${aria}><i style="width:${pct || 0}%"></i></div>
+    <div class="rw-reset">${resetLine}</div>
+    ${meta ? `<div class="rw-meta">${meta}</div>` : ""}
+  </div>`;
+}
+
+function setRunway(r) {
+  if (!r || typeof r !== "object") return;
+  const same = state.runway && JSON.stringify(state.runway) === JSON.stringify(r);
+  state.runway = r;
+  state.runwayReceivedAt = Date.now();
+  if (!same) renderRunway();
+}
+
+function renderRunway() {
+  const el = $("runway"), r = state.runway;
+  if (!r) { el.hidden = true; return; }
+  const now = rwNow();
+  const counters = [["daily", r.daily], ["weekly", r.weekly]].filter(([, c]) => c && typeof c === "object");
+  const usable = counters.filter(([, c]) => c.status !== "unknown");
+  if (r.error && !usable.length) {
+    el.innerHTML = `<div class="runway-note">Quota unavailable — ${esc(r.error)}</div>`;
+    el.hidden = false;
+    return;
+  }
+  if (!usable.length) {
+    if (r.plan) {
+      el.innerHTML = `<div class="runway-note">Quota is not reported on this plan.</div>`;
+      el.hidden = false;
+    } else {
+      el.innerHTML = "";
+      el.hidden = true;
+    }
+    return;
+  }
+  el.innerHTML = counters.map(([n, c]) => runwayCardHTML(n, c, now)).join("") +
+    (r.error ? `<div class="runway-note">Quota fetch failed — showing the last sample from ${r.history && r.history.newest ? rwAgo(now - r.history.newest) : "earlier"}.</div>` : "");
+  el.hidden = false;
+  const sig = counters.map(([n, c]) => `${n}:${c.status}`).join(",");
+  if (sig !== state.runwaySig)
+    $("runway-status").textContent = counters.map(([n, c]) => `${n} quota ${c.status}`).join("; ");
+  state.runwaySig = sig;
 }
 
 function render() {
@@ -282,6 +362,7 @@ function fillCols() {
 
 function setData(data) {
   state.quota = data.quota || null;
+  if (data.runway) setRunway(data.runway);
   state.rows = data.rows.map((r) => ({ ...r, hit: hitPct(r) }));
   state.limit = 2000;
   const counts = {};
@@ -691,6 +772,14 @@ $("r-csv").addEventListener("click", () => {
   URL.revokeObjectURL(a.href);
 });
 
-setInterval(() => fetch("/api/ping").catch(() => {}), 20000);
+setInterval(async () => {
+  try {
+    const res = await fetch("/api/ping");
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.runway) setRunway(data.runway);
+  } catch {}
+}, 20000);
+setInterval(() => { if (state.runway) renderRunway(); }, 30000);  // countdowns tick between pings
 fillCols();
 load().catch((e) => setStatus({ error: e.message }));

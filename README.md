@@ -63,6 +63,11 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
   the CLI's `/usage` panel makes). A value is only valid until that sample's
   reset; past it the cell shows `—`. Percent fields only exist on quota-billed
   plans.
+- The **quota runway** strip under the header shows each quota meter and its
+  reset countdown, with a confidence label describing how much same-cycle
+  sample history backs the reading (High confidence / Estimated / Rough
+  estimate). The widget updates on the page's normal 20-second ping;
+  countdowns tick locally.
 - **Double-click a row** (or focus it and press Enter) for full session details
   across all models, regardless of table filters.
 - **$ Prices** shows the rate card; **Rescan database** re-reads `sessions.db`
@@ -77,7 +82,32 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
 - Token and cost figures come straight from `sessions.db`, so they're accurate
   regardless of when you run the dashboard. The **Allowance value** estimate is
   different: quota is only sampled while the dashboard is open, so for the most
-  accurate result keep it running during Devin coding sessions.
+  accurate result keep it running during Devin coding sessions — or register
+  the background sampler below so history accrues around the clock.
+
+## Background quota sampling (optional)
+
+Quota history is what makes the runway projection and the Allowance value
+estimate useful — both are only as good as their sample coverage. While the
+dashboard is open it samples every ~5 minutes; to keep history accruing when
+it's closed, register a scheduled task:
+
+- `register_sampler.bat` — creates the **Session Ledger quota sampler**
+  scheduled task, which runs `pythonw server.py --sample-only` every 15
+  minutes (registered directly on `pythonw.exe` so no console window
+  flashes). It runs as the current user and needs the Devin credentials and
+  network access.
+- `unregister_sampler.bat` — deletes the task.
+- `sample_quota.bat` — runs one sample manually (useful for checking the
+  setup; the line is also appended to `.cache\sampler.log`).
+
+Verify with `schtasks /Query /TN "Session Ledger quota sampler" /V /FO LIST`
+and `type .cache\sampler.log` — one line per run. `--sample-only` only calls
+the `GetUserStatus` endpoint and writes to `.cache`; it never opens
+`sessions.db` or starts the server. The sampler uses the same
+`%APPDATA%\devin\credentials.toml` API key as the dashboard — the key is sent
+only to Devin's API for authentication, never exposed to the browser or
+stored in this repository.
 
 ## Configuration
 
@@ -126,14 +156,16 @@ pricing_manual.json  Hand-entered rates (never auto-overwritten)
 update_prices.py     Fetches + parses the docs.devin.ai rate card
 static/              Single-page dashboard (index.html, app.js, style.css)
 run.bat / stop_server.bat / update_prices.bat   Windows helpers
+sample_quota.bat / register_sampler.bat / unregister_sampler.bat   Quota sampler
 test_server.py       Unit tests
 ```
 
 ## Privacy
 
 The server binds `127.0.0.1` only and opens `sessions.db` read-only. While the
-dashboard is open it polls the Devin `GetUserStatus` endpoint (every ~5 min)
-to fill the quota columns, using the API key in
+dashboard is open — and every 15 minutes if you register the background
+sampler — it polls the Devin `GetUserStatus` endpoint to fill the quota
+columns and runway, using the API key in
 `%APPDATA%\devin\credentials.toml` — the key is sent only to Devin's own API
 and never leaves the server otherwise. The only other outbound call is
 `update_prices.py` fetching the public pricing page. Your session data stays

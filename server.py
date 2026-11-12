@@ -464,27 +464,76 @@ def load_quota_history(path=QUOTA_HISTORY_PATH):
 _quota_hist = load_quota_history()
 
 
-def record_quota(data, path=QUOTA_HISTORY_PATH):
-    """Append a (fetched, daily, weekly, daily_reset, weekly_reset) sample when
-    the values changed; this history backs the per-row quota columns. Errors
-    aren't recorded. Reset times dedupe too, so an identical-looking percent in
-    a new cycle still extends validity."""
-    daily, weekly = data.get("daily"), data.get("weekly")
-    if data.get("error") or (daily is None and weekly is None):
-        return
-    t = int(data.get("fetched") or time.time())
-    sample = (t, daily, weekly, data.get("daily_reset"), data.get("weekly_reset"))
+def _absorb_history(path):
+    """Refresh _quota_hist from disk so samples written by other processes
+    (the --sample-only scheduled task) show up without a restart."""
+    _quota_hist[:] = load_quota_history(path)
+
+
+def _lock_quota_file(fd):
+    if os.name == "nt":
+        import msvcrt
+        msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+    else:
+        import fcntl
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
+def record_quota(data, path=QUOTA_HISTORY_PATH, lock_timeout=5.0):
+    """Record a (fetched, daily, weekly, daily_reset, weekly_reset) sample.
+
+    Merges into the on-disk history under a lock file (the --sample-only
+    sampler writes from another process, so disk is authoritative and the
+    possibly-stale _quota_hist is never merged in — that would resurrect an
+    intentional reset). An unchanged sample is still appended once every
+    ~10 min so runway coverage and "as of" stay fresh; reset times dedupe
+    too, so an identical percent in a new cycle records immediately.
+    Returns True when a sample was written; never raises."""
+    try:
+        daily, weekly = data.get("daily"), data.get("weekly")
+        if data.get("error") or (daily is None and weekly is None):
+            return False
+        sample = (int(data.get("fetched") or time.time()), daily, weekly,
+                  data.get("daily_reset"), data.get("weekly_reset"))
+    except (AttributeError, TypeError, ValueError):
+        return False
+    path = Path(path)
+    lock = path.with_suffix(".lock")
+    deadline = time.monotonic() + lock_timeout
     with _hist_lock:
-        if _quota_hist and _quota_hist[-1][1:] == sample[1:]:
-            return
-        _quota_hist.append(sample)
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
-            tmp = path.with_suffix(".tmp")
-            tmp.write_text(json.dumps({"samples": _quota_hist}), encoding="utf-8")
-            tmp.replace(path)
+            fd = os.open(str(lock), os.O_CREAT | os.O_RDWR, 0o600)
         except OSError:
-            pass
+            return False
+        try:
+            while True:
+                try:
+                    _lock_quota_file(fd)
+                    break
+                except OSError:
+                    if time.monotonic() >= deadline:
+                        _absorb_history(path)
+                        return False  # losing one sample is fine; racy writes are not
+                    time.sleep(0.05)
+            disk = load_quota_history(path)
+            if disk and disk[-1][1:] == sample[1:] and sample[0] - disk[-1][0] < 600:
+                _quota_hist[:] = disk
+                return False
+            merged = sorted(set(disk + [sample]), key=lambda s: s[0] or 0)
+            try:
+                tmp = path.with_suffix(".tmp")
+                tmp.write_text(json.dumps({"samples": merged}), encoding="utf-8")
+                tmp.replace(path)
+            except OSError:
+                _quota_hist[:] = merged
+                return False
+            _quota_hist[:] = merged
+            return True
+        except Exception:
+            return False
+        finally:
+            os.close(fd)
 
 
 def _sample_at(samples, t):
@@ -502,6 +551,138 @@ def _sample_at(samples, t):
     return (st,
             d if dr is None or t < dr else None,
             w if wr is None or t < wr else None)
+
+
+_RUNWAY_UNKNOWN = {"remaining": None, "reset": None, "cycle_start": None,
+                   "rate_per_hr": None, "hours_left": None, "exhausts_at": None,
+                   "status": "unknown", "confidence": "none", "samples": 0,
+                   "sampled_at": None}
+# counter name -> (history value index, history reset index, cycle seconds)
+_RUNWAY_COUNTERS = {"daily": (1, 3, 86400), "weekly": (2, 4, 604800)}
+
+
+def _norm_samples(samples):
+    """Validated [(t, daily, weekly, daily_reset, weekly_reset)] sorted by t:
+    short tuples padded, non-sequences and non-int timestamps dropped."""
+    out = []
+    for s in samples or []:
+        if not isinstance(s, (list, tuple)):
+            continue
+        row = (list(s) + [None] * 5)[:5]
+        if not isinstance(row[0], int):
+            continue
+        out.append(tuple(row))
+    return sorted(out, key=lambda s: s[0])
+
+
+def _counter_runway(samples, quota_data, name, vidx, ridx, period, now):
+    """Runway fields for one counter (daily or weekly): current remaining %,
+    burn rate from same-cycle samples, projected exhaustion, confidence."""
+    c = dict(_RUNWAY_UNKNOWN)
+    resets = {s[ridx] for s in samples if isinstance(s[ridx], int) and s[0] <= now}
+    snap_reset = quota_data.get(name + "_reset")
+    if isinstance(snap_reset, int):
+        resets.add(snap_reset)
+    if not resets:
+        return c
+    current = max(resets)  # a sampler-recorded newer cycle beats the cached snapshot
+    c["reset"] = current
+    if current <= now:
+        return c  # reset passed; the next fetch refreshes the cycle
+    prev = max((r for r in resets if r < current), default=None)
+    c["cycle_start"] = prev if prev is not None and current - prev <= 1.5 * period else current - period
+    if c["cycle_start"] >= now:
+        return c
+    cyc = sorted((s[0], s[vidx]) for s in samples
+                 if isinstance(s[vidx], (int, float)) and s[ridx] == current and s[0] <= now)
+    snap_v, fetched = quota_data.get(name), quota_data.get("fetched")
+    if (isinstance(snap_v, (int, float)) and snap_reset == current
+            and isinstance(fetched, (int, float)) and fetched <= now):
+        cyc = sorted([p for p in cyc if p[0] != fetched] + [(fetched, snap_v)])
+    if not cyc:
+        return c
+    c["samples"], c["sampled_at"] = len(cyc), cyc[-1][0]
+    c["remaining"] = min(100, max(0, cyc[-1][1]))
+    rate, fallback = None, False
+    for i in range(len(cyc) - 1, 0, -1):
+        dt = cyc[i][0] - cyc[i - 1][0]
+        if dt < 60:
+            continue
+        if cyc[i][1] > cyc[i - 1][1]:
+            rate = 0.0  # top-up or plan change: recent trend is flat
+            break
+        if cyc[i][1] < cyc[i - 1][1]:
+            rate = (cyc[i - 1][1] - cyc[i][1]) / (dt / 3600)
+            break
+    if rate is None:  # cycle-average fallback assumes 100% at cycle start -> always low confidence
+        fallback = True
+        elapsed = cyc[-1][0] - c["cycle_start"]
+        if c["remaining"] >= 100:
+            rate = 0.0
+        elif elapsed >= 60:
+            rate = max(0.0, (100 - c["remaining"]) / (elapsed / 3600))
+    if rate is None:
+        return c  # unknown
+    c["rate_per_hr"] = round(rate, 2)
+    if c["remaining"] <= 0:
+        c.update(status="exhausted", hours_left=0, exhausts_at=now)
+    elif c["rate_per_hr"] <= 0:
+        c["status"] = "flat"
+    elif now + (c["remaining"] / c["rate_per_hr"]) * 3600 >= current:
+        c["status"] = "lasts"
+    else:
+        h = c["remaining"] / c["rate_per_hr"]
+        c.update(status="ok", hours_left=round(h, 2), exhausts_at=now + round(h * 3600))
+    if fallback:
+        c["confidence"] = "low"
+    else:
+        span, age = cyc[-1][0] - cyc[0][0], now - cyc[-1][0]
+        if len(cyc) >= 3 and span >= 3600 and age <= 900:
+            c["confidence"] = "high"
+        elif len(cyc) >= 2 and span >= 1800:
+            c["confidence"] = "medium"
+        else:
+            c["confidence"] = "low"
+    return c
+
+
+def quota_runway(samples=None, quota_data=None, now=None):
+    """Quota runway projection for the header widget.
+
+    Burn rate comes from same-cycle samples with the freshest snapshot value
+    merged in; 'generated' (now) is the clock for every projection so the UI
+    is immune to client-clock skew. Additive on /api/data and /api/ping;
+    never raises."""
+    try:
+        now = int(time.time()) if now is None else int(now)
+    except (TypeError, ValueError):
+        now = int(time.time())
+    try:
+        if samples is None:
+            samples = load_quota_history()
+            if not samples:
+                samples = list(_quota_hist)  # the file may be briefly unreadable
+        samples = _norm_samples(samples)
+        quota_data = quota_data if isinstance(quota_data, dict) else {}
+        newest = samples[-1][0] if samples else None
+        runway = {"generated": now, "plan": quota_data.get("plan"),
+                  "error": quota_data.get("error"),
+                  "sample_age_s": max(0, now - newest) if newest is not None else None,
+                  "history": {"samples_24h": sum(1 for s in samples if s[0] >= now - 86400),
+                              "samples_7d": sum(1 for s in samples if s[0] >= now - 604800),
+                              "oldest": samples[0][0] if samples else None,
+                              "newest": newest}}
+        for name, (vidx, ridx, period) in _RUNWAY_COUNTERS.items():
+            try:
+                runway[name] = _counter_runway(samples, quota_data, name, vidx, ridx, period, now)
+            except Exception:
+                runway[name] = dict(_RUNWAY_UNKNOWN)
+        return runway
+    except Exception:
+        return {"generated": now, "plan": None, "error": "runway unavailable",
+                "sample_age_s": None,
+                "history": {"samples_24h": 0, "samples_7d": 0, "oldest": None, "newest": None},
+                "daily": dict(_RUNWAY_UNKNOWN), "weekly": dict(_RUNWAY_UNKNOWN)}
 
 
 PING_TIMEOUT = 90  # page pings every 20s; Chrome throttles background tabs to ~1/min
@@ -579,12 +760,13 @@ class Handler(SimpleHTTPRequestHandler):
             dbs = " + ".join(str(p) for _, p in DB_SOURCES if p.exists())
             q = quota()  # fetch first so the fresh sample lands in history before rows are stamped
             return self._json({"status": STATE.status, "db": dbs, "rows": flatten(STATE.sessions),
-                               "quota": q})
+                               "quota": q, "runway": quota_runway(quota_data=q)})
         if self.path.startswith("/api/status"):
             return self._json(STATE.status)
         if self.path.startswith("/api/ping"):
             last_ping[0] = time.time()
-            return self._json({"ok": True, "quota": quota()})
+            q = quota()
+            return self._json({"ok": True, "quota": q, "runway": quota_runway(quota_data=q)})
         if self.path.startswith("/api/pricing"):
             return self._json(pricing.snapshot())
         if self.path.startswith("/api/allowance"):
@@ -624,7 +806,41 @@ class Server(ThreadingHTTPServer):
         super().server_bind()
 
 
+def run_sample_only():
+    """One quota sample for the scheduled task: fetch, record, append a line
+    to .cache/sampler.log, and exit. Written by Python rather than a shell
+    redirect because the task runs under pythonw with no console. Never
+    starts the server, touches sessions.db, or prints credentials."""
+    data = quota()
+    if data.get("error"):
+        line, out, rc = f"quota sample failed: {data['error']}", sys.stderr, 1
+    else:
+        at = time.strftime("%Y-%m-%d %H:%M:%S",
+                           time.localtime(data.get("fetched") or time.time()))
+        parts = [f"quota sampled at {at}"]
+        if data.get("plan"):
+            parts.append(f"plan={data['plan']}")
+        for name in ("daily", "weekly"):
+            if data.get(name) is None:
+                continue
+            seg = f"{name}={data[name]}"
+            if data.get(name + "_reset"):
+                seg += f" {name}_reset={time.strftime('%Y-%m-%d %H:%M', time.localtime(data[name + '_reset']))}"
+            parts.append(seg)
+        line, out, rc = " ".join(parts), sys.stdout, 0
+    print(line, file=out)
+    try:
+        QUOTA_HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(QUOTA_HISTORY_PATH.parent / "sampler.log", "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except OSError:
+        pass
+    return rc
+
+
 def main():
+    if "--sample-only" in sys.argv:
+        sys.exit(run_sample_only())
     if not any(p.exists() for _, p in DB_SOURCES):
         sys.exit("no sessions.db found (looked in "
                  + ", ".join(str(p) for _, p in DB_SOURCES)

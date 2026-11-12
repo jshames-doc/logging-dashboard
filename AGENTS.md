@@ -69,8 +69,20 @@
   api_key + api_server_url come from `%APPDATA%\devin\credentials.toml` — the metadata block must include ide_name,
   ide_version, extension_name, extension_version or it's a 400; the key never leaves the server). Cached `QUOTA_TTL`=300s;
   invoked by `/api/data` and `/api/ping` so samples accrue while the dashboard is open.
-  `record_quota` appends changed (fetched, daily, weekly, daily_reset, weekly_reset) samples to `.cache/quota_history.json`;
+  `record_quota` merges (fetched, daily, weekly, daily_reset, weekly_reset) samples into `.cache/quota_history.json` under a
+  persistent `quota_history.lock` OS-backed file lock (`msvcrt` on Windows, `flock` elsewhere; never unlink it, and process
+  exit releases ownership automatically). The cache directory is created before opening the lock (disk is authoritative —
+  the in-memory `_quota_hist` is only slice-assigned from disk, never
+  rebind it); unchanged values are still appended once per ~10 min for coverage, while any change (including a reset advance)
+  records immediately. `python server.py --sample-only` records one sample and exits (the "Session Ledger quota sampler"
+  scheduled task runs it every 15 min via `register_sampler.bat`; `unregister_sampler.bat` removes it, `sample_quota.bat`
+  runs it manually; each run appends one line to `.cache/sampler.log`). It never opens sessions.db or starts the server.
   `flatten` stamps each row with the latest sample at or before `last_activity` (bisect on sample time only — values may be
   None), so columns show quota in effect when the session ended. A value is only valid until that sample's reset for its
   counter; past the reset the cell shows "—" (tooltip explains), and identical percents re-record when a reset advances.
   Legacy 3-field samples load padded with unbounded resets. Percent fields only exist on quota-billed plans.
+  `server.quota_runway()` projects per-counter burn rate and exhaustion from same-cycle samples (status unknown|exhausted|
+  flat|lasts|ok; confidence none|low|medium|high; cycle-average fallback is always low). It's an additive `runway` field on
+  `/api/data` and `/api/ping`, rendered by the `#runway` widget after the header (`setRunway`/`renderRunway`/`runwayCardHTML`
+  in app.js; the ping response feeds it and a 30 s ticker advances countdowns against `runway.generated`, not the client
+  clock).
