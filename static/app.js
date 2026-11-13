@@ -22,7 +22,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const base = (p) => (p || "").split(/[\\/]/).filter(Boolean).pop() || p || "—";
 const dt = (s) => {
   const d = new Date(s * 1000);
-  return `${d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" })}<small>${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</small>`;
+  const p = (n) => String(n).padStart(2, "0");
+  return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${p(d.getFullYear() % 100)}<small>${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</small>`;
 };
 const dayStart = (v) => (v ? new Date(v + "T00:00:00").getTime() / 1000 : null);
 
