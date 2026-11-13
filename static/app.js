@@ -65,7 +65,7 @@ function renderTotals(rows) {
     card("Avg TPS", t.gen_ms ? (t.output * 1000 / t.gen_ms).toFixed(1) : "—", "output ÷ generation time", "", 4),
     card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 5),
     card("Cache hit", `${hit.toFixed(1)}%`, "cached ÷ (input + cached)", "", 6),
-    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "Devin Enterprise rates", "", 7),
+    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "Devin Self-serve rates", "", 7),
   ].join("");
 }
 
