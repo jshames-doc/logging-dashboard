@@ -64,6 +64,11 @@
   The dialog and model-filter unit tests use Node.js with a mocked DOM.
 - Column picker: **Columns** dropdown in the filter bar toggles `#tbl` columns (`COLS`/`CELLS` maps in `app.js`;
   `state.hiddenCols` persisted in localStorage `ledger.cols`, all visible by default, at least one column stays shown).
+  Dropdown rows drag to reorder (`state.colOrder` -> `ledger.colOrder`; `applyOrder` re-appends the `th`s, body cells
+  follow in `render`); **Reset order & widths** restores defaults. Header right-edge grips (`initColResize`, `.rsz`) resize
+  columns into `state.colWidths` -> `ledger.colWidths`, painted through `#colg` under `table-layout: fixed` (`.sized` class
+  on `#tbl`) once the first render with rows seeds widths measured from auto layout — `title` stays widthless to absorb
+  leftover table width (a resized `title` switches the leftover to proportional distribution).
 - Quota columns (Daily % / Weekly %): `server.quota()` calls the CLI's `GetUserStatus` endpoint
   (`{api_server_url}/exa.seat_management_pb.SeatManagementService/GetUserStatus`, POST JSON `{"metadata": {...}}`;
   api_key + api_server_url come from `%APPDATA%\devin\credentials.toml` — the metadata block must include ide_name,

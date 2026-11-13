@@ -130,6 +130,12 @@ h1 em { color: var(--in); }
 .model-option { display: flex; align-items: center; gap: 8px; padding: 6px; cursor: pointer; overflow-wrap: anywhere; }
 .model-option:hover, .model-option:focus-within { background: var(--bg-2); }
 .model-option input { margin: 0; accent-color: var(--in); flex-shrink: 0; }
+.col-opt { cursor: grab; }
+.col-opt.dragging { opacity: .35; }
+.col-opt.drop-above { box-shadow: 0 -2px 0 var(--in); }
+.col-opt.drop-below { box-shadow: 0 2px 0 var(--in); }
+.col-opt .grip { align-self: stretch; width: 8px; margin: -4px -3px -4px -4px; flex-shrink: 0;
+  background-image: radial-gradient(circle, var(--ink-3) 1px, transparent 1.3px); background-size: 4px 4px; }
 .field { font: 400 11px var(--mono); color: var(--ink-3); text-transform: uppercase; letter-spacing: .1em; display: flex; align-items: center; gap: 6px; }
 .toggle { display: flex; align-items: center; gap: 8px; font: 400 12px var(--mono); color: var(--ink-2); cursor: pointer; user-select: none; }
 .toggle input { display: none; }
@@ -146,12 +152,17 @@ h1 em { color: var(--in); }
 .table-wrap::-webkit-scrollbar-thumb:hover { background: var(--ink-3); }
 .table-wrap::-webkit-scrollbar-corner { background: var(--bg-2); }
 table { width: 100%; border-collapse: collapse; font: 400 13px var(--mono); }
+#tbl.sized { table-layout: fixed; }
+#tbl.sized td { overflow: hidden; text-overflow: ellipsis; }
 thead th {
   text-align: left; font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .12em;
   color: var(--ink-3); padding: 8px 10px; border-bottom: 1px solid var(--line-2);
-  cursor: pointer; white-space: nowrap; user-select: none;
+  cursor: pointer; white-space: nowrap; user-select: none; overflow: hidden; text-overflow: ellipsis;
   position: sticky; top: 0; z-index: 2; background: var(--bg);
 }
+.rsz { position: absolute; top: 0; right: -2px; width: 11px; height: 100%; cursor: col-resize; touch-action: none; }
+.rsz::after { content: ""; position: absolute; top: 22%; bottom: 22%; right: 5px; width: 1px; background: var(--ink-3); opacity: 0; transition: opacity .15s; }
+th:hover .rsz::after, th.resizing .rsz::after { opacity: 1; }
 thead th:hover { color: var(--ink); }
 thead th.sorted { color: var(--in); }
 thead th.sorted::after { content: " ↓"; }

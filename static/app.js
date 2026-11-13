@@ -5,10 +5,16 @@ const COLS = [
   ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
   ["quota_day", "Daily %"], ["quota_week", "Weekly %"],
 ];
-const savedCols = () => { try { const v = JSON.parse(localStorage.getItem("ledger.cols")); return Array.isArray(v) ? v : []; } catch { return []; } };
+const savedArr = (key) => { try { const v = JSON.parse(localStorage.getItem(key)); return Array.isArray(v) ? v : []; } catch { return []; } };
+const savedObj = (key) => { try { const v = JSON.parse(localStorage.getItem(key)); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch { return {}; } };
+const COL_KEYS = new Set(COLS.map(([k]) => k));
+const initOrder = savedArr("ledger.colOrder").filter((k) => COL_KEYS.has(k));
+initOrder.push(...COLS.map(([k]) => k).filter((k) => !initOrder.includes(k)));
 const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000,
   quota: null, runway: null, runwayReceivedAt: 0, runwaySig: "",
-  hiddenCols: new Set(savedCols().filter((k) => COLS.some(([c]) => c === k))) };
+  hiddenCols: new Set(savedArr("ledger.cols").filter((k) => COL_KEYS.has(k))), colOrder: initOrder,
+  colWidths: Object.fromEntries(Object.entries(savedObj("ledger.colWidths")).filter(([k, v]) => COL_KEYS.has(k) && +v > 0)),
+  widthSeeded: false };
 const fmt = new Intl.NumberFormat();
 const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
@@ -178,9 +184,10 @@ function render() {
   renderTotals(rows);
   $("empty").hidden = rows.length > 0;
   const shown = rows.slice(0, state.limit);
-  const cols = COLS.filter(([k]) => !state.hiddenCols.has(k));
+  const cols = state.colOrder.filter((k) => !state.hiddenCols.has(k));
+  stampCols();
   $("rows").innerHTML = shown.map((r, i) => `
-    <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map(([k]) => CELLS[k](r)).join("")}</tr>`).join("");
+    <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map((k) => CELLS[k](r)).join("")}</tr>`).join("");
   const rest = rows.length - shown.length;
   $("more").hidden = !rest;
   if (rest)
@@ -189,6 +196,17 @@ function render() {
     th.classList.toggle("sorted", th.dataset.k === state.sortKey);
     th.classList.toggle("asc", th.dataset.k === state.sortKey && state.asc);
   });
+  // freeze the natural auto-layout widths once, then switch to fixed layout so
+  // columns can be drag-resized; "title" stays widthless to absorb leftover space
+  if (!state.widthSeeded && shown.length) {
+    state.widthSeeded = true;
+    if (!Object.keys(state.colWidths).length) {
+      document.querySelectorAll("#tbl thead th[data-k]").forEach((th) => {
+        if (!th.hidden && th.dataset.k !== "title") state.colWidths[th.dataset.k] = Math.round(th.getBoundingClientRect().width);
+      });
+      stampCols();
+    }
+  }
   saveView();
 }
 
@@ -342,6 +360,67 @@ function fillModels(values) {
 }
 
 const saveCols = () => { try { localStorage.setItem("ledger.cols", JSON.stringify([...state.hiddenCols])); } catch {} };
+const saveLayout = () => {
+  try {
+    localStorage.setItem("ledger.colOrder", JSON.stringify(state.colOrder));
+    localStorage.setItem("ledger.colWidths", JSON.stringify(state.colWidths));
+  } catch {}
+};
+
+/* paint per-column widths through <colgroup> under table-layout: fixed; a
+   widthless column ("title" by default) absorbs the leftover table width */
+function stampCols() {
+  const widths = state.colWidths;
+  $("tbl").classList.toggle("sized", Object.keys(widths).length > 0);
+  $("colg").innerHTML = state.colOrder.filter((k) => !state.hiddenCols.has(k))
+    .map((k) => `<col${widths[k] ? ` style="width:${Math.round(widths[k])}px"` : ""}>`).join("");
+}
+
+/* re-append header cells in colOrder; body cells follow via render() */
+function applyOrder() {
+  if (typeof document.querySelector !== "function") return;
+  const tr = document.querySelector("#tbl thead tr");
+  if (!tr) return;
+  for (const k of state.colOrder) {
+    const th = tr.querySelector(`th[data-k="${k}"]`);
+    if (th) tr.appendChild(th);
+  }
+}
+
+/* drag handle on each header's right edge resizes its column */
+function initColResize() {
+  document.querySelectorAll("#tbl thead th[data-k]").forEach((th) => {
+    const grip = document.createElement("span");
+    grip.className = "rsz";
+    grip.title = "Drag to resize";
+    th.appendChild(grip);
+    grip.addEventListener("click", (e) => e.stopPropagation());
+    grip.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const k = th.dataset.k, startX = e.clientX;
+      const startW = th.getBoundingClientRect().width;
+      const visible = () => state.colOrder.filter((c) => !state.hiddenCols.has(c));
+      const colEl = () => document.querySelectorAll("#colg col")[visible().indexOf(k)];
+      grip.setPointerCapture(e.pointerId);
+      th.classList.add("resizing");
+      const move = (ev) => {
+        state.colWidths[k] = Math.max(48, Math.round(startW + ev.clientX - startX));
+        const c = colEl();
+        if (c) c.style.width = state.colWidths[k] + "px";
+      };
+      const up = () => {
+        grip.removeEventListener("pointermove", move);
+        th.classList.remove("resizing");
+        saveLayout();
+      };
+      grip.addEventListener("pointermove", move);
+      grip.addEventListener("pointerup", up, { once: true });
+      grip.addEventListener("pointercancel", up, { once: true });
+    });
+  });
+}
 
 function applyCols() {
   document.querySelectorAll("#tbl thead th").forEach((th) => (th.hidden = state.hiddenCols.has(th.dataset.k || th.dataset.col)));
@@ -354,8 +433,9 @@ function updateCols() {
 }
 
 function fillCols() {
-  $("f-cols-options").innerHTML = COLS.map(([k, label]) =>
-    `<label class="model-option"><input type="checkbox" value="${k}"${state.hiddenCols.has(k) ? "" : " checked"}><span>${label}</span></label>`).join("");
+  const label = new Map(COLS);
+  $("f-cols-options").innerHTML = state.colOrder.map((k) =>
+    `<label class="model-option col-opt" draggable="true" data-k="${k}"><i class="grip" title="Drag to reorder"></i><input type="checkbox" value="${k}"${state.hiddenCols.has(k) ? "" : " checked"}><span>${label.get(k)}</span></label>`).join("");
   updateCols();
   applyCols();
 }
@@ -423,10 +503,16 @@ $("f-model-all").addEventListener("click", () => {
 });
 $("f-cols-options").addEventListener("change", (e) => {
   if (e.target.type !== "checkbox") return;
-  if (e.target.checked) state.hiddenCols.delete(e.target.value);
-  else if (state.hiddenCols.size < COLS.length - 1) state.hiddenCols.add(e.target.value);
+  if (e.target.checked) {
+    state.hiddenCols.delete(e.target.value);
+    // a column with no stored width in a sized table gets a fallback so it
+    // doesn't share the flexible leftover space with "title"
+    if (Object.keys(state.colWidths).length && e.target.value !== "title" && !state.colWidths[e.target.value])
+      state.colWidths[e.target.value] = 150;
+  } else if (state.hiddenCols.size < COLS.length - 1) state.hiddenCols.add(e.target.value);
   else { e.target.checked = true; return; }
   saveCols();
+  saveLayout();
   updateCols();
   applyCols();
   render();
@@ -438,11 +524,81 @@ $("f-cols-all").addEventListener("click", () => {
   applyCols();
   render();
 });
+$("f-cols-reset").addEventListener("click", () => {
+  state.colOrder = COLS.map(([k]) => k);
+  state.colWidths = {};
+  state.widthSeeded = false;
+  saveLayout();
+  fillCols();
+  applyOrder();
+  render();
+});
+
+/* reorder columns by dragging rows inside the Columns dropdown */
+let colDrag = null;
+const clearDropMarks = () => $("f-cols-options").querySelectorAll(".col-opt").forEach((o) => o.classList.remove("drop-above", "drop-below"));
+$("f-cols-options").addEventListener("dragstart", (e) => {
+  const opt = e.target.closest && e.target.closest(".col-opt");
+  if (!opt) { e.preventDefault(); return; }
+  colDrag = opt.dataset.k;
+  if (e.dataTransfer) {
+    e.dataTransfer.effectAllowed = "move";
+    try { e.dataTransfer.setData("text/plain", colDrag); } catch {}
+  }
+  opt.classList.add("dragging");
+});
+$("f-cols-options").addEventListener("dragover", (e) => {
+  if (!colDrag) return;
+  e.preventDefault();
+  if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+  clearDropMarks();
+  const over = e.target.closest && e.target.closest(".col-opt");
+  if (over && over.dataset.k !== colDrag) {
+    const r = over.getBoundingClientRect();
+    over.classList.add(e.clientY > r.top + r.height / 2 ? "drop-below" : "drop-above");
+  }
+});
+$("f-cols-options").addEventListener("drop", (e) => {
+  if (!colDrag) return;
+  e.preventDefault();
+  const over = e.target.closest && e.target.closest(".col-opt");
+  const from = state.colOrder.indexOf(colDrag);
+  if (from < 0) return;
+  state.colOrder.splice(from, 1);
+  let to = state.colOrder.length;
+  if (over && over.dataset.k !== colDrag) {
+    const r = over.getBoundingClientRect();
+    to = state.colOrder.indexOf(over.dataset.k) + (e.clientY > r.top + r.height / 2 ? 1 : 0);
+  }
+  state.colOrder.splice(to, 0, colDrag);
+  colDrag = null;
+  saveLayout();
+  fillCols();
+  applyOrder();
+  render();
+});
+$("f-cols-options").addEventListener("dragend", () => { colDrag = null; clearDropMarks(); });
 document.addEventListener("click", (e) => {
   if (!$("f-model").contains(e.target)) $("f-model").open = false;
   if (!$("f-cols").contains(e.target)) $("f-cols").open = false;
   if (!$("report-models").contains(e.target)) $("report-models").open = false;
 });
+
+/* keep open dropdown menus inside the viewport: #f-cols is right-aligned, so
+   when the wrapped filter bar puts it near the left edge it would overflow */
+function clampMenu(d) {
+  const menu = d.querySelector && d.querySelector(".model-menu");
+  if (!menu) return;
+  menu.style.transform = "";
+  if (!d.open) return;
+  const r = menu.getBoundingClientRect();
+  const vw = globalThis.innerWidth || 1e9;
+  const shift = r.left < 8 ? 8 - r.left : r.right > vw - 8 ? vw - 8 - r.right : 0;
+  if (shift) menu.style.transform = `translateX(${shift}px)`;
+}
+["f-model", "f-cols", "report-models"].forEach((id) => $(id).addEventListener("toggle", () => clampMenu($(id))));
+if (typeof globalThis.addEventListener === "function")
+  globalThis.addEventListener("resize", () => ["f-model", "f-cols", "report-models"].forEach((id) => clampMenu($(id))));
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
   [["f-model", "f-model-label"], ["f-cols", "f-cols-label"]].forEach(([d, lbl]) => {
@@ -782,4 +938,6 @@ setInterval(async () => {
 }, 20000);
 setInterval(() => { if (state.runway) renderRunway(); }, 30000);  // countdowns tick between pings
 fillCols();
+applyOrder();
+initColResize();
 load().catch((e) => setStatus({ error: e.message }));

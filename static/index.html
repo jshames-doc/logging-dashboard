@@ -187,7 +187,8 @@
       <summary id="f-cols-label" aria-label="Choose columns">Columns</summary>
       <div class="model-menu">
         <button id="f-cols-all" class="btn ghost" type="button">Show all</button>
-        <div id="f-cols-options" class="model-options" role="group" aria-label="Columns to show"></div>
+        <button id="f-cols-reset" class="btn ghost" type="button" title="Restore the default column order and sizes">Reset order &amp; widths</button>
+        <div id="f-cols-options" class="model-options" role="group" aria-label="Columns to show — drag to reorder"></div>
       </div>
     </details>
     <button id="clear" class="btn ghost">Clear</button>
@@ -195,6 +196,7 @@
 
   <main class="table-wrap">
     <table id="tbl">
+      <colgroup id="colg"></colgroup>
       <thead>
         <tr>
           <th data-k="created">Created</th>

@@ -55,7 +55,9 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
 - Filter by search text, model (multi-select), workspace, and date range.
   Toggle "Show hidden" to include hidden sessions. Click column headers to sort.
   The **Source** column shows which database a session came from (`cli` vs
-  `cli-next`); hide it via the Columns picker.
+  `cli-next`); hide it via the Columns picker. Drag rows in the Columns picker
+  to reorder columns, and drag a header's right edge to resize it; order and
+  widths persist locally (Reset order & widths restores the defaults).
 - Filter/sort state is kept in the URL hash, so a filtered view survives
   reloads and can be bookmarked.
 - **Daily % / Weekly %** show the account quota remaining at each session's
