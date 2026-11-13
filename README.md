@@ -66,9 +66,7 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
   reset; past it the cell shows `—`. Percent fields only exist on quota-billed
   plans.
 - The **quota runway** strip under the header shows each quota meter and its
-  reset countdown, with a confidence label describing how much same-cycle
-  sample history backs the reading (High confidence / Estimated / Rough
-  estimate). The widget updates on the page's normal 20-second ping;
+  reset countdown. The widget updates on the page's normal 20-second ping;
   countdowns tick locally.
 - **Double-click a row** (or focus it and press Enter) for full session details
   across all models, regardless of table filters.

@@ -487,7 +487,6 @@ const html = element("runway").innerHTML;
 assert.equal(element("runway").hidden, false);
 assert.ok(html.includes("62%"));
 assert.ok(html.includes("Resets in"));
-assert.ok(html.includes("High confidence"));
 assert.ok(html.includes('role="meter"'));
 assert.ok(html.includes('aria-valuenow="62"'));
 const unknown = vm.runInContext(`runwayCardHTML("daily", { remaining: null, reset: null,

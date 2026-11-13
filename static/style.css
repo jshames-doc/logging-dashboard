@@ -101,7 +101,6 @@ h1 em { color: var(--in); }
 .meter.warn > i { background: var(--in); }
 .meter.low > i, .meter.empty > i { background: var(--out); }
 .rw-reset { font: 400 11.5px var(--mono); color: var(--ink-2); overflow-wrap: anywhere; }
-.rw-meta { font: 400 10.5px var(--mono); color: var(--ink-3); margin-top: 3px; }
 .runway-note { grid-column: 1 / -1; padding: 10px 0; font: 400 11.5px var(--mono); color: var(--ink-3); }
 
 .sr-only {
