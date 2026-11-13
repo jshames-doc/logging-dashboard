@@ -126,7 +126,7 @@ in `.cache/sessions_cache.json`, keyed by `source:session-id` and each session's
 
 Estimated costs use the published rates from
 [docs.devin.ai/desktop/models](https://docs.devin.ai/desktop/models)
-(Enterprise SaaS tier, Pro-tier fallback), stored in `pricing_data.json`.
+(Self-serve tier, Enterprise ACU-tier fallback), stored in `pricing_data.json`.
 
 - `update_prices.bat` fetches the latest rates, prints a diff, and rewrites
   `pricing_data.json`. The file is hot-reloaded on change — no restart needed.

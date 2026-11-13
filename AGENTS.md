@@ -44,8 +44,8 @@
   `None` when no usable windows (too few samples or no drop — note tells the user why). Quota is account-wide while cost
   is local-only, so other clients' and excluded models' drain stay in the denominator.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,
-  parses the embedded `modelCostData` array (Devin Enterprise tier — accepts the legacy `TEAMS_TIER_ENTERPRISE_SAAS` name too —
-  Pro-tier fallback for models only published there), prints a diff
+  parses the embedded `modelCostData` array (Self-serve tab = `TEAMS_TIER_PRO`, the rates self-serve plans pay;
+  Enterprise-ACU tier fallback — accepts the legacy `TEAMS_TIER_ENTERPRISE_SAAS` name too — for models only published there), prints a diff
   and writes `pricing_data.json`. Models dropped from the page are kept at their last-known rates marked tier `"Legacy"`
   (`merge_legacy`), so historical sessions stay priced. `pricing.py` hot-reloads that file on mtime change; no restart or cache bump needed.
 - `pricing_manual.json`: hand-entered rates for models Devin doesn't publish (e.g. Claude Haiku 5.5 from Anthropic's pricing page;

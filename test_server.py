@@ -773,12 +773,12 @@ class PricingTest(DBFixture):
         self.assertIsNone(res["model-a"]["price_model"])
 
 
-PAGE = r"""<script>self.__next_f.push([1,"...modelCostData=[{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-a`,\"label\":`Model A`,\"model_provider\":`P`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25,\"credit_multiplier\":1,\"is_recommended\":false},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":9,\"output_cost_per_million_usd\":9,\"cache_write_cost_per_million_usd\":9,\"cache_read_cost_per_million_usd\":9},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-b`,\"label\":`Model B`,\"input_cost_per_million_usd\":1,\"output_cost_per_million_usd\":2,\"cache_write_cost_per_million_usd\":3,\"cache_read_cost_per_million_usd\":4}]"])</script>
+PAGE = r"""<script>self.__next_f.push([1,"...modelCostData=[{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-a`,\"label\":`Model A`,\"model_provider\":`P`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25,\"credit_multiplier\":1,\"is_recommended\":false},{\"tier\":`TEAMS_TIER_PRO`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":9,\"output_cost_per_million_usd\":9,\"cache_write_cost_per_million_usd\":9,\"cache_read_cost_per_million_usd\":9},{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-b`,\"label\":`Model B`,\"input_cost_per_million_usd\":1,\"output_cost_per_million_usd\":2,\"cache_write_cost_per_million_usd\":3,\"cache_read_cost_per_million_usd\":4}]"])</script>
 <script>modelCostData=[{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25}]</script>"""
 
 
 class UpdatePricesTest(unittest.TestCase):
-    def test_parse_and_build_with_pro_fallback(self):
+    def test_parse_and_build_with_enterprise_fallback(self):
         import update_prices
         entries = update_prices.parse(PAGE)
         self.assertEqual(len(entries), 3)  # duplicate page copy de-duplicated
@@ -787,8 +787,8 @@ class UpdatePricesTest(unittest.TestCase):
         self.assertEqual(set(models), {"Model A", "Model B"})
         a, b = models["Model A"], models["Model B"]
         self.assertEqual((a["uid"], a["tier"], a["input"], a["output"], a["cache_write"], a["cache_read"]),
-                         ("m-a", "Devin Enterprise", 2.5, 10.0, 0.0, 0.25))
-        self.assertEqual((b["tier"], b["cache_read"]), ("Pro", 4.0))
+                         ("m-a", "Self-serve", 9.0, 9.0, 9.0, 9.0))
+        self.assertEqual((b["tier"], b["cache_read"]), ("Devin Enterprise", 4.0))
 
     def test_diff_reports_changes(self):
         import update_prices

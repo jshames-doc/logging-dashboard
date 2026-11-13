@@ -6,8 +6,9 @@
 
 The page embeds a `modelCostData` array of
 {tier, model_uid, label, *_cost_per_million_usd, ...} objects. We keep the
-Devin Enterprise tier, and fall back to the Pro tier for models only published
-there. Models that vanish from the page are kept at their last-known rates with
+Self-serve tier (the page's "Self-serve" tab), and fall back to the Enterprise
+(ACUs) tier for models only published there. Models that vanish from the page
+are kept at their last-known rates with
 tier "Legacy", so historical sessions stay priced. The dashboard reloads
 pricing_data.json automatically; just refresh the page.
 """
@@ -20,11 +21,12 @@ from datetime import date
 from pathlib import Path
 
 URL = "https://docs.devin.ai/desktop/models"
-# Primary tier candidates in preference order (the site renamed
-# TEAMS_TIER_ENTERPRISE_SAAS to TEAMS_TIER_DEVIN_ENTERPRISE in late 2025).
-TIERS = {"TEAMS_TIER_DEVIN_ENTERPRISE": "Devin Enterprise",
-         "TEAMS_TIER_ENTERPRISE_SAAS": "Enterprise SaaS"}
-FALLBACK_TIER, FALLBACK_NAME = "TEAMS_TIER_PRO", "Pro"
+# Primary tier = the page's "Self-serve" tab. The "Enterprise (ACUs)" tab is the
+# fallback for models only published there (TEAMS_TIER_ENTERPRISE_SAAS was its
+# name before the late-2025 rename).
+TIERS = {"TEAMS_TIER_PRO": "Self-serve"}
+FALLBACK_TIERS = {"TEAMS_TIER_DEVIN_ENTERPRISE": "Devin Enterprise",
+                  "TEAMS_TIER_ENTERPRISE_SAAS": "Enterprise SaaS"}
 OUT = Path(__file__).resolve().parent / "pricing_data.json"
 COSTS = ("input", "output", "cache_write", "cache_read")
 
@@ -63,11 +65,11 @@ def build(entries, fetched=None):
     tier = next((t for t in TIERS if any(e["tier"] == t for e in entries)), None)
     primary = [e for e in entries if e["tier"] == tier]
     labels, uids = {e["label"] for e in primary}, {e["uid"] for e in primary}
-    extra = [e for e in entries if e["tier"] == FALLBACK_TIER and e["label"] not in labels and e["uid"] not in uids]
-    names = {**TIERS, FALLBACK_TIER: FALLBACK_NAME}
+    extra = [e for e in entries if e["tier"] in FALLBACK_TIERS and e["label"] not in labels and e["uid"] not in uids]
+    names = {**TIERS, **FALLBACK_TIERS}
     models = [{**{k: e[k] for k in ("uid", "label", *COSTS)}, "tier": names[e["tier"]]}
               for e in sorted(primary + extra, key=lambda e: (e["label"].lower(), e["uid"]))]
-    return {"source": URL, "tier": TIERS.get(tier, "?"), "fallback_tier": FALLBACK_NAME,
+    return {"source": URL, "tier": TIERS.get(tier, "?"), "fallback_tier": next(iter(FALLBACK_TIERS.values())),
             "fetched": fetched or date.today().isoformat(), "models": models}
 
 
