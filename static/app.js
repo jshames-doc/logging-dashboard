@@ -131,7 +131,7 @@ function runwayCardHTML(name, c, now) {
   const aria = pct == null ? 'aria-valuetext="Quota unknown"'
     : `aria-valuenow="${pct}" aria-valuetext="${pct} percent remaining${c.status === "ok" && exhaustIn ? `; projected to run out in ${rwDurWords(exhaustIn)}` : ""}"`;
   return `<div class="runway-card">
-    <div class="rw-top"><span class="rw-lbl">${name[0].toUpperCase() + name.slice(1)} quota</span><span class="rw-val">${pct == null ? "—" : `${pct}% <span class="rw-left">left</span>`}</span></div>
+    <div class="rw-top"><span class="rw-lbl">${name[0].toUpperCase() + name.slice(1)} quota remaining</span><span class="rw-val">${pct == null ? "—" : `${pct}%`}</span></div>
     <div class="meter ${cls}" role="meter" aria-valuemin="0" aria-valuemax="100" ${aria}><i style="width:${pct || 0}%"></i></div>
     <div class="rw-reset">${resetLine}</div>
   </div>`;
