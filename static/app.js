@@ -833,7 +833,6 @@ async function runAllowance() {
   if ($("r-from").value) p.set("from", $("r-from").value);
   if ($("r-to").value) p.set("to", $("r-to").value);
   if ($("r-hidden").checked) p.set("hidden", "1");
-  if (report.excluded.size) p.set("exc", [...report.excluded].join(","));
   $("r-allow").disabled = true;
   try {
     const d = await (await fetch("/api/allowance?" + p)).json();
@@ -858,7 +857,7 @@ async function runAllowance() {
         ? "Not enough quota samples in this range — history accrues while the dashboard is open."
         : "No measurable weekly-quota drop within a known reset cycle in this range — widen the dates or wait for more usage.");
     if (d.unpriced) notes.push(`${d.unpriced} model${d.unpriced === 1 ? "" : "s"} without published rates excluded from cost.`);
-    notes.push("Quota is account-wide: usage outside these sessions (and any excluded models' drain) still counts toward the %.");
+    notes.push(`Quota is account-wide: all models are costed${report.excluded.size ? " (the model filter doesn't apply)" : ""}, and usage outside these sessions still counts toward the %.`);
     const note = $("allowance-note");
     note.textContent = notes.join(" ");
     note.hidden = false;

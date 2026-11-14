@@ -292,15 +292,18 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
     return {"group": group, "rows": rows, "totals": totals, "generated": int(time.time())}
 
 
-def allowance(samples, sessions, exclude=(), from_day=None, to_day=None, hidden=False):
+def allowance(samples, sessions, from_day=None, to_day=None, hidden=False):
     """Implied USD value of the weekly/monthly quota allowance.
 
     Consecutive quota samples inside the range that share a weekly_reset form
     windows in which the weekly-% drop is attributable to usage in (t_a, t_b].
+    Windows with no visible drop still count: quota is reported in whole
+    percents, so their usage surfaces in a later window's drop.
     Priced requests are matched to windows by their message timestamps;
-    weekly_usd = cost * 100 / weekly_delta.
+    weekly_usd = cost * 100 / weekly_delta. Every model is costed regardless of
+    the report's model filter: quota is account-wide, so an excluded model's
+    drain can't be removed from the denominator.
     """
-    exclude = set(exclude)
     lo = int(datetime.fromisoformat(from_day).timestamp()) if from_day else None
     hi = int((datetime.fromisoformat(to_day) + timedelta(days=1)).timestamp()) if to_day else None
     ss = [s for s in samples if (lo is None or s[0] >= lo) and (hi is None or s[0] < hi)]
@@ -308,8 +311,8 @@ def allowance(samples, sessions, exclude=(), from_day=None, to_day=None, hidden=
     for a, b in zip(ss, ss[1:]):
         w0, wr0, w1, wr1 = a[2], a[4], b[2], b[4]
         if (w0 is None or w1 is None or wr0 is None or wr1 is None or wr0 != wr1
-                or not a[0] < b[0] < wr0 or w0 - w1 <= 0):
-            continue  # missing value, weekly reset inside the window, or no drop
+                or not a[0] < b[0] < wr0 or w0 - w1 < 0):
+            continue  # missing value, weekly reset inside the window, or a top-up
         windows.append((a[0], b[0], w0 - w1))
     used, unpriced = 0.0, set()
     ends = [t1 for _, t1, _ in windows]
@@ -317,8 +320,6 @@ def allowance(samples, sessions, exclude=(), from_day=None, to_day=None, hidden=
         if s["hidden"] and not hidden:
             continue
         for b in s.get("daily") or []:
-            if b["model"] in exclude:
-                continue
             for usage in b.get("usage") or []:
                 at = usage["at"]
                 i = bisect.bisect_left(ends, at)
@@ -771,9 +772,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(pricing.snapshot())
         if self.path.startswith("/api/allowance"):
             q = parse_qs(urlsplit(self.path).query)
-            exc = {m for v in q.get("exc", []) for m in v.split(",") if m}
             quota()  # land a fresh sample before measuring
-            return self._json(allowance(_quota_hist, STATE.sessions, exclude=exc,
+            return self._json(allowance(_quota_hist, STATE.sessions,
                                         from_day=q.get("from", [None])[0] or None,
                                         to_day=q.get("to", [None])[0] or None,
                                         hidden=q.get("hidden") == ["1"]))

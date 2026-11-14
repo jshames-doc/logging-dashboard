@@ -38,11 +38,13 @@
 - Table view state (search text, model set, workspace, dates, show-hidden, sort) persists in the URL hash via
   `saveView()`/`applyView()` in `app.js` (`models` is a JSON array; stale model/workspace values are pruned on restore),
   so filtered views survive reload and can be bookmarked. Column visibility stays in localStorage `ledger.cols`.
-  **Allowance value** button -> `GET /api/allowance?from&to&exc&hidden`: `server.allowance` pairs consecutive quota
-  samples inside the range that share a known, unexpired `weekly_reset` into windows where `weekly` dropped, sums priced
+  **Allowance value** button -> `GET /api/allowance?from&to&hidden`: `server.allowance` pairs consecutive quota
+  samples inside the range that share a known, unexpired `weekly_reset` into windows where `weekly` didn't rise (flat windows count: whole-percent
+  quantization means their usage shows up in a later drop; top-ups are skipped), sums priced
   requests whose timestamps fall in `(start, end]`, and returns `weekly_usd = cost × 100 ÷ Δweekly%` (`monthly_usd = × 4.33`);
   `None` when no usable windows (too few samples or no drop — note tells the user why). Quota is account-wide while cost
-  is local-only, so other clients' and excluded models' drain stay in the denominator.
+  is local-only, so other clients' drain stays in the denominator. The model filter (`exc`) is deliberately not applied:
+  an excluded model's drain can't be separated from the account-wide %, so dropping only its cost would bias the value low.
 - Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,
   parses the embedded `modelCostData` array (Self-serve tab = `TEAMS_TIER_PRO`, the rates self-serve plans pay;
   Enterprise-ACU tier fallback — accepts the legacy `TEAMS_TIER_ENTERPRISE_SAAS` name too — for models only published there), prints a diff

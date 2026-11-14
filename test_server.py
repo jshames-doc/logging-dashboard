@@ -1384,15 +1384,13 @@ class AllowanceTest(unittest.TestCase):
         self.assertEqual(r["windows"], 0)
         self.assertIsNone(r["weekly_usd"])
 
-    def test_excluded_and_unpriced_models_not_costed(self):
+    def test_unpriced_models_not_costed(self):
         d0, d1 = self._t(), self._t(86400)
         reset = self._t(604800)
         samples = [(d0, 90, 90, d1, reset), (d1, 90, 85, d1 + 86400, reset)]
         sess = self._sessions(self._bucket(), self._bucket(model="MODEL_SWE_1_5"))
-        r = server.allowance(samples, sess, exclude={"claude-sonnet-4-6"})
-        self.assertEqual(r["unpriced"], 1)
-        self.assertEqual(r["cost"], 0)
         r = server.allowance(samples, sess)
+        self.assertEqual(r["unpriced"], 1)
         self.assertAlmostEqual(r["cost"], self._usd(self._bucket()), places=4)
 
     def test_hidden_sessions_skipped_unless_requested(self):
@@ -1435,7 +1433,7 @@ class AllowanceTest(unittest.TestCase):
                 self.assertEqual(r["windows"], 0)
                 self.assertIsNone(r["weekly_usd"])
 
-    def test_requests_in_no_drop_gaps_are_not_costed(self):
+    def test_requests_in_no_drop_gaps_are_costed(self):
         d0, mid, end, reset = self._t(), self._t(300), self._t(600), self._t(604800)
         samples = [(d0, 90, 90, None, reset), (mid, 90, 90, None, reset),
                    (end, 80, 80, None, reset)]
@@ -1443,8 +1441,16 @@ class AllowanceTest(unittest.TestCase):
         b["usage"] = [{**b["usage"][0], "at": t} for t in (d0 + 1, mid, mid + 1)]
         with mock.patch.object(server, "cost", return_value=("priced", 24.0)) as price:
             r = server.allowance(samples, self._sessions(b))
-        self.assertEqual(price.call_count, 1)
-        self.assertEqual(r["cost"], 24.0)
+        self.assertEqual(price.call_count, 3)  # sub-1% usage in the flat window shows up in the next drop
+        self.assertEqual(r["cost"], 72.0)
+        self.assertEqual(r["weekly_delta"], 10)
+
+    def test_top_up_window_skipped(self):
+        d0, end, reset = self._t(), self._t(300), self._t(604800)
+        samples = [(d0, 80, 80, None, reset), (end, 90, 90, None, reset)]
+        r = server.allowance(samples, self._sessions(self._bucket(day=self.DAY)))
+        self.assertEqual(r["windows"], 0)
+        self.assertIsNone(r["weekly_usd"])
 
     def test_date_range_limits_samples(self):
         d0, mid, d2 = self._t(), self._t(43200), self._t(172800)
