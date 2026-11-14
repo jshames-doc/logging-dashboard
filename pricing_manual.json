@@ -24,6 +24,17 @@
    "cache_read": 0.1
   },
   {
+   "label": "Gemini 4 Hydrogen",
+   "uids": ["gemini-4-hydrogen", "gemini-4-hydrogen-low", "gemini-4-hydrogen-medium", "gemini-4-hydrogen-high",
+            "gemini-4-hydrogen-minimal", "gemini-4-hydrogen-xhigh", "gemini-4-hydrogen-max", "gemini-4-hydrogen-none"],
+   "source": "user-provided (not on docs.devin.ai/desktop/models)",
+   "noted": "2026-11-14",
+   "input": 1.5,
+   "output": 7.5,
+   "cache_write": 0.0,
+   "cache_read": 0.08
+  },
+  {
    "label": "SWE-2 Lightning",
    "uids": ["swe-2-lightning", "swe-2-low-lightning", "swe-2-medium-lightning",
             "swe-2-high-lightning", "swe-2-xhigh-lightning", "swe-2-max-lightning",

@@ -2,7 +2,7 @@
  "source": "https://docs.devin.ai/desktop/models",
  "tier": "Self-serve",
  "fallback_tier": "Devin Enterprise",
- "fetched": "2026-11-13",
+ "fetched": "2026-11-14",
  "models": [
   {
    "uid": "adaptive",
