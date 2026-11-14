@@ -74,7 +74,7 @@ const hitPct = (r) => (r.input + r.cached ? (r.cached / (r.input + r.cached)) * 
 const CELLS = {
   created: (r) => `<td class="dt">${dt(r.created)}</td>`,
   last_activity: (r) => `<td class="dt">${dt(r.last_activity)}</td>`,
-  title: (r) => `<td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div><div class="id">${esc(r.id)}</div></td>`,
+  title: (r) => `<td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div></td>`,
   workspace: (r) => `<td class="ws" title="${esc(r.workspace)}">${esc(base(r.workspace))}</td>`,
   src: (r) => `<td class="src">${esc(r.src || "—")}</td>`,
   model: (r) => `<td class="model" title="Used ${esc(new Date(r.first * 1000).toLocaleString())} → ${esc(new Date(r.last * 1000).toLocaleString())}">${esc(r.model)}</td>`,
