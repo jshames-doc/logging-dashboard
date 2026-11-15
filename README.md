@@ -125,19 +125,32 @@ in `.cache/sessions_cache.json`, keyed by `source:session-id` and each session's
 
 ## Pricing
 
-Estimated costs use the published rates from
-[docs.devin.ai/desktop/models](https://docs.devin.ai/desktop/models)
-(Self-serve tier, Enterprise ACU-tier fallback), stored in `pricing_data.json`.
+Estimated costs use published per-model rates stored in `pricing_data.json`,
+sourced primarily from the account's `GetCliModelConfigs` RPC (the same model
+catalog the IDE uses), supplemented by the public
+[docs.devin.ai/desktop/models](https://docs.devin.ai/desktop/models) rate card
+for cache-write rates and models the catalog doesn't cover.
 
-- `update_prices.bat` fetches the latest rates, prints a diff, and rewrites
-  `pricing_data.json`. The file is hot-reloaded on change — no restart needed.
-  `python update_prices.py --dry-run` previews changes without writing;
-  `--file page.html` parses a saved copy of the page instead of fetching.
+- `update_prices.bat` (or `python update_prices.py`) fetches the catalog and
+  docs page, prints a diff, and atomically rewrites `pricing_data.json`. The
+  file is hot-reloaded on change — no restart needed. A catalog or credential
+  failure exits nonzero and leaves the snapshot untouched; `--docs-only` is
+  the explicit docs-only recovery path. `python update_prices.py --dry-run`
+  previews changes without writing; `--file page.html` and
+  `--catalog-file resp.json` parse saved fixtures (both together = fully
+  offline).
+- Each rate records its provenance (`rate_sources`) and the Prices dialog
+  groups models into tiers: Live, Live·cached, Self-serve, Devin Enterprise,
+  Enterprise SaaS, Legacy, and Manual. Models with no matching rate (e.g.
+  summarizer/compactor models) show `—` instead of a price — there are no
+  cache-write heuristics, so a catalog model without a published cache-write
+  rate stays partially unpriced.
 - `pricing_manual.json` holds hand-entered rates for models Devin doesn't
-  publish. It's never overwritten by the updater, and it can define
-  `long_prompt` rates for requests whose prompt exceeds 100K tokens.
-- Models with no matching rate (e.g. summarizer/compactor models) show `—`
-  instead of a price.
+  publish. It's never overwritten by the updater — published rates win on
+  collision, and entries active under the previous snapshot are protected
+  from being half-replaced (`--promote-manual` performs that migration
+  explicitly). Entries can define `long_prompt` rates for requests whose
+  prompt exceeds 100K tokens.
 
 ## Tests
 
@@ -154,7 +167,7 @@ server.py            HTTP server + sqlite aggregation + cache
 pricing.py           Rate lookup, model-slug resolution, hot-reload
 pricing_data.json    Published rates (written by update_prices.py)
 pricing_manual.json  Hand-entered rates (never auto-overwritten)
-update_prices.py     Fetches + parses the docs.devin.ai rate card
+update_prices.py     Fetches the catalog RPC + parses the docs.devin.ai rate card
 static/              Single-page dashboard (index.html, app.js, style.css)
 run.bat / stop_server.bat / update_prices.bat   Windows helpers
 sample_quota.bat / register_sampler.bat / unregister_sampler.bat   Quota sampler
@@ -168,8 +181,9 @@ dashboard is open — and every 15 minutes if you register the background
 sampler — it polls the Devin `GetUserStatus` endpoint to fill the quota
 columns and runway, using the API key in
 `%APPDATA%\devin\credentials.toml` — the key is sent only to Devin's own API
-and never leaves the server otherwise. The only other outbound call is
-`update_prices.py` fetching the public pricing page. Your session data stays
+and never leaves the server otherwise. The only other outbound calls are
+`update_prices.py` fetching the public pricing page and the account's
+model-catalog RPC. Your session data stays
 in `%APPDATA%` and is never copied into this repo.
 
 ## License
