@@ -50,7 +50,7 @@ function sorted(rows) {
 }
 
 const card = (lbl, val, sub, sw = "", i = 0) =>
-  `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div><div class="sub">${sub}</div></div>`;
+  `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div>${sub ? `<div class="sub">${sub}</div>` : ""}</div>`;
 
 function renderTotals(rows) {
   const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0), gen_ms: a.gen_ms + (r.gen_ms || 0) }),
@@ -58,14 +58,14 @@ function renderTotals(rows) {
   const sessions = new Set(rows.map((r) => r.id)).size;
   const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
   $("totals").innerHTML = [
-    card("Sessions", fmt.format(sessions), `${fmt.format(rows.length)} model rows`, "", 0),
-    card("Responses", compact.format(t.messages), fmt.format(t.messages), "", 1),
-    card("Input", compact.format(t.input), fmt.format(t.input), "in", 2),
-    card("Output", compact.format(t.output), fmt.format(t.output), "out", 3),
-    card("Avg TPS", t.gen_ms ? (t.output * 1000 / t.gen_ms).toFixed(1) : "—", "output ÷ generation time", "", 4),
-    card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 5),
-    card("Cache hit", `${hit.toFixed(1)}%`, "cached ÷ (input + cached)", "", 6),
-    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "Devin Self-serve rates", "", 7),
+    card("Sessions", fmt.format(sessions), "", "", 0),
+    card("Responses", compact.format(t.messages), "", "", 1),
+    card("Input", compact.format(t.input), "", "in", 2),
+    card("Output", compact.format(t.output), "", "out", 3),
+    card("Avg TPS", t.gen_ms ? (t.output * 1000 / t.gen_ms).toFixed(1) : "—", "", "", 4),
+    card("Cached", compact.format(t.cached), "", "ca", 5),
+    card("Cache hit", `${hit.toFixed(1)}%`, "", "", 6),
+    card("Est. cost", t.price ? fmtPrice(t.price) : "—", "", "", 7),
   ].join("");
 }
 

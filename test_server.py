@@ -297,7 +297,7 @@ vm.runInContext(`
 const ids = () => Array.from(vm.runInContext("filtered().map(r => r.id)", context));
 assert.deepEqual(ids(), ["a", "b"]);
 vm.runInContext("render()", context);
-assert.ok(element("totals").innerHTML.includes("2 model rows"));
+assert.ok(element("totals").innerHTML.includes(">2<"));
 assert.ok(!element("rows").innerHTML.includes("model-c"));
 element("f-ws").value = "two";
 assert.deepEqual(ids(), []);
