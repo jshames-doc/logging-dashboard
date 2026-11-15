@@ -175,8 +175,16 @@ function renderRunway() {
   state.runwaySig = sig;
 }
 
+/* Clear lives in the header actions; show it only while a filter is active */
+function filtersActive() {
+  return Boolean($("q").value.trim() || state.models.size || $("f-ws").value ||
+    $("f-from").value || $("f-to").value || $("f-hidden").checked);
+}
+function updateClearBtn() { $("clear").hidden = !filtersActive(); }
+
 function render() {
   const rows = sorted(filtered());
+  updateClearBtn();
   renderTotals(rows);
   $("empty").hidden = rows.length > 0;
   const shown = rows.slice(0, state.limit);

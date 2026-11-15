@@ -3663,7 +3663,6 @@
    }
   },
   {
-   "label": "Gemini 4 Carbon",
    "uids": [
     "gemini-4-carbon",
     "gemini-4-carbon-minimal",
@@ -3671,6 +3670,9 @@
     "gemini-4-carbon-max",
     "gemini-4-carbon-none"
    ],
+   "label": "Gemini 4 Carbon",
+   "source": "user-provided (not on docs.devin.ai/desktop/models)",
+   "noted": "2026-11-11",
    "input": 2.0,
    "output": 10.0,
    "cache_write": 2.0,
@@ -3693,9 +3695,7 @@
      "kind": "manual",
      "date": "2026-11-11"
     }
-   },
-   "source": "user-provided (not on docs.devin.ai/desktop/models)",
-   "noted": "2026-11-11"
+   }
   },
   {
    "uid": "gemini-4-carbon-high",
@@ -3788,13 +3788,15 @@
    }
   },
   {
-   "label": "Gemini 4 Hydrogen",
    "uids": [
     "gemini-4-hydrogen",
     "gemini-4-hydrogen-minimal",
     "gemini-4-hydrogen-max",
     "gemini-4-hydrogen-none"
    ],
+   "label": "Gemini 4 Hydrogen",
+   "source": "user-provided (not on docs.devin.ai/desktop/models)",
+   "noted": "2026-11-14",
    "input": 1.5,
    "output": 7.5,
    "cache_write": 0.0,
@@ -3817,9 +3819,7 @@
      "kind": "manual",
      "date": "2026-11-14"
     }
-   },
-   "source": "user-provided (not on docs.devin.ai/desktop/models)",
-   "noted": "2026-11-14"
+   }
   },
   {
    "uid": "gemini-4-hydrogen-high",
@@ -10482,7 +10482,6 @@
    }
   },
   {
-   "label": "SWE-2 Lightning",
    "uids": [
     "swe-2-lightning",
     "swe-2-low-lightning",
@@ -10493,6 +10492,9 @@
     "swe-2-lightning-xhigh",
     "swe-2-lightning-max"
    ],
+   "label": "SWE-2 Lightning",
+   "source": "user-provided (not on docs.devin.ai/desktop/models)",
+   "noted": "2026-10-15",
    "input": 1.0,
    "output": 5.0,
    "cache_write": 0.0,
@@ -10515,9 +10517,7 @@
      "kind": "manual",
      "date": "2026-10-15"
     }
-   },
-   "source": "user-provided (not on docs.devin.ai/desktop/models)",
-   "noted": "2026-10-15"
+   }
   },
   {
    "uid": "swe-2-max",
