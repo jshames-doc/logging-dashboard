@@ -573,6 +573,34 @@ assert.ok(!element("session-stats").innerHTML.includes('NaN'));
 assert.ok(element("session-cost-note").textContent.includes('No published rates'));
 """)
 
+    def test_prices_source_text_and_provenance_tooltips(self):
+        self.run_script(r"""
+const src = vm.runInContext(`srcLink("GetCliModelConfigs + https://docs.devin.ai/desktop/models")`, context);
+assert.ok(!src.includes("<a"));  // RPC identifier is text, not a broken relative link
+assert.equal(vm.runInContext(`srcLink("x <b>")`, context), "x &lt;b&gt;");
+assert.ok(vm.runInContext(`srcLink("https://docs.devin.ai/desktop/models")`, context).includes("href="));
+const prov = vm.runInContext(`provTitle({rate_sources: {
+  input: {kind: "catalog", src: "GetCliModelConfigs", date: "2026-02-01"},
+  output: {kind: "catalog", src: "GetCliModelConfigs", date: "2026-02-01"},
+  cache_read: {kind: "catalog", src: "GetCliModelConfigs", date: "2026-02-01"},
+  cache_write: {kind: "docs", tier: "Self-serve", date: "2026-01-01"}}})`, context);
+assert.ok(prov.includes("input: GetCliModelConfigs, observed 2026-02-01"));
+assert.ok(prov.includes("cache write: docs page (Self-serve), observed 2026-01-01"));
+vm.runInContext(`
+  prices.data = {tier: "Live", fetched: "2026-02-01", source: "GetCliModelConfigs",
+    models: [{uid: "m-1", label: "M", input: 1, output: 2, cache_write: 3, cache_read: 0.4,
+              tier: "Live·cached", rate_sources: {
+                input: {kind: "catalog", date: "2026-02-01"},
+                output: {kind: "catalog", date: "2026-02-01"},
+                cache_read: {kind: "catalog", date: "2026-02-01"},
+                cache_write: {kind: "docs", tier: "Self-serve", date: "2026-01-01"}}}]};
+  renderPrices();
+`, context);
+const html = element("prices-rows").innerHTML;
+assert.ok(html.includes("Live·cached"));  // cached provenance tagged, not sold as fresh
+assert.ok(html.includes("cache write: docs page (Self-serve), observed 2026-01-01"));
+""")
+
 
 class ReportTest(DBFixture):
     D12 = "2026-10-12T12:00:00Z"  # midday UTC: same local day for nearly all timezones
@@ -776,18 +804,26 @@ PAGE = r"""<script>self.__next_f.push([1,"...modelCostData=[{\"tier\":`TEAMS_TIE
 <script>modelCostData=[{\"tier\":`TEAMS_TIER_DEVIN_ENTERPRISE`,\"model_uid\":`m-a`,\"label\":`Model A`,\"input_cost_per_million_usd\":2.5,\"output_cost_per_million_usd\":10,\"cache_write_cost_per_million_usd\":0,\"cache_read_cost_per_million_usd\":.25}]</script>"""
 
 
+def cat_cfg(uid, label=None, inp=1.0, cached=0.1, out=5.0,
+            ptype="MODEL_PRICING_TYPE_STATIC_CREDIT", denom="1M tokens", drop=(), extra=()):
+    """A sanitized GetCliModelConfigs config: COST dimensions in USD per 1M tokens."""
+    dims = [{"label": lab, "value": v, "denominator": denom, "kind": "MODEL_DIMENSION_KIND_COST"}
+            for lab, v in (("Input", inp), ("Cached input", cached), ("Output", out))]
+    return {"label": label if label is not None else uid, "modelUid": uid, "pricingType": ptype,
+            "modelDimensions": [d for d in dims if d["label"] not in drop] + list(extra)}
+
+
 class UpdatePricesTest(unittest.TestCase):
-    def test_parse_and_build_with_enterprise_fallback(self):
+    def test_parse_and_select_docs_with_enterprise_fallback(self):
         import update_prices
         entries = update_prices.parse(PAGE)
         self.assertEqual(len(entries), 3)  # duplicate page copy de-duplicated
-        data = update_prices.build(entries, fetched="2026-01-01")
-        models = {m["label"]: m for m in data["models"]}
-        self.assertEqual(set(models), {"Model A", "Model B"})
-        a, b = models["Model A"], models["Model B"]
-        self.assertEqual((a["uid"], a["tier"], a["input"], a["output"], a["cache_write"], a["cache_read"]),
-                         ("m-a", "Self-serve", 9.0, 9.0, 9.0, 9.0))
-        self.assertEqual((b["tier"], b["cache_read"]), ("Devin Enterprise", 4.0))
+        tier, docs = update_prices.select_docs(entries)
+        self.assertEqual(tier, "TEAMS_TIER_PRO")
+        self.assertEqual(set(docs), {"m-a", "m-b"})
+        # Self-serve wins for the shared uid; the Enterprise-only uid falls back.
+        self.assertEqual((docs["m-a"]["tier"], docs["m-a"]["cache_write"]), ("Self-serve", 9.0))
+        self.assertEqual((docs["m-b"]["tier"], docs["m-b"]["cache_read"]), ("Devin Enterprise", 4.0))
 
     def test_diff_reports_changes(self):
         import update_prices
@@ -795,15 +831,32 @@ class UpdatePricesTest(unittest.TestCase):
         lines = update_prices.diff({"models": [m("A", 1), m("B", 1)]}, {"models": [m("A", 2), m("C", 1)]})
         self.assertEqual([l[0] for l in lines], ["+", "-", "~"])
 
-    def test_merge_legacy_keeps_unpublished_models(self):
+    def test_diff_reports_tier_and_provenance_changes(self):
+        import update_prices
+        base = {"uid": "m-1", "label": "M", "input": 1, "output": 1, "cache_write": 0, "cache_read": 0}
+        old = {**base, "tier": "Self-serve"}
+        rs = {c: {"kind": "catalog", "date": "2026-01-01"} for c in ("input", "output", "cache_read")}
+        new = {**base, "tier": "Live",
+               "rate_sources": rs | {"cache_write": {"kind": "docs", "tier": "Self-serve", "date": "2026-01-01"}}}
+        lines = update_prices.diff({"models": [old]}, {"models": [new]})
+        self.assertEqual(len(lines), 1)
+        self.assertIn("tier Self-serve -> Live", lines[0])
+        self.assertIn("sources Self-serve -> catalog+docs", lines[0])
+
+    def test_merge_keeps_unpublished_models_as_legacy(self):
         import update_prices
         m = lambda label, uid=None, tier="Devin Enterprise": {"label": label, "uid": uid or label.lower(),
             "input": 1, "output": 1, "cache_write": 0, "cache_read": 0, "tier": tier}
-        old = {"models": [m("A"), m("B"), m("C", uid="shared-uid")]}
-        new = {"models": [m("A"), m("Z", uid="shared-uid")]}
-        kept = update_prices.merge_legacy(old, new)
-        self.assertEqual([(k["label"], k["tier"]) for k in kept], [("B", "Legacy")])
-        self.assertEqual([x["label"] for x in new["models"]], ["A", "B", "Z"])
+        old = {"fetched": "2026-01-01", "models": [m("A"), m("B"), m("C", uid="shared-uid")]}
+        docs = {"a": m("A", tier="Self-serve"), "shared-uid": m("Z", uid="shared-uid", tier="Self-serve")}
+        models, stats = update_prices.merge({}, docs, old, None, "2026-02-01")
+        kept = {x["label"]: x for x in models}
+        self.assertEqual(set(kept), {"A", "B", "Z"})
+        self.assertEqual(kept["B"]["tier"], "Legacy")
+        self.assertEqual(kept["B"]["rate_sources"]["cache_write"],
+                         {"kind": "docs", "tier": "Devin Enterprise", "date": "2026-01-01"})
+        self.assertEqual(kept["A"]["tier"], "Self-serve")  # docs-published, not Legacy
+        self.assertEqual(stats["legacy"], 1)
 
     def test_pricing_survives_malformed_files(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -845,6 +898,421 @@ class UpdatePricesTest(unittest.TestCase):
             finally:
                 pricing.DATA_PATH = orig
                 pricing._load()
+
+
+class UpdatePricesCatalogTest(unittest.TestCase):
+    """Validated USD catalog entries from a (sanitized) GetCliModelConfigs response."""
+
+    def test_validates_and_ignores_unrelated_dimensions(self):
+        import update_prices
+        models, rejected = update_prices.catalog_models({"clientModelConfigs": [
+            cat_cfg("m-a", "Model A", inp=8, cached=0.2, out=40, extra=[
+                {"label": "Context", "value": 400, "denominator": "K tokens",
+                 "kind": "MODEL_DIMENSION_KIND_TEXT"},
+                {"label": "Input", "value": 99, "denominator": "1M tokens",
+                 "kind": "MODEL_DIMENSION_KIND_COST_FUZZY"}]),  # wrong kind: ignored, not a duplicate
+            cat_cfg("m-z", "Zero", inp=0, cached=0, out=0),
+        ]})
+        self.assertEqual(rejected, {})
+        self.assertEqual(models["m-a"], {"uid": "m-a", "label": "Model A",
+                                         "input": 8.0, "output": 40.0, "cache_read": 0.2})
+        self.assertEqual(models["m-z"], {"uid": "m-z", "label": "Zero",
+                                         "input": 0.0, "output": 0.0, "cache_read": 0.0})
+
+    def test_rejection_reasons(self):
+        import update_prices
+        cases = [
+            ("empty uid", [{"label": "No UID", "modelUid": "", "pricingType":
+                            "MODEL_PRICING_TYPE_STATIC_CREDIT"}], "uid or label"),
+            ("empty label", [cat_cfg("m-1", label=" ")], "uid or label"),
+            ("credit pricing", [cat_cfg("m-2", ptype="MODEL_PRICING_TYPE_CREDITS")], "pricingType"),
+            ("bad denominator", [cat_cfg("m-3", denom="1K tokens")], "denominator"),
+            ("missing cached input", [cat_cfg("m-4", drop=("Cached input",))], "cache_read"),
+            ("bool value", [cat_cfg("m-5", inp=True)], "Input value"),
+            ("negative value", [cat_cfg("m-6", inp=-1)], "Input value"),
+            ("string value", [cat_cfg("m-7", inp="3")], "Input value"),
+            ("nan value", [cat_cfg("m-8", inp=float("nan"))], "Input value"),
+            ("inf value", [cat_cfg("m-9", inp=float("inf"))], "Input value"),
+            ("duplicate dim", [cat_cfg("m-10", extra=[{"label": "Input", "value": 9,
+                "denominator": "1M tokens", "kind": "MODEL_DIMENSION_KIND_COST"}])], "duplicate Input"),
+            ("non-dict config", [42], "not an object"),
+        ]
+        for name, cfgs, want in cases:
+            with self.subTest(name):
+                models, rejected = update_prices.catalog_models({"clientModelConfigs": cfgs})
+                self.assertEqual(models, {}, rejected)
+                self.assertTrue(any(want in r for r in rejected), (name, rejected))
+
+    def test_conflicting_duplicate_uids_rejected_identical_deduped(self):
+        import update_prices
+        models, rejected = update_prices.catalog_models({"clientModelConfigs": [
+            cat_cfg("m-1", inp=1), cat_cfg("m-1", inp=9)]})
+        self.assertEqual(models, {})
+        self.assertTrue(any("conflicting duplicate uid" in r for r in rejected))
+        models, rejected = update_prices.catalog_models({"clientModelConfigs": [
+            cat_cfg("m-1"), cat_cfg("m-1"), cat_cfg("m-2")]})
+        self.assertEqual(sorted(models), ["m-1", "m-2"])
+
+    def test_malformed_response_raises(self):
+        import update_prices
+        with self.assertRaises(ValueError):
+            update_prices.catalog_models([1, 2])
+        with self.assertRaises(ValueError):
+            update_prices.catalog_models({"clientModelConfigs": "nope"})
+        models, _ = update_prices.catalog_models({"clientModelConfigs": []})
+        self.assertEqual(models, {})
+
+    def test_priceless_config_is_not_reported_as_malformed(self):
+        import update_prices
+        bare = {"label": "SWE-2 High", "modelUid": "swe-2-high",
+                "pricingType": "MODEL_PRICING_TYPE_STATIC_CREDIT"}
+        _, rejected = update_prices.catalog_models({"clientModelConfigs": [bare]})
+        self.assertEqual(rejected, {"no price dimensions": 1})
+
+    def test_ide_version_from_installed_product(self):
+        import update_prices
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(os.environ, {"DEVIN_IDE_VERSION": ""}):
+            prod = Path(tmp) / "product.json"
+            prod.write_text(json.dumps({"codeiumVersion": "1.50.0", "version": "9.9.9"}))
+            self.assertEqual(update_prices.ide_version(prod), "1.50.0")
+            prod.write_text(json.dumps({"codeiumVersion": "dev"}))
+            self.assertEqual(update_prices.ide_version(prod), update_prices.CATALOG_IDE_FALLBACK)
+            self.assertEqual(update_prices.ide_version(Path(tmp) / "missing.json"),
+                             update_prices.CATALOG_IDE_FALLBACK)
+            os.environ["DEVIN_IDE_VERSION"] = "2.0.0"
+            self.assertEqual(update_prices.ide_version(prod), "2.0.0")
+
+
+class UpdatePricesMergeTest(unittest.TestCase):
+    def setUp(self):
+        import update_prices
+        self.up = update_prices
+        self.docs = update_prices.select_docs(update_prices.parse(PAGE))[1]
+
+    def cm(self, uid, label=None, **rates):
+        d = {"uid": uid, "label": label or uid, "input": 1, "output": 2, "cache_read": 0.1}
+        d.update(rates)
+        return {uid: d}
+
+    def test_catalog_uses_selfserve_cache_write_over_enterprise(self):
+        models, _ = self.up.merge(self.cm("m-a", "Model A"), self.docs, None, None, "2026-02-01")
+        a = next(m for m in models if m["uid"] == "m-a")
+        self.assertEqual(a["cache_write"], 9.0)  # Self-serve, not the Enterprise duplicate's 0
+        self.assertEqual(a["tier"], "Live")
+        self.assertEqual(a["rate_sources"]["cache_write"],
+                         {"kind": "docs", "tier": "Self-serve", "date": "2026-02-01"})
+        self.assertEqual(a["rate_sources"]["input"]["kind"], "catalog")
+        # m-b is not in the catalog: docs covers it at the Enterprise fallback tier.
+        b = next(m for m in models if m["uid"] == "m-b")
+        self.assertEqual((b["tier"], b["cache_write"]), ("Devin Enterprise", 3.0))
+        self.assertEqual(b["rate_sources"]["input"]["kind"], "docs")
+
+    def test_catalog_uses_enterprise_cache_write_when_no_selfserve(self):
+        models, stats = self.up.merge(self.cm("m-b", "Model B"), {}, None, None, "2026-02-01")
+        self.assertEqual(models, [])  # no docs and no fallback -> unpriced, not guessed
+        self.assertEqual(stats["missing_cw"], ["m-b"])
+        models, _ = self.up.merge(self.cm("m-b", "Model B"), self.docs, None, None, "2026-02-01")
+        b = next(m for m in models if m["uid"] == "m-b")
+        self.assertEqual(b["rate_sources"]["cache_write"]["tier"], "Devin Enterprise")
+        self.assertEqual(b["cache_write"], 3.0)
+
+    def test_cache_write_falls_back_to_trusted_snapshot(self):
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-x", "label": "X", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.5, "tier": "Self-serve"}]}
+        models, _ = self.up.merge(self.cm("m-x", "X"), {}, old, None, "2026-02-01")
+        m = models[0]
+        self.assertEqual((m["cache_write"], m["tier"]), (3.0, "Live·cached"))
+        self.assertEqual(m["rate_sources"]["cache_write"],
+                         {"kind": "docs", "tier": "Self-serve", "date": "2026-01-01"})
+
+    def test_zero_docs_cache_write_wins_over_fallback(self):
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-x", "label": "X", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.5, "tier": "Self-serve"}]}
+        docs = {"m-x": {"uid": "m-x", "label": "X", "tier": "Self-serve",
+                        "input": 1, "output": 2, "cache_write": 0, "cache_read": 0.5}}
+        models, _ = self.up.merge(self.cm("m-x", "X"), docs, old, None, "2026-02-01")
+        self.assertEqual((models[0]["cache_write"], models[0]["tier"]), (0.0, "Live"))
+
+    def test_missing_cache_write_omits_model(self):
+        models, stats = self.up.merge(self.cm("m-x", "X"), {}, None, None, "2026-02-01")
+        self.assertEqual(models, [])
+        self.assertEqual(stats["missing_cw"], ["m-x"])
+        # A previous cache_write rate is not enough: its provenance must be trusted.
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-x", "label": "X", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.5, "tier": "Live·est"}]}
+        models, stats = self.up.merge(self.cm("m-x", "X"), {}, old, None, "2026-02-01")
+        self.assertEqual(models, [])
+        self.assertEqual(stats["missing_cw"], ["m-x"])
+
+    def test_second_update_preserves_reused_provenance(self):
+        docs = {"m-x": {"uid": "m-x", "label": "X", "tier": "Self-serve",
+                        "input": 1, "output": 2, "cache_write": 3, "cache_read": 0.5}}
+        first, _ = self.up.merge(self.cm("m-x", "X"), docs, None, None, "2026-01-01")
+        self.assertEqual(first[0]["tier"], "Live")
+        snapshot = {"fetched": "2026-01-01", "models": first}
+        second, _ = self.up.merge(self.cm("m-x", "X"), {}, snapshot, None, "2026-02-01")
+        m = second[0]
+        self.assertEqual(m["tier"], "Live·cached")
+        # The reused rate keeps its original docs provenance and date.
+        self.assertEqual(m["rate_sources"]["cache_write"],
+                         {"kind": "docs", "tier": "Self-serve", "date": "2026-01-01"})
+        self.assertEqual(m["rate_sources"]["input"]["date"], "2026-02-01")  # re-observed
+
+    def test_estimates_never_become_trusted(self):
+        est = {"kind": "est", "date": "2026-01-01"}
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-e", "label": "E", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.4, "tier": "Live·est"},
+            {"uid": "m-f", "label": "F", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.4, "tier": "Live",
+             "rate_sources": {**{c: {"kind": "catalog", "date": "2026-01-01"}
+                                 for c in ("input", "output", "cache_read")},
+                              "cache_write": est}}]}
+        # No catalog: neither is retained as Legacy.
+        models, stats = self.up.merge({}, {}, old, None, "2026-02-01")
+        self.assertEqual(models, [])
+        self.assertEqual(stats["dropped"], 2)
+        # In the catalog: the estimated cache_write can't be reused.
+        models, stats = self.up.merge({**self.cm("m-e", "E"), **self.cm("m-f", "F")},
+                                      {}, old, None, "2026-02-01")
+        self.assertEqual(models, [])
+        self.assertEqual(sorted(stats["missing_cw"]), ["m-e", "m-f"])
+
+    def test_trusted_legacy_survives_new_format_provenance_preserved(self):
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-nf", "label": "NF", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.4, "tier": "Live",
+             "rate_sources": {"input": {"kind": "catalog", "date": "2025-12-01"},
+                              "output": {"kind": "catalog", "date": "2025-12-01"},
+                              "cache_read": {"kind": "catalog", "date": "2025-12-01"},
+                              "cache_write": {"kind": "docs", "tier": "Self-serve",
+                                              "date": "2025-11-01"}}}]}
+        models, stats = self.up.merge({}, {}, old, None, "2026-02-01")
+        self.assertEqual(len(models), 1)
+        m = models[0]
+        self.assertEqual(m["tier"], "Legacy")
+        self.assertEqual(m["rate_sources"]["cache_write"],
+                         {"kind": "docs", "tier": "Self-serve", "date": "2025-11-01"})
+
+    def test_manual_collision_defers_by_label_and_any_uid(self):
+        manual = {"models": [{"label": "Cat Manual", "uids": ["m-man", "m-man-alias"],
+                              "input": 1, "output": 2, "cache_write": 3, "cache_read": 0.4}]}
+        catalog = {**self.cm("m-man-alias", "Alias Pub"), **self.cm("m-x", "X")}
+        docs = {"m-man": {"uid": "m-man", "label": "Man Pub", "tier": "Self-serve",
+                          "input": 1, "output": 2, "cache_write": 0, "cache_read": 0.1},
+                "m-other": {"uid": "m-other", "label": "Cat Manual", "tier": "Self-serve",
+                            "input": 1, "output": 2, "cache_write": 0, "cache_read": 0.1},
+                "m-x": {"uid": "m-x", "label": "X", "tier": "Self-serve",
+                        "input": 1, "output": 2, "cache_write": 0, "cache_read": 0.1}}
+        models, stats = self.up.merge(catalog, docs, None, manual, "2026-02-01")
+        self.assertEqual({m["label"] for m in models}, {"X"})
+        self.assertEqual(sorted(stats["protected"]), ["m-man", "m-man-alias", "m-other"])
+
+    def test_manual_shadowed_entry_stays_shadowed(self):
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-man", "label": "Pub", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.4, "tier": "Self-serve"}]}
+        manual = {"models": [{"label": "Cat Manual", "uids": ["m-man"],
+                              "input": 9, "output": 9, "cache_write": 9, "cache_read": 9}]}
+        # m-man already shadowed the manual entry: catalog may keep pricing it.
+        models, stats = self.up.merge(self.cm("m-man", "Pub"), {}, old, manual, "2026-02-01")
+        self.assertEqual(stats["protected"], [])
+        self.assertEqual(models[0]["label"], "Pub")
+
+    def test_manual_protection_preserves_aliases_and_long_tier(self):
+        manual = {"models": [{"label": "Claude Haiku 5.5", "uids": ["claude-haiku-5-5"],
+                              "input": 0.1, "output": 0.5, "cache_write": 0.125, "cache_read": 0.01,
+                              "long_prompt": {"input": 0.5, "output": 2.5,
+                                              "cache_write": 0.625, "cache_read": 0.05}}]}
+        catalog = {**self.cm("claude-haiku-5-5", "Haiku Pub")}
+        models, stats = self.up.merge(catalog, {}, None, manual, "2026-02-01")
+        self.assertEqual(models, [])
+        self.assertEqual(stats["protected"], ["claude-haiku-5-5"])
+        with tempfile.TemporaryDirectory() as tmp:
+            data_path, manual_path = Path(tmp) / "d.json", Path(tmp) / "m.json"
+            data_path.write_text(json.dumps({"fetched": "2026-02-01", "models": models}))
+            manual_path.write_text(json.dumps(manual))
+            orig = pricing.DATA_PATH, pricing.MANUAL_PATH
+            try:
+                pricing.DATA_PATH, pricing.MANUAL_PATH = data_path, manual_path
+                pricing._load()
+                self.assertEqual(pricing.resolve("claude-haiku-5-5"), "Claude Haiku 5.5")
+                parts = {"input": 100, "output": 1, "cache_write": 60_000, "cache_read": 50_000}
+                _, flat = pricing.cost("claude-haiku-5-5", parts)
+                _, tiered = pricing.cost("claude-haiku-5-5", parts, parts)
+                self.assertGreater(tiered, flat)  # long-prompt tier still applies
+            finally:
+                pricing.DATA_PATH, pricing.MANUAL_PATH = orig
+                pricing._load()
+
+    def test_promote_manual_overrides_and_keeps_uncovered_aliases(self):
+        manual = {"models": [{"label": "Cat Manual", "uids": ["m-man", "m-man-alias", "m-man-extra"],
+                              "source": "user-provided", "noted": "2026-01-15",
+                              "input": 1, "output": 2, "cache_write": 3, "cache_read": 0.4,
+                              "long_prompt": {"input": 5, "output": 10,
+                                              "cache_write": 6, "cache_read": 0.5}},
+                             {"label": "Unrelated", "uids": ["m-unrelated"], "input": 9,
+                              "output": 9, "cache_write": 9, "cache_read": 9}]}
+        catalog = {**self.cm("m-man", "Cat Manual Pub"), **self.cm("m-man-alias", "Alias Pub"),
+                   **self.cm("m-x", "X")}
+        docs = {"m-x": {"uid": "m-x", "label": "X", "tier": "Self-serve",
+                        "input": 1, "output": 2, "cache_write": 0, "cache_read": 0.1}}
+        models, stats = self.up.merge(catalog, docs, None, manual, "2026-02-01", promote=True)
+        by_uid = {m.get("uid") or tuple(m.get("uids", ())): m for m in models}
+        # Catalog-published variants: catalog rates, manual cache_write fallback.
+        pub = next(m for m in models if m.get("uid") == "m-man")
+        self.assertEqual((pub["input"], pub["cache_write"], pub["tier"]), (1.0, 3.0, "Live·cached"))
+        self.assertEqual(pub["rate_sources"]["cache_write"],
+                         {"kind": "manual", "date": "2026-01-15"})
+        self.assertEqual(pub["long_prompt"]["input"], 5)  # carried over
+        self.assertEqual(sorted(stats["promoted"]), ["m-man", "m-man-alias"])
+        # The uncovered alias stays priced via a Manual-tier generated entry.
+        kept = next(m for m in models if m.get("uids") == ["m-man-extra"])
+        self.assertEqual((kept["tier"], kept["cache_write"], kept["label"]),
+                         ("Manual", 3.0, "Cat Manual"))
+        self.assertEqual(kept["rate_sources"]["input"]["kind"], "manual")
+        self.assertEqual(kept["long_prompt"]["input"], 5)
+        self.assertEqual(stats["manual_kept"], 1)
+        # A manual entry the catalog doesn't touch stays file-driven, not snapshotted.
+        self.assertIsNone(next((m for m in models if m.get("label") == "Unrelated"), None))
+        # Next normal run: the manual entry is now shadowed, nothing deferred or duplicated.
+        snapshot = {"fetched": "2026-02-01", "models": models}
+        models2, stats2 = self.up.merge(catalog, docs, snapshot, manual, "2026-03-01")
+        self.assertEqual(stats2["protected"], [])
+        self.assertEqual(stats2["manual_kept"], 0)
+        self.assertEqual(sorted(m.get("uid") or m.get("uids")[0] for m in models2),
+                         sorted(m.get("uid") or m.get("uids")[0] for m in models))
+        # The uncovered alias survives (all-manual provenance keeps tier Manual)
+        # with its uids and long_prompt intact.
+        kept2 = next(m for m in models2 if m.get("uids") == ["m-man-extra"])
+        self.assertEqual((kept2["tier"], kept2["cache_write"]), ("Manual", 3.0))
+        self.assertEqual(kept2["long_prompt"]["input"], 5)
+        self.assertEqual(kept2["rate_sources"]["cache_write"],
+                         {"kind": "manual", "date": "2026-01-15"})
+        self.assertEqual((stats2["legacy"], stats2["manual_retained"]), (0, 1))
+
+    def test_promote_without_collision_behaves_normally(self):
+        models, stats = self.up.merge(self.cm("m-a", "Model A"), self.docs, None, None,
+                                      "2026-02-01", promote=True)
+        a = next(m for m in models if m["uid"] == "m-a")
+        self.assertEqual((a["cache_write"], a["tier"]), (9.0, "Live"))
+        self.assertEqual(stats["promoted"], [])
+
+    def test_validate_rejects_ambiguity(self):
+        m = lambda uid, label, i: {"uid": uid, "label": label, "input": i,
+                                   "output": 1, "cache_write": 0, "cache_read": 0}
+        self.up.validate([m("a", "M", 1), m("b", "M", 1)])  # same rates: aliases are fine
+        with self.assertRaises(ValueError):
+            self.up.validate([m("a", "M", 1), m("a", "N", 1)])  # duplicate uid
+        with self.assertRaises(ValueError):
+            self.up.validate([m("a", "M", 1), m("b", "M", 9)])  # label, different rates
+
+
+class UpdatePricesMainTest(unittest.TestCase):
+    def setUp(self):
+        import update_prices
+        self.up = update_prices
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name)
+        self.out, self.manual = root / "pricing_data.json", root / "pricing_manual.json"
+        self._p = mock.patch.multiple(update_prices, OUT=self.out, MANUAL=self.manual)
+        self._p.start()
+        self.addCleanup(self._p.stop)
+        self.addCleanup(self.tmp.cleanup)
+
+    def fixture(self, name, obj):
+        p = Path(self.tmp.name) / name
+        p.write_text(obj if isinstance(obj, str) else json.dumps(obj), encoding="utf-8")
+        return str(p)
+
+    def offline(self, catalog=None, page=PAGE):
+        cat = self.fixture("cat.json", {"clientModelConfigs": catalog if catalog is not None
+                                        else [cat_cfg("m-a", "Model A")]})
+        html = self.fixture("page.html", page)
+        return ["--catalog-file", cat, "--file", html]
+
+    def test_offline_fixture_run(self):
+        with mock.patch.object(server, "_credentials",
+                               side_effect=AssertionError("credentials must not be read")):
+            self.up.main(self.offline())
+        new = json.loads(self.out.read_text())
+        a = next(m for m in new["models"] if m["uid"] == "m-a")
+        self.assertEqual((a["cache_write"], a["tier"]), (9.0, "Live"))
+        self.assertIn("GetCliModelConfigs", new["source"])
+
+    def test_malformed_or_empty_catalog_aborts(self):
+        self.out.write_text("OLD")
+        for cat_obj in ("{ not json", {"clientModelConfigs": []}, {"clientModelConfigs": "x"},
+                        {"clientModelConfigs": [cat_cfg("m-1", drop=("Cached input",))]}):
+            cat = self.fixture("cat.json", cat_obj)
+            with self.assertRaises(SystemExit, msg=str(cat_obj)[:40]):
+                self.up.main(["--catalog-file", cat])
+            self.assertEqual(self.out.read_text(), "OLD")
+
+    def test_rpc_failure_and_missing_credentials_leave_file_unchanged(self):
+        self.out.write_text("OLD")
+        with mock.patch.object(server, "_credentials", return_value=("k", "http://x")), \
+             mock.patch.object(self.up, "fetch_catalog", side_effect=RuntimeError("boom")):
+            with self.assertRaises(SystemExit):
+                self.up.main([])
+        with mock.patch.object(server, "_credentials", return_value=None):
+            with self.assertRaises(SystemExit):
+                self.up.main([])
+        self.assertEqual(self.out.read_text(), "OLD")
+
+    def test_docs_outage_uses_trusted_historical_cache_write(self):
+        old = {"fetched": "2026-01-01", "models": [
+            {"uid": "m-x", "label": "X", "input": 1, "output": 2, "cache_write": 3,
+             "cache_read": 0.5, "tier": "Self-serve"}]}
+        self.out.write_text(json.dumps(old))
+        with mock.patch.object(self.up, "fetch_docs", side_effect=RuntimeError("down")):
+            self.up.main(self.offline(catalog=[cat_cfg("m-x", "X")]))
+        new = json.loads(self.out.read_text())
+        m = next(m for m in new["models"] if m["uid"] == "m-x")
+        self.assertEqual((m["cache_write"], m["tier"]), (3.0, "Live·cached"))
+
+    def test_unreadable_fixtures_and_files_abort(self):
+        cat = self.fixture("cat.json", {"clientModelConfigs": [cat_cfg("m-a")]})
+        with self.assertRaises(SystemExit):  # missing docs fixture file
+            self.up.main(["--catalog-file", cat, "--file", str(Path(self.tmp.name) / "no.html")])
+        self.manual.write_text("{ not json")
+        with self.assertRaises(SystemExit):  # manual file can't establish protection
+            self.up.main(self.offline())
+        self.manual.write_text("{}")
+        self.out.write_text("{ not json")
+        with self.assertRaises(SystemExit):  # prior snapshot must not be discarded
+            self.up.main(self.offline())
+
+    def test_docs_only_modes(self):
+        with self.assertRaises(SystemExit):  # contradictory flags
+            self.up.main(["--docs-only", "--catalog-file", "x"])
+        with self.assertRaises(SystemExit):  # no Self-serve entries in fixture
+            self.up.main(["--docs-only", "--file",
+                          self.fixture("page.html", PAGE.replace("TEAMS_TIER_PRO", "TEAMS_TIER_X"))])
+        self.up.main(["--docs-only", "--file", self.fixture("page.html", PAGE)])
+        new = json.loads(self.out.read_text())
+        self.assertEqual((new["source"], new["tier"]), (self.up.URL, "Self-serve"))
+        a = next(m for m in new["models"] if m["uid"] == "m-a")
+        self.assertEqual((a["tier"], a["rate_sources"]["input"]["kind"]), ("Self-serve", "docs"))
+
+    def test_dry_run_writes_nothing(self):
+        self.up.main(self.offline() + ["--dry-run"])
+        self.assertFalse(self.out.exists())
+        self.assertFalse(self.out.with_suffix(".tmp").exists())
+        self.out.write_text(json.dumps({"fetched": "2026-01-01", "models": []}))
+        self.up.main(self.offline() + ["--dry-run"])
+        self.assertEqual(json.loads(self.out.read_text()), {"fetched": "2026-01-01", "models": []})
+
+    def test_write_snapshot_failure_preserves_old_file(self):
+        self.out.write_text("OLD")
+        with mock.patch.object(Path, "replace", side_effect=OSError("denied")):
+            with self.assertRaises(OSError):
+                self.up.write_snapshot({"x": 1}, self.out)
+        self.assertEqual(self.out.read_text(), "OLD")
+        self.assertFalse(self.out.with_suffix(".tmp").exists())
 
 
 class OpenDashboardTest(unittest.TestCase):

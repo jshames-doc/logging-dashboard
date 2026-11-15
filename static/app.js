@@ -616,6 +616,25 @@ $("refresh").addEventListener("click", async () => {
 
 const prices = { data: null, key: "label", asc: true };
 const rate = (v) => (v ? "$" + (v < 0.1 ? v.toFixed(3) : v.toFixed(2)) : "—");
+const RATE_KEYS = ["input", "output", "cache_write", "cache_read"];
+
+function provTitle(m) {
+  const rs = m.rate_sources;
+  if (!rs) return "";
+  return "\n" + RATE_KEYS.map((k) => {
+    const s = rs[k];
+    if (!s || !s.kind) return `${k.replace("_", " ")}: unknown source`;
+    const where = s.kind === "catalog" ? (s.src || "GetCliModelConfigs")
+      : s.kind === "docs" ? `docs page (${s.tier || "?"})`
+      : s.kind === "manual" ? "pricing_manual.json" : s.kind;
+    return `${k.replace("_", " ")}: ${where}, observed ${s.date || "?"}`;
+  }).join("\n");
+}
+
+/* Source text: linked only when it is an http(s) URL (RPC identifiers are plain text). */
+const srcLink = (src) => (/^https?:\/\//.test(src)
+  ? `<a href="${esc(src)}" target="_blank" rel="noopener">${esc(src.replace(/^https?:\/\//, ""))}</a>`
+  : esc(src));
 
 function renderPrices() {
   if (!prices.data) return;
@@ -627,7 +646,7 @@ function renderPrices() {
     .sort((a, b) => (k === "label" ? a.label.localeCompare(b.label) : a[k] - b[k] || a.label.localeCompare(b.label)) * dir);
   $("prices-rows").innerHTML = list.map((m) => `
     <tr class="${used.has(m.label) ? "used" : ""}">
-      <td title="${esc((m.uids || [m.uid]).join(", "))}">${esc(m.label)}${m.tier && m.tier !== prices.data.tier ? `<span class="tag" title="${m.tier === "Manual" ? `Not published by Devin; entered in pricing_manual.json from ${esc(m.source || "?")}` : `Not published for ${esc(prices.data.tier)}; using ${esc(m.tier)} rate`}">${esc(m.tier)}</span>` : ""}${m.long_prompt ? `<span class="tag" title="Requests with prompts over 100K tokens: ${["input", "output", "cache_write", "cache_read"].map((c) => `${c.replace("_", " ")} ${rate(m.long_prompt[c])}`).join(" · ")}">&gt;100K tier</span>` : ""}</td>
+      <td title="${esc((m.uids || [m.uid]).join(", "))}${esc(provTitle(m))}">${esc(m.label)}${m.tier && m.tier !== prices.data.tier ? `<span class="tag" title="${m.tier === "Manual" ? `Not published by Devin; entered in pricing_manual.json from ${esc(m.source || "?")}` : m.rate_sources ? esc(provTitle(m).trim()) : `Not published for ${esc(prices.data.tier)}; using ${esc(m.tier)} rate`}">${esc(m.tier)}</span>` : ""}${m.long_prompt ? `<span class="tag" title="Requests with prompts over 100K tokens: ${["input", "output", "cache_write", "cache_read"].map((c) => `${c.replace("_", " ")} ${rate(m.long_prompt[c])}`).join(" · ")}">&gt;100K tier</span>` : ""}</td>
       <td class="num">${rate(m.input)}</td>
       <td class="num">${rate(m.output)}</td>
       <td class="num">${rate(m.cache_write)}</td>
@@ -643,7 +662,7 @@ function renderPrices() {
 $("prices-btn").addEventListener("click", async () => {
   prices.data = await (await fetch("/api/pricing")).json();
   const src = prices.data.source || "";
-  $("prices-src").innerHTML = `${esc(prices.data.tier)} rates · snapshot ${esc(prices.data.fetched)} · <a href="${esc(src)}" target="_blank" rel="noopener">${esc(src.replace(/^https?:\/\//, ""))}</a> · update with update_prices.bat`;
+  $("prices-src").innerHTML = `${esc(prices.data.tier)} rates · snapshot ${esc(prices.data.fetched)} · ${srcLink(src)} · update with update_prices.bat`;
   renderPrices();
   $("prices").showModal();
   $("pq").focus();

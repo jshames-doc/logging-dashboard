@@ -45,17 +45,44 @@
   `None` when no usable windows (too few samples or no drop — note tells the user why). Quota is account-wide while cost
   is local-only, so other clients' drain stays in the denominator. The model filter (`exc`) is deliberately not applied:
   an excluded model's drain can't be separated from the account-wide %, so dropping only its cost would bias the value low.
-- Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html]`) fetches docs.devin.ai/desktop/models,
-  parses the embedded `modelCostData` array (Self-serve tab = `TEAMS_TIER_PRO`, the rates self-serve plans pay;
-  Enterprise-ACU tier fallback — accepts the legacy `TEAMS_TIER_ENTERPRISE_SAAS` name too — for models only published there), prints a diff
-  and writes `pricing_data.json`. Models dropped from the page are kept at their last-known rates marked tier `"Legacy"`
-  (`merge_legacy`), so historical sessions stay priced. `pricing.py` hot-reloads that file on mtime change; no restart or cache bump needed.
+- Prices: `update_prices.bat` (or `python update_prices.py [--dry-run] [--file page.html] [--catalog-file resp.json]
+  [--docs-only]`). Primary source is the account's GetCliModelConfigs RPC
+  (`{api_server_url}/exa.api_server_pb.ApiServerService/GetCliModelConfigs`, POST `{"metadata": {...}}` with
+  credentials.toml's windsurf_api_key): the server requires `ide_name "windsurf"` AND a plausible `ide_version` —
+  placeholder versions like 0.0.0 return an empty catalog, which aborts without writing (never treated as zero
+  models). `update_prices.ide_version()` sends the installed client's `codeiumVersion` from
+  `%LOCALAPPDATA%\Programs\Devin\resources\app\product.json` (`DEVIN_IDE_VERSION` overrides; `CATALOG_IDE_FALLBACK`
+  last). Catalog configs with no COST dimensions at all (e.g. some SWE-2 variants) are counted as "without prices",
+  not malformed — docs/Legacy rates cover them. COST-kind `model_dimensions` labelled Input / Cached input / Output with `denominator "1M tokens"` are
+  consumed as USD/1M-token rates (verified: every overlapping UID matches the docs page exactly); any other
+  pricingType/denominator/malformed value is rejected, and a catalog or credential failure exits nonzero leaving the
+  snapshot untouched — `--docs-only` is the explicit recovery path (docs page only; can't combine with
+  `--catalog-file`; requires Self-serve prices). `--file`/`--catalog-file` take saved fixtures; both together = fully
+  offline. Writes are atomic (`.tmp` + replace); `--dry-run` writes nothing.
+- The docs page (docs.devin.ai/desktop/models `modelCostData`, Self-serve `TEAMS_TIER_PRO` preferred, Enterprise-ACU
+  fallback — `TEAMS_TIER_ENTERPRISE_SAAS` accepted — matched by exact UID after tier selection) is still fetched in
+  default mode for cache-write rates (the catalog has none) and out-of-catalog models; a docs outage degrades to a
+  warning + trusted prior-snapshot cache-write rates. **No cache-write heuristics**: a catalog model without a docs
+  or trusted prior rate stays unpriced and is reported. Tiers in the Prices dialog: `Live` (catalog + fresh docs
+  cache-write), `Live·cached` (catalog + reused cache-write), Self-serve/Devin Enterprise/Enterprise SaaS
+  (docs-covered), Legacy, Manual. Each model's optional `rate_sources` records per-rate
+  `{kind: catalog|docs|manual, tier|src, date}` — reused values keep their original source/date (shown in tooltips);
+  pre-migration snapshots without it are trusted only for the known docs tiers (+Legacy), never estimates like
+  `Live·est`. Vanished models keep last-known rates as `Legacy` only when rates+provenance are trusted.
+  `pricing.py` hot-reloads the file on mtime change; no restart or cache bump needed.
 - `pricing_manual.json`: hand-entered rates for models Devin doesn't publish (e.g. Claude Haiku 5.5 from Anthropic's pricing page;
   now only covers the plain `claude-haiku-5-5` slug — the effort-suffixed slugs are published and take precedence).
   Never overwritten by the updater; published rates win if the model appears later (a manual entry whose `uids` intersect
   published uids is dropped entirely). Entries list DB slugs in `uids` and may set
   `long_prompt` rates for requests whose prompt (input + cache write + cache read) > 100K; the aggregator tracks those requests
-  separately per model in the `long` bucket.
+  separately per model in the `long` bucket. The updater additionally protects entries that are ACTIVE under the
+  previous snapshot: a colliding catalog/docs/Legacy candidate on the label or ANY uid defers the whole generated
+  model (printed as a notice), so aliases and long-prompt tiers are never half-replaced; already-shadowed entries
+  stay shadowed. `--promote-manual` performs that migration explicitly (used once for the Carbon/Hydrogen/Lightning
+  families): colliding models are emitted from the catalog/docs, cache_write may fall back to the manual entry's
+  own rate (`kind: "manual"`, `date` = its `noted`), `long_prompt` carries over, and a tier `"Manual"` generated
+  entry bridges the entry's catalog-uncovered aliases so promotion never strands unpublished variants;
+  non-colliding manual entries stay file-driven.
 - `pricing.resolve()` maps DB model slugs: OVERRIDES -> published `model_uid` (most slugs) -> ordered-token label match ignoring
   "thinking" (order matters so opus-5-5 != Opus 5), then also ignoring a 4-digit MMDD build stamp
   (`deepseek-v4-1-flash-1017-high` -> DeepSeek V4.1 Flash High). Price is computed at serve time (`server.with_price`) from
