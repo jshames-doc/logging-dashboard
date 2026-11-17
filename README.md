@@ -90,7 +90,9 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
 
 Quota history is what makes the runway projection and the Allowance value
 estimate useful — both are only as good as their sample coverage. While the
-dashboard is open it samples every ~5 minutes; to keep history accruing when
+dashboard is open it checks quota at most every 5 minutes and records a sample
+whenever a value changes (unchanged values are re-recorded about every 10
+minutes so coverage stays continuous); to keep history accruing when
 it's closed, register a scheduled task:
 
 - `register_sampler.bat` — creates the **Session Ledger quota sampler**
@@ -172,6 +174,9 @@ static/              Single-page dashboard (index.html, app.js, style.css)
 run.bat / stop_server.bat / update_prices.bat   Windows helpers
 sample_quota.bat / register_sampler.bat / unregister_sampler.bat   Quota sampler
 test_server.py       Unit tests
+quota-runway-build-spec.md   Design spec for quota runway projections
+screenshot.png       Dashboard screenshot used above
+.cache/              Generated at runtime: sessions_cache.json, quota_history.json, sampler.log
 ```
 
 ## Privacy
