@@ -26,6 +26,7 @@ const dt = (s) => {
   return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${p(d.getFullYear() % 100)}<small>${d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</small>`;
 };
 const dayStart = (v) => (v ? new Date(v + "T00:00:00").getTime() / 1000 : null);
+const sessionKey = (r) => JSON.stringify([r.src || "", r.id]);
 
 function filtered() {
   const q = $("q").value.trim().toLowerCase();
@@ -53,16 +54,16 @@ const card = (lbl, val, sub, sw = "", i = 0) =>
   `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div>${sub ? `<div class="sub">${sub}</div>` : ""}</div>`;
 
 function renderTotals(rows) {
-  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0), gen_ms: a.gen_ms + (r.gen_ms || 0) }),
-    { input: 0, output: 0, cached: 0, messages: 0, price: 0, gen_ms: 0 });
-  const sessions = new Set(rows.map((r) => r.id)).size;
+  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0), gen_ms: a.gen_ms + (r.gen_ms || 0), tps_output: a.tps_output + (r.tps_output || 0) }),
+    { input: 0, output: 0, cached: 0, messages: 0, price: 0, gen_ms: 0, tps_output: 0 });
+  const sessions = new Set(rows.map(sessionKey)).size;
   const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
   $("totals").innerHTML = [
     card("Sessions", fmt.format(sessions), "", "", 0),
     card("Responses", compact.format(t.messages), "", "", 1),
     card("Input", compact.format(t.input), "", "in", 2),
     card("Output", compact.format(t.output), "", "out", 3),
-    card("Avg TPS", t.gen_ms ? (t.output * 1000 / t.gen_ms).toFixed(1) : "—", "", "", 4),
+    card("Avg TPS", t.gen_ms ? (t.tps_output * 1000 / t.gen_ms).toFixed(1) : "—", "", "", 4),
     card("Cached", compact.format(t.cached), "", "ca", 5),
     card("Cache hit", `${hit.toFixed(1)}%`, "", "", 6),
     card("Est. cost", t.price ? fmtPrice(t.price) : "—", "", "", 7),
@@ -191,7 +192,7 @@ function render() {
   const cols = state.colOrder.filter((k) => !state.hiddenCols.has(k));
   stampCols();
   $("rows").innerHTML = shown.map((r, i) => `
-    <tr data-session-id="${esc(r.id)}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(r.id) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map((k) => CELLS[k](r)).join("")}</tr>`).join("");
+    <tr data-session-id="${esc(r.id)}" data-session-src="${esc(r.src || "")}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(sessionKey(r)) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map((k) => CELLS[k](r)).join("")}</tr>`).join("");
   const rest = rows.length - shown.length;
   $("more").hidden = !rest;
   if (rest)
@@ -274,15 +275,16 @@ function applyView() {
 
 let sessionOpener = null;
 
-function showSession(id, opener = null) {
-  const models = state.rows.filter((r) => r.id === id).sort((a, b) => a.first - b.first);
+function showSession(id, src = "", opener = null) {
+  const models = state.rows.filter((r) => r.id === id && (r.src || "") === src).sort((a, b) => a.first - b.first);
   if (!models.length) return;
   const session = models[0];
   const totals = models.reduce((a, r) => ({
     messages: a.messages + r.messages, input: a.input + r.input,
     output: a.output + r.output, cached: a.cached + r.cached, gen_ms: a.gen_ms + (r.gen_ms || 0),
+    tps_output: a.tps_output + (r.tps_output || 0),
     price: a.price + (r.price ?? 0), priced: a.priced + (r.price != null ? 1 : 0),
-  }), { messages: 0, input: 0, output: 0, cached: 0, gen_ms: 0, price: 0, priced: 0 });
+  }), { messages: 0, input: 0, output: 0, cached: 0, gen_ms: 0, tps_output: 0, price: 0, priced: 0 });
   const hit = totals.input + totals.cached ? totals.cached / (totals.input + totals.cached) * 100 : 0;
   const unpriced = models.length - totals.priced;
   const detail = (label, value, cls = "") => `<div class="${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
@@ -301,7 +303,7 @@ function showSession(id, opener = null) {
     stat("Responses", fmt.format(totals.messages)),
     stat("Input · includes cache write", fmt.format(totals.input), "in"),
     stat("Output", fmt.format(totals.output), "out"),
-    stat("Avg TPS", totals.gen_ms ? (totals.output * 1000 / totals.gen_ms).toFixed(1) : "—"),
+    stat("Avg TPS", totals.gen_ms ? (totals.tps_output * 1000 / totals.gen_ms).toFixed(1) : "—"),
     stat("Cached", fmt.format(totals.cached), "ca"),
     stat("Cache hit", `${hit.toFixed(1)}%`),
     stat("Daily quota", session.quota_day != null ? session.quota_day + "%" : "—", "", quotaTitle(session, "daily")),
@@ -330,14 +332,14 @@ function showSession(id, opener = null) {
 
 $("rows").addEventListener("dblclick", (e) => {
   const row = e.target.closest("tr[data-session-id]");
-  if (row) showSession(row.dataset.sessionId, row);
+  if (row) showSession(row.dataset.sessionId, row.dataset.sessionSrc, row);
 });
 $("rows").addEventListener("keydown", (e) => {
   if (e.key !== "Enter" && e.key !== " ") return;
   const row = e.target.closest("tr[data-session-id]");
   if (!row) return;
   e.preventDefault();
-  showSession(row.dataset.sessionId, row);
+  showSession(row.dataset.sessionId, row.dataset.sessionSrc, row);
 });
 $("session-close").addEventListener("click", () => $("session-details").close());
 $("session-details").addEventListener("click", (e) => {
@@ -456,7 +458,7 @@ function setData(data) {
   state.rows = data.rows.map((r) => ({ ...r, hit: hitPct(r) }));
   state.limit = 2000;
   const counts = {};
-  data.rows.forEach((r) => (counts[r.id] = (counts[r.id] || 0) + 1));
+  data.rows.forEach((r) => { const k = sessionKey(r); counts[k] = (counts[k] || 0) + 1; });
   state.multi = new Set(Object.keys(counts).filter((k) => counts[k] > 1));
   $("dbpath").textContent = data.db;
   fillModels([...new Set(data.rows.map((r) => r.model))].sort());

@@ -90,8 +90,9 @@ class AggregationTest(DBFixture):
         # gen_ms = output / tokens_per_sec * 1000: r1 10/250 -> 40 ms, r2 5/100 -> 50 ms; r3 has no tps
         self.assertAlmostEqual(res["model-a"]["gen_ms"], 40.0)
         self.assertAlmostEqual(res["model-b"]["gen_ms"], 50.0)
+        self.assertEqual(res["model-a"]["tps_output"], 10)
         served = {k: server.with_price(m) for k, m in res.items()}
-        self.assertEqual(served["model-a"]["tps"], 325.0)  # 13 output tokens / 0.04 s
+        self.assertEqual(served["model-a"]["tps"], 250.0)  # 10 measured output tokens / 0.04 s
         self.assertEqual(served["model-b"]["tps"], 100.0)
 
     def test_tps_ignores_missing_or_invalid_speed(self):
@@ -108,7 +109,8 @@ class AggregationTest(DBFixture):
         c.close()
         (m,) = server.aggregate_session(self.conn, "s9")[0]
         self.assertEqual((m["messages"], m["output"], m["gen_ms"]), (4, 12, 20.0))
-        self.assertEqual(server.with_price(m)["tps"], 600.0)  # 12 tokens / 0.02 s
+        self.assertEqual(m["tps_output"], 4)
+        self.assertEqual(server.with_price(m)["tps"], 200.0)  # only 4 tokens have measurable time
 
     def test_untracked_speed_yields_null_tps(self):
         res = {m["model"]: server.with_price(m) for m in server.aggregate_session(self.conn, "s2")[0]}
@@ -157,13 +159,15 @@ class AggregationTest(DBFixture):
     def test_cache_rebuilds_legacy_aggregates_and_roundtrips_usage(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "cache.json"
-            path.write_text(json.dumps({"version": 10, "sessions": {"s1": {}}}))
+            path.write_text(json.dumps({"version": 11, "sessions": {"s1": {}}}))
             self.assertEqual(server.load_cache(path), {})
             sessions = server.refresh_sessions(self.conn, {})
             server.save_cache(sessions, path)
             loaded = server.load_cache(path)
             self.assertEqual(loaded, sessions)
             self.assertTrue(loaded["s1"]["daily"][0]["usage"])
+            self.assertEqual(loaded["s1"]["models"][0]["tps_output"], 10)
+            self.assertEqual(sum(b["tps_output"] for b in loaded["s1"]["daily"]), 15)
 
     def test_aggregation_skips_malformed_rows(self):
         c = sqlite3.connect(self.db)
@@ -514,7 +518,7 @@ vm.runInContext(`
   state.rows = [
     { id: 's"1', title: '<script>title</script>', workspace: 'C:/work/<demo>', created: 100,
       last_activity: 400, hidden: true, model: 'model-a', messages: 2, input: 100,
-      cache_write: 40, output: 20, cached: 300, price: 1.25, price_model: 'Model A', tps: 500, gen_ms: 40, first: 110, last: 200 },
+      cache_write: 40, output: 20, cached: 300, price: 1.25, price_model: 'Model A', tps: 500, gen_ms: 40, tps_output: 20, first: 110, last: 200 },
     { id: 's"1', title: '<script>title</script>', workspace: 'C:/work/<demo>', created: 100,
       last_activity: 400, hidden: true, model: '<model-b>', messages: 3, input: 50,
       cache_write: 10, output: 30, cached: 150, price: null, price_model: null, tps: null, first: 210, last: 350 },
@@ -539,7 +543,8 @@ assert.ok(element("session-stats").innerHTML.includes('450'));
 assert.ok(element("session-stats").innerHTML.includes('75.0%'));
 assert.ok(element("session-stats").innerHTML.includes('$1.25'));
 assert.ok(element("session-stats").innerHTML.includes('Avg TPS'));
-assert.ok(element("session-stats").innerHTML.includes('1250.0'));  // 50 output / 0.04 s, model-b untracked
+assert.ok(element("session-stats").innerHTML.includes('500.0'));  // only model-a has measured output
+assert.ok(!element("session-stats").innerHTML.includes('1250.0'));
 assert.ok(element("session-cost-note").textContent.includes('1 model without published rates'));
 assert.ok(element("session-models").innerHTML.includes('&lt;model-b&gt;'));
 assert.ok(element("session-models").innerHTML.includes('500.0'));  // model-a TPS cell
@@ -571,6 +576,48 @@ assert.equal(element("session-title").textContent, 'Untitled');
 assert.ok(element("session-stats").innerHTML.includes('0.0%'));
 assert.ok(!element("session-stats").innerHTML.includes('NaN'));
 assert.ok(element("session-cost-note").textContent.includes('No published rates'));
+""")
+
+    def test_session_identity_is_scoped_by_source(self):
+        self.run_script(r"""
+vm.runInContext(`
+  const common = { id: 'shared', workspace: 'work', created: 100, last_activity: 200,
+    first: 100, last: 200, messages: 1, input: 1, output: 10, cached: 0,
+    price: null, gen_ms: 0, tps_output: 0 };
+  setData({db: 'test', rows: [
+    {...common, src: 'cli', title: 'CLI session', model: 'cli-model-a'},
+    {...common, src: 'cli', title: 'CLI session', model: 'cli-model-b'},
+    {...common, src: 'cli-next', title: 'IDE session', model: 'ide-model'},
+  ]});
+`, context);
+assert.match(element("totals").innerHTML, /Sessions<\/div><div class="val">2<\/div>/);
+assert.equal(vm.runInContext("state.multi.size", context), 1);
+assert.equal(vm.runInContext("state.multi.has(sessionKey({src:'cli',id:'shared'}))", context), true);
+assert.equal(vm.runInContext("state.multi.has(sessionKey({src:'cli-next',id:'shared'}))", context), false);
+assert.ok(element("rows").innerHTML.includes('data-session-src="cli-next"'));
+const ideRow = {dataset: {sessionId: 'shared', sessionSrc: 'cli-next'}, focus() {}};
+element("rows").listeners.dblclick({target: {closest: () => ideRow}});
+assert.equal(element("session-title").textContent, 'IDE session');
+assert.ok(element("session-models").innerHTML.includes('ide-model'));
+assert.ok(!element("session-models").innerHTML.includes('cli-model'));
+const cliRow = {dataset: {sessionId: 'shared', sessionSrc: 'cli'}, focus() {}};
+element("rows").listeners.keydown({target: {closest: () => cliRow}, key: 'Enter', preventDefault() {}});
+assert.equal(element("session-title").textContent, 'CLI session');
+assert.ok(element("session-models").innerHTML.includes('cli-model-a'));
+assert.ok(element("session-models").innerHTML.includes('cli-model-b'));
+assert.ok(!element("session-models").innerHTML.includes('ide-model'));
+""")
+
+    def test_totals_tps_uses_only_measured_output(self):
+        self.run_script(r"""
+vm.runInContext(`
+  renderTotals([
+    {id:'a', input:0, output:13, cached:0, messages:2, gen_ms:40, tps_output:10},
+    {id:'b', input:0, output:5, cached:0, messages:1, gen_ms:50, tps_output:5},
+    {id:'c', input:0, output:1000, cached:0, messages:1, gen_ms:0, tps_output:0},
+  ]);
+`, context);
+assert.match(element("totals").innerHTML, /Avg TPS<\/div><div class="val">166\.7<\/div>/);
 """)
 
     def test_prices_source_text_and_provenance_tooltips(self):
@@ -705,20 +752,37 @@ class ReportTest(DBFixture):
         by_model = {r["key"]: r for r in server.report(sessions, group="model")["rows"]}
         self.assertEqual(by_model["claude-sonnet-4-6"]["price_model"], "Claude Sonnet 4.6")
         self.assertIsNone(by_model["model-a"]["price"])
-        self.assertEqual(by_model["model-a"]["tps"], 450.0)  # group includes s1's model-a: 18 tokens / 0.04 s
+        self.assertEqual(by_model["model-a"]["tps"], 250.0)  # only s1's 10 measured tokens / 0.04 s
+
+    def test_report_session_counts_are_scoped_by_source(self):
+        session = self.refresh()["s1"]
+        sessions = {f"{src}:s1": {**session, "src": src} for src in ("cli", "cli-next")}
+        for group in server.REPORT_GROUPS:
+            with self.subTest(group=group):
+                rep = server.report(sessions, group=group)
+                self.assertEqual(rep["totals"]["sessions"], 2)
+                self.assertTrue(all(row["sessions"] == 2 for row in rep["rows"]))
+                self.assertEqual(rep["totals"]["messages"], 6)
 
     def test_report_tps_is_token_weighted(self):
         self.add_session("s4", [
             msg("assistant", "d1", "d1", "model-x", inp=10, out=5, at=self.D12, tps=100),
             msg("assistant", "d2", "d2", "model-y", inp=20, out=6, at=self.D12, tps=200),
             msg("assistant", "d3", "d3", "model-x", inp=30, out=7, at=self.D13, tps=70),
+            msg("assistant", "d4", "d4", "model-x", out=300, at=self.D12),  # unknown speed
+            msg("assistant", "d5", "d5", "model-z", out=1000, at=self.D12),  # wholly unmeasured model
         ])
         sessions = self.refresh()
         models = {r["key"]: r for r in server.report(sessions, group="model")["rows"]}
         self.assertEqual((models["model-x"]["tps"], models["model-y"]["tps"]), (80.0, 200.0))
-        # from_day drops the shared fixture's 1970-era buckets, isolating s4: 18 tokens / 0.18 s
+        self.assertIsNone(models["model-z"]["tps"])
+        self.assertEqual(models["model-x"]["output"], 312)
+        days = {r["key"]: r for r in server.report(sessions, group="day")["rows"]}
+        self.assertEqual(days[day_of(self.D12)]["tps"], 137.5)
+        # from_day isolates s4: 18 measured tokens / 0.18 s, all 1318 output tokens still counted
         tot = server.report(sessions, group="model", from_day=day_of(self.D12))["totals"]
         self.assertEqual(tot["tps"], 100.0)
+        self.assertEqual(tot["output"], 1318)
 
     def test_report_empty_when_all_models_excluded(self):
         rep = server.report(self.refresh(), exclude={"model-a", "model-b"}, group="model")
@@ -1185,6 +1249,16 @@ class UpdatePricesMergeTest(unittest.TestCase):
         self.assertEqual(stats2["manual_kept"], 0)
         self.assertEqual(sorted(m.get("uid") or m.get("uids")[0] for m in models2),
                          sorted(m.get("uid") or m.get("uids")[0] for m in models))
+        for uid in ("m-man", "m-man-alias"):
+            self.assertEqual(next(m for m in models2 if m.get("uid") == uid).get("long_prompt"),
+                             by_uid[uid]["long_prompt"])
+        # Switching to docs-only coverage must preserve the promoted tiers too.
+        docs2 = {m["uid"]: {**m, "tier": "Self-serve"} for m in models2 if m.get("uid")}
+        models3, _ = self.up.merge({}, docs2, {"fetched": "2026-03-01", "models": models2},
+                                   manual, "2026-04-01")
+        for uid in ("m-man", "m-man-alias"):
+            self.assertEqual(next(m for m in models3 if m.get("uid") == uid).get("long_prompt"),
+                             by_uid[uid]["long_prompt"])
         # The uncovered alias survives (all-manual provenance keeps tier Manual)
         # with its uids and long_prompt intact.
         kept2 = next(m for m in models2 if m.get("uids") == ["m-man-extra"])

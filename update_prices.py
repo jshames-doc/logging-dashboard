@@ -352,9 +352,11 @@ def merge(catalog, docs_by_uid, old, manual, fetched, promote=False):
         m = {"uid": uid, "label": cm["label"], "input": cm["input"],
              "output": cm["output"], "cache_write": cw, "cache_read": cm["cache_read"],
              "tier": tier, "rate_sources": {**rs, "cache_write": cwsrc}}
-        lp = (man_uid.get(uid.lower()) or man_label.get(cm["label"]) or {}).get("long_prompt")
-        if collides and isinstance(lp, dict):
-            m["long_prompt"] = lp
+        # Published base rates do not replace a previously promoted long-prompt tier.
+        lp = (man_uid.get(uid.lower()) or man_label.get(cm["label"])
+              or old_by_uid.get(uid) or {}).get("long_prompt")
+        if isinstance(lp, dict) and (long_rates := _valid_rates(lp)) is not None:
+            m["long_prompt"] = long_rates
         models.append(m)
     for uid in sorted(docs_by_uid):
         if uid in catalog:
@@ -373,9 +375,10 @@ def merge(catalog, docs_by_uid, old, manual, fetched, promote=False):
         src = {"kind": "docs", "tier": d["tier"], "date": fetched}
         m = {"uid": uid, "label": d["label"], **rates, "tier": d["tier"],
              "rate_sources": {c: dict(src) for c in COSTS}}
-        mm = man_uid.get(uid.lower()) or man_label.get(d["label"])
-        if collides and mm is not None and isinstance(mm.get("long_prompt"), dict):
-            m["long_prompt"] = mm["long_prompt"]
+        lp = (man_uid.get(uid.lower()) or man_label.get(d["label"])
+              or old_by_uid.get(uid) or {}).get("long_prompt")
+        if isinstance(lp, dict) and (long_rates := _valid_rates(lp)) is not None:
+            m["long_prompt"] = long_rates
         models.append(m)
     if promote:
         covered_u = {u for m in models for u in _uids_of(m)}

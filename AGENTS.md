@@ -15,17 +15,20 @@
 - Data source: every existing `sessions.db` under `%APPDATA%\devin\cli` (CLI) and `%APPDATA%\devin\cli-next` (IDE),
   opened read-only and merged; override with `SESSIONS_DB` (accepts an `os.pathsep`-joined list). Port override: `DASHBOARD_PORT`.
   Each session is tagged `src` = the DB's parent folder name (the **Source** column); cache keys are `src:session-id` so
-  identical session ids across DBs can't collide.
+  identical session ids across DBs can't collide. UI session counts, multi-model markers, details, and report counts
+  also use (src, id), while the raw id stays available for display and search.
 - Tokens come from `message_nodes.chat_message -> $.metadata.metrics` on assistant messages, deduped by `request_id`
   (forked branches duplicate nodes; falls back to `message_id`, and rows with neither are all counted — only non-null keys dedupe).
   Input = input_tokens + cache_creation_tokens; Cached = cache_read_tokens.
-- TPS = output tokens ÷ generation time, token-weighted (sum(output) ÷ sum(gen_ms)). The CLI stores `tokens_per_sec`
+- TPS = measured output tokens / generation time, token-weighted (sum(tps_output) / sum(gen_ms)). The CLI stores `tokens_per_sec`
   per message (= output / (total_time_ms − ttft_ms); ttft_ms is null in ~⅓ of rows), so the aggregator derives
-  `gen_ms = output_tokens / tokens_per_sec * 1000`, skipping rows without positive output/tps (zero-output responses).
+  `gen_ms = output_tokens / tokens_per_sec * 1000`, skipping rows without positive output/tps in both the numerator
+  (`tps_output`) and denominator; overall output totals still include unmeasured responses.
   TPS is computed at serve time in `with_price` and per report group; shown as a table column (after Output), an
   "Avg TPS" totals card, and a report column.
 - `message_nodes.created_at` is rewritten on save; use `$.metadata.created_at` for real message times.
 - Aggregates cached in `.cache/sessions_cache.json`, keyed by `src:session-id` and invalidated on `last_activity_at` change; bump `CACHE_VERSION` when the aggregate shape changes.
+  Cache version 12 adds `tps_output` alongside `gen_ms` in model and daily totals.
   Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`
   and `usage`: deduplicated request timestamps and token parts, including long-prompt parts when applicable).
 - Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|workspace|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.
@@ -86,7 +89,8 @@
   families): colliding models are emitted from the catalog/docs, cache_write may fall back to the manual entry's
   own rate (`kind: "manual"`, `date` = its `noted`), `long_prompt` carries over, and a tier `"Manual"` generated
   entry bridges the entry's catalog-uncovered aliases so promotion never strands unpublished variants;
-  non-colliding manual entries stay file-driven.
+  non-colliding manual entries stay file-driven. Later catalog/docs refreshes preserve promoted long-prompt rates
+  from the previous snapshot by exact UID.
 - `pricing.resolve()` maps DB model slugs: OVERRIDES -> published `model_uid` (most slugs) -> ordered-token label match ignoring
   "thinking" (order matters so opus-5-5 != Opus 5), then also ignoring a 4-digit MMDD build stamp
   (`deepseek-v4-1-flash-1017-high` -> DeepSeek V4.1 Flash High). Price is computed at serve time (`server.with_price`) from
