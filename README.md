@@ -71,7 +71,9 @@ It accepts several paths joined by `os.pathsep` (`;` on Windows, `:` elsewhere).
 - **Double-click a row** (or focus it and press Enter) for full session details
   across all models, regardless of table filters.
 - **$ Prices** shows the rate card; **Rescan database** re-reads `sessions.db`
-  (only sessions whose `last_activity_at` changed are re-aggregated).
+  (only sessions whose `last_activity_at` changed are re-aggregated). The
+  dashboard also rescans automatically every minute — the button just does
+  it immediately.
 - **Report** opens the report maker: Excel-style model checkboxes (all included
   by default, uncheck to exclude), a response-date range, and grouping by
   model, workspace, day, week, or month. Time-period groups show a stacked

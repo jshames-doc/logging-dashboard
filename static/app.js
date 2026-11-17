@@ -959,6 +959,13 @@ setInterval(async () => {
   } catch {}
 }, 20000);
 setInterval(() => { if (state.runway) renderRunway(); }, 30000);  // countdowns tick between pings
+setInterval(async () => {
+  try {
+    if ((await (await fetch("/api/status")).json()).running) return;
+    await fetch("/api/refresh", { method: "POST" });
+    poll();
+  } catch {}
+}, 60000);
 fillCols();
 applyOrder();
 initColResize();

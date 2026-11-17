@@ -9,6 +9,8 @@
 - Stop: `stop_server.bat` (kills the `server.py` process listening on `DASHBOARD_PORT`/8765; won't touch other programs on that port).
   The server also exits on its own ~90s after the dashboard tab/browser closes: `app.js` pings `/api/ping` every 20s and
   `server.watch_browser` shuts down once pings stop. The watchdog only arms after the first ping, so `--no-browser` stays up.
+  `app.js` also auto-rescans every 60s (`POST /api/refresh`, skipped while a scan is already running; the in-flight
+  `poll()` reloads when it ends), so new sessions appear without clicking Rescan.
 - Tests: `python -m unittest test_server` (requires Node.js for the model-filter unit test; uses a mocked DOM, no browser).
 - Data source: every existing `sessions.db` under `%APPDATA%\devin\cli` (CLI) and `%APPDATA%\devin\cli-next` (IDE),
   opened read-only and merged; override with `SESSIONS_DB` (accepts an `os.pathsep`-joined list). Port override: `DASHBOARD_PORT`.
