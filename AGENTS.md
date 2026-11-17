@@ -39,7 +39,9 @@
   per-model uncheck = exclude (sent as `exc`). Sortable columns, Download CSV exports the currently shown rows.
 - Table view state (search text, model set, workspace, dates, show-hidden, sort) persists in the URL hash via
   `saveView()`/`applyView()` in `app.js` (`models` is a JSON array; stale model/workspace values are pruned on restore),
-  so filtered views survive reload and can be bookmarked. Column visibility stays in localStorage `ledger.cols`.
+  so filtered views survive reload and can be bookmarked. The sort also persists in localStorage `ledger.sort`
+  (`{k, asc}`, written by `saveView`); `applyView` falls back to it whenever the hash carries no explicit `sort`,
+  so a chosen sort sticks across fresh launches. Column visibility stays in localStorage `ledger.cols`.
   **Allowance value** button -> `GET /api/allowance?from&to&hidden`: `server.allowance` pairs consecutive quota
   samples inside the range that share a known, unexpired `weekly_reset` into windows where `weekly` didn't rise (flat windows count: whole-percent
   quantization means their usage shows up in a later drop; top-ups are skipped), sums priced

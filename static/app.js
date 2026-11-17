@@ -214,8 +214,10 @@ function render() {
   saveView();
 }
 
-/* table filters + sort persist in the URL hash so views survive reload and can be bookmarked */
+/* table filters + sort persist in the URL hash so views survive reload and can be bookmarked;
+   sort additionally persists in localStorage so it sticks across sessions with no hash */
 function saveView() {
+  try { localStorage.setItem("ledger.sort", JSON.stringify({ k: state.sortKey, asc: state.asc })); } catch {}
   try {
     const p = [];
     const put = (k, v) => p.push(`${k}=${encodeURIComponent(v)}`);
@@ -237,8 +239,7 @@ let viewLoaded = false;
 
 function applyView() {
   let h;
-  try { h = location.hash.slice(1); } catch { return; }
-  if (!h) return;
+  try { h = location.hash.slice(1); } catch { h = ""; }
   const p = {};
   for (const kv of h.split("&")) {
     const i = kv.indexOf("=");
@@ -263,6 +264,11 @@ function applyView() {
   if (p.sort && COLS.some(([k]) => k === p.sort)) {
     state.sortKey = p.sort;
     state.asc = p.asc === "1";
+  } else {
+    try {
+      const s = JSON.parse(localStorage.getItem("ledger.sort"));
+      if (s && COLS.some(([k]) => k === s.k)) { state.sortKey = s.k; state.asc = !!s.asc; }
+    } catch {}
   }
 }
 
