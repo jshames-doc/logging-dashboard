@@ -6,6 +6,8 @@
   launches it via `os.startfile`, so the app window opens instead of a browser tab; falls back to `webbrowser.open`.
   `DASHBOARD_APP` overrides the shortcut/exe path, `DASHBOARD_APP=browser` forces the browser. The shortcut is named after
   the page `<title>` in `static/index.html`, so keep `APP_TITLE` in sync when the title changes.
+- Version: `APP_VERSION` in `server.py` (currently "1.0") — returned as `version` on `/api/data`, rendered as `v1.0`
+  in the footer (`#appver`, set in `setData` in `app.js`), and printed in the startup line.
 - Stop: `stop_server.bat` (kills the `server.py` process listening on `DASHBOARD_PORT`/8765; won't touch other programs on that port).
   The server also exits on its own ~BYE_GRACE (30s) after the last dashboard window closes: the page holds an
   `EventSource` stream to `/api/presence` open for its whole lifetime (server heartbeats every 10s; a failed write means

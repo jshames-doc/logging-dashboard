@@ -24,6 +24,7 @@ from pricing import LONG_PROMPT_TOKENS, cost
 
 ROOT = Path(__file__).resolve().parent
 APP_TITLE = "Session Ledger"  # matches <title> in static/index.html and the installed web-app shortcut
+APP_VERSION = "1.0"
 
 
 def _configured_dbs():
@@ -806,7 +807,8 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path.startswith("/api/data"):
             dbs = " + ".join(str(p) for _, p in DB_SOURCES if p.exists())
             q = quota()  # fetch first so the fresh sample lands in history before rows are stamped
-            return self._json({"status": STATE.status, "db": dbs, "rows": flatten(STATE.sessions),
+            return self._json({"status": STATE.status, "db": dbs, "version": APP_VERSION,
+                               "rows": flatten(STATE.sessions),
                                "quota": q, "runway": quota_runway(quota_data=q)})
         if self.path.startswith("/api/status"):
             return self._json(STATE.status)
@@ -907,7 +909,7 @@ def main():
                  "Close that window first (or set DASHBOARD_PORT).")
     STATE.refresh_async()
     threading.Thread(target=watch_browser, args=(server,), daemon=True).start()
-    print(f"Session dashboard running at {url}  (Ctrl+C to stop)")
+    print(f"{APP_TITLE} v{APP_VERSION} running at {url}  (Ctrl+C to stop)")
     if "--no-browser" not in sys.argv:
         open_dashboard(url)
     try:

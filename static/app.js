@@ -461,6 +461,7 @@ function setData(data) {
   data.rows.forEach((r) => { const k = sessionKey(r); counts[k] = (counts[k] || 0) + 1; });
   state.multi = new Set(Object.keys(counts).filter((k) => counts[k] > 1));
   $("dbpath").textContent = data.db;
+  $("appver").textContent = data.version ? `v${data.version}` : "";
   fillModels([...new Set(data.rows.map((r) => r.model))].sort());
   fillSelect($("f-ws"), [...new Set(data.rows.map((r) => r.workspace))].sort((a, b) => base(a).localeCompare(base(b))), "All workspaces");
   if (!viewLoaded) { viewLoaded = true; applyView(); }
