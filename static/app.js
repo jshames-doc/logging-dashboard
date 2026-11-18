@@ -958,14 +958,19 @@ $("r-csv").addEventListener("click", () => {
   URL.revokeObjectURL(a.href);
 });
 
-setInterval(async () => {
+const ping = async () => {
   try {
     const res = await fetch("/api/ping");
     if (!res.ok) return;
     const data = await res.json();
     if (data.runway) setRunway(data.runway);
   } catch {}
-}, 20000);
+};
+setInterval(ping, 20000);
+addEventListener("visibilitychange", () => { if (!document.hidden) ping(); });
+addEventListener("pageshow", ping);
+addEventListener("pagehide", () => { try { navigator.sendBeacon("/api/bye"); } catch {} });
+new EventSource("/api/presence");  // held open for the page's lifetime; the server watches the socket, not JS timers
 setInterval(() => { if (state.runway) renderRunway(); }, 30000);  // countdowns tick between pings
 setInterval(async () => {
   try {

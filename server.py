@@ -691,8 +691,19 @@ def quota_runway(samples=None, quota_data=None, now=None):
                 "daily": dict(_RUNWAY_UNKNOWN), "weekly": dict(_RUNWAY_UNKNOWN)}
 
 
-PING_TIMEOUT = 90  # page pings every 20s; Chrome throttles background tabs to ~1/min
-last_ping = [0.0]  # watchdog arms on the first /api/ping, so --no-browser stays up
+PING_TIMEOUT = 420  # fallback for pages without a presence stream: page pings every 20s and
+                    # Chrome may throttle hidden pages to ~1/5min (intensive throttling)
+BYE_GRACE = 30  # after the last dashboard goes away, wait this long for a reload/second window
+last_ping = [0.0]  # watchdog arms on the first /api/ping or presence stream, so --no-browser stays up
+live_clients = [0]  # open /api/presence streams; a live socket means a dashboard is up even if its timers stall
+_presence_lock = threading.Lock()
+
+
+def close_grace():
+    """The dashboard signalled it is going away: arm the watchdog for BYE_GRACE
+    so a page reload or a second open window can ping/connect first."""
+    if last_ping[0]:
+        last_ping[0] = time.time() - PING_TIMEOUT + BYE_GRACE
 
 
 def _shortcut_dirs():
@@ -739,6 +750,8 @@ def open_dashboard(url):
 def watch_browser(server):
     while True:
         time.sleep(5)
+        if live_clients[0]:
+            continue  # a connected dashboard can't time out (also immune to suspend/resume clock skew)
         if last_ping[0] and time.time() - last_ping[0] > PING_TIMEOUT:
             print("Browser closed - shutting down.")
             server.shutdown()
@@ -751,6 +764,34 @@ class Handler(SimpleHTTPRequestHandler):
 
     def log_message(self, *a):
         pass
+
+    def _presence(self):
+        """Server-sent keepalive the dashboard holds open for its whole
+        lifetime, so the watchdog tracks the socket rather than JS timers
+        (which browsers throttle or freeze while the page is hidden)."""
+        with _presence_lock:
+            live_clients[0] += 1
+            last_ping[0] = time.time()
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.flush()
+            while True:
+                time.sleep(10)
+                self.wfile.write(b": hb\n\n")
+                self.wfile.flush()
+                with _presence_lock:
+                    last_ping[0] = time.time()
+        except OSError:  # client closed the socket
+            pass
+        finally:
+            with _presence_lock:
+                live_clients[0] -= 1
+                if live_clients[0] <= 0:
+                    live_clients[0] = 0
+                    close_grace()
 
     def _json(self, obj, code=200):
         body = json.dumps(obj).encode()
@@ -773,6 +814,8 @@ class Handler(SimpleHTTPRequestHandler):
             last_ping[0] = time.time()
             q = quota()
             return self._json({"ok": True, "quota": q, "runway": quota_runway(quota_data=q)})
+        if self.path.startswith("/api/presence"):
+            return self._presence()
         if self.path.startswith("/api/pricing"):
             return self._json(pricing.snapshot())
         if self.path.startswith("/api/allowance"):
@@ -798,6 +841,12 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path.startswith("/api/refresh"):
             STATE.refresh_async()
             return self._json(STATE.status)
+        if self.path.startswith("/api/bye"):
+            length = int(self.headers.get("Content-Length") or 0)
+            if length:
+                self.rfile.read(length)  # drain the beacon body so the socket closes cleanly
+            close_grace()
+            return self._json({"ok": True})
         self.send_error(404)
 
 

@@ -5,6 +5,7 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import unittest
 from datetime import datetime
@@ -280,7 +281,8 @@ const document = {
   querySelectorAll: () => [],
   addEventListener(type, fn) { this[type] = fn; },
 };
-const context = vm.createContext({ document, Intl, fetch: () => new Promise(() => {}), setInterval: () => 0 });
+const context = vm.createContext({ document, Intl, fetch: () => new Promise(() => {}), setInterval: () => 0,
+  addEventListener: () => {}, EventSource: function () {}, navigator: { sendBeacon: () => {} } });
 vm.runInContext(fs.readFileSync("static/app.js", "utf8"), context);
 """
         result = subprocess.run(["node", "-e", setup + script], cwd=Path(__file__).parent,
@@ -1425,6 +1427,63 @@ class OpenDashboardTest(unittest.TestCase):
                  mock.patch.object(server.webbrowser, "open") as browser:
                 server.open_dashboard("http://127.0.0.1:8765/")
             browser.assert_called_once_with("http://127.0.0.1:8765/")
+
+
+class WatchdogTest(unittest.TestCase):
+    def setUp(self):
+        self._state = (server.last_ping[0], server.live_clients[0])
+        self._orig_sleep = time.sleep
+        patcher = mock.patch.object(server.time, "sleep",
+                                    lambda n: self._orig_sleep(0.001))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.addCleanup(self._restore)
+
+    def _restore(self):
+        server.last_ping[0], server.live_clients[0] = self._state
+
+    def _watch(self):
+        srv = mock.Mock()
+        threading.Thread(target=server.watch_browser, args=(srv,), daemon=True).start()
+        return srv
+
+    def _until_shutdown(self, srv):
+        for _ in range(300):
+            if srv.shutdown.called:
+                return
+            self._orig_sleep(0.01)
+
+    def test_stale_pings_shut_down(self):
+        server.last_ping[0] = time.time() - server.PING_TIMEOUT - 1
+        srv = self._watch()
+        self._until_shutdown(srv)
+        srv.shutdown.assert_called_once_with()
+
+    def test_live_presence_blocks_timeout_until_disconnect(self):
+        server.last_ping[0] = time.time() - server.PING_TIMEOUT - 1
+        server.live_clients[0] = 1
+        srv = self._watch()
+        self._orig_sleep(0.1)
+        srv.shutdown.assert_not_called()
+        server.live_clients[0] = 0
+        self._until_shutdown(srv)
+        srv.shutdown.assert_called_once_with()
+
+    def test_never_arms_without_a_ping(self):
+        server.last_ping[0] = 0.0
+        srv = self._watch()
+        self._orig_sleep(0.05)
+        srv.shutdown.assert_not_called()
+
+    def test_close_grace_shortens_timeout_and_ignores_unarmed(self):
+        server.last_ping[0] = 0.0
+        server.close_grace()
+        self.assertEqual(server.last_ping[0], 0.0)
+        server.last_ping[0] = time.time()
+        server.close_grace()
+        self.assertAlmostEqual(server.last_ping[0],
+                               time.time() - server.PING_TIMEOUT + server.BYE_GRACE,
+                               delta=1.0)
 
 
 class QuotaTest(unittest.TestCase):

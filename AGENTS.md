@@ -7,8 +7,17 @@
   `DASHBOARD_APP` overrides the shortcut/exe path, `DASHBOARD_APP=browser` forces the browser. The shortcut is named after
   the page `<title>` in `static/index.html`, so keep `APP_TITLE` in sync when the title changes.
 - Stop: `stop_server.bat` (kills the `server.py` process listening on `DASHBOARD_PORT`/8765; won't touch other programs on that port).
-  The server also exits on its own ~90s after the dashboard tab/browser closes: `app.js` pings `/api/ping` every 20s and
-  `server.watch_browser` shuts down once pings stop. The watchdog only arms after the first ping, so `--no-browser` stays up.
+  The server also exits on its own ~BYE_GRACE (30s) after the last dashboard window closes: the page holds an
+  `EventSource` stream to `/api/presence` open for its whole lifetime (server heartbeats every 10s; a failed write means
+  the client is gone) and `pagehide` `sendBeacon`s `POST /api/bye`. Both paths call `server.close_grace`, which shortens
+  the watchdog deadline to BYE_GRACE so a page reload or a second open window can ping/reconnect first. While any
+  presence stream is live (`live_clients`), `server.watch_browser` cannot fire — browsers throttle or freeze JS timers
+  in hidden/occluded pages (Chrome intensive throttling stalls a 20s `setInterval` to ~1/5min), which is what used to
+  kill the server under an idle-but-open dashboard; the socket stays up regardless. Live presence also covers OS
+  suspend/resume, where a stale `last_ping` otherwise races the client's next tick. Without a stream the watchdog falls
+  back to `PING_TIMEOUT` (420s, above the ~5min throttle cap) of `/api/ping` silence; `app.js` still pings every 20s for
+  quota/runway updates (and immediately on `pageshow`/`visibilitychange` to visible). The watchdog only arms on the
+  first ping or presence connection, so `--no-browser` stays up.
   `app.js` also auto-rescans every 60s (`POST /api/refresh`, skipped while a scan is already running; the in-flight
   `poll()` reloads when it ends), so new sessions appear without clicking Rescan.
 - Tests: `python -m unittest test_server` (requires Node.js for the model-filter unit test; uses a mocked DOM, no browser).
