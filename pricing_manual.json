@@ -35,6 +35,17 @@
    "cache_read": 0.08
   },
   {
+   "label": "Pudding",
+   "uids": ["pudding-jelly", "pudding-jelly-low", "pudding-jelly-medium", "pudding-jelly-high",
+            "pudding-jelly-max"],
+   "source": "Devin client model catalog (GetCliModelConfigs); no published cache-write rate",
+   "noted": "2026-11-23",
+   "input": 0.592,
+   "output": 2.96,
+   "cache_write": 0.0,
+   "cache_read": 0.059
+  },
+  {
    "label": "SWE-2 Lightning",
    "uids": ["swe-2-lightning", "swe-2-low-lightning", "swe-2-medium-lightning",
             "swe-2-high-lightning", "swe-2-xhigh-lightning", "swe-2-max-lightning",
