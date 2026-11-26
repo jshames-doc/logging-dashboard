@@ -2,7 +2,7 @@
  "source": "GetCliModelConfigs + https://docs.devin.ai/desktop/models",
  "tier": "Live",
  "fallback_tier": "Devin Enterprise",
- "fetched": "2026-11-23",
+ "fetched": "2026-11-26",
  "models": [
   {
    "uid": "adaptive",
@@ -16,22 +16,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -47,22 +47,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -78,22 +78,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -109,22 +109,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -140,22 +140,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -171,22 +171,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -202,22 +202,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -233,22 +233,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -264,22 +264,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -295,22 +295,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -326,22 +326,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -357,22 +357,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -388,22 +388,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -419,22 +419,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -450,22 +450,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -481,22 +481,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -512,22 +512,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -543,22 +543,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -574,22 +574,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -605,22 +605,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -636,22 +636,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -698,22 +698,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -729,22 +729,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -760,22 +760,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -791,22 +791,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -822,22 +822,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -915,22 +915,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -946,22 +946,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -977,22 +977,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1008,22 +1008,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1039,22 +1039,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1070,22 +1070,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1101,22 +1101,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1132,22 +1132,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1163,22 +1163,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1194,22 +1194,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1225,22 +1225,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1256,22 +1256,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1287,22 +1287,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1318,22 +1318,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1349,22 +1349,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1380,22 +1380,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1411,22 +1411,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1442,22 +1442,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1473,22 +1473,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1504,22 +1504,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1535,22 +1535,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1566,22 +1566,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1597,22 +1597,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1628,22 +1628,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1659,22 +1659,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1690,22 +1690,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1721,22 +1721,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1752,22 +1752,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1783,22 +1783,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1814,22 +1814,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1845,22 +1845,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1876,22 +1876,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1907,22 +1907,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1938,22 +1938,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -1969,22 +1969,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2000,22 +2000,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2031,22 +2031,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2062,22 +2062,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2093,22 +2093,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2124,22 +2124,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2155,22 +2155,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2186,22 +2186,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2217,22 +2217,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2248,22 +2248,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2279,22 +2279,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2310,22 +2310,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2341,22 +2341,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2372,22 +2372,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2403,22 +2403,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2434,22 +2434,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2465,22 +2465,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2496,22 +2496,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2527,22 +2527,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2558,22 +2558,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2620,22 +2620,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2651,22 +2651,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2713,22 +2713,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2744,22 +2744,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2775,22 +2775,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2806,22 +2806,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2837,22 +2837,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2868,22 +2868,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -2899,22 +2899,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3147,22 +3147,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3178,22 +3178,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3209,22 +3209,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3240,22 +3240,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3271,22 +3271,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3302,22 +3302,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3333,22 +3333,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3364,22 +3364,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3395,22 +3395,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3426,22 +3426,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3457,22 +3457,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3488,22 +3488,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3519,22 +3519,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3550,22 +3550,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3581,22 +3581,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3612,22 +3612,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3643,22 +3643,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3709,17 +3709,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3739,17 +3739,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3769,17 +3769,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3833,17 +3833,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3863,17 +3863,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3893,17 +3893,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3923,17 +3923,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -3953,22 +3953,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -3984,22 +3984,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4015,22 +4015,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4046,22 +4046,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4077,22 +4077,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4108,22 +4108,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4139,22 +4139,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4170,22 +4170,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4201,22 +4201,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4232,22 +4232,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4263,22 +4263,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4294,22 +4294,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4325,22 +4325,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4356,22 +4356,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4387,22 +4387,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -4418,22 +4418,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5441,22 +5441,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5472,22 +5472,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5503,22 +5503,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5534,22 +5534,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5565,22 +5565,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5596,22 +5596,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5627,22 +5627,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5658,22 +5658,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5689,22 +5689,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5720,22 +5720,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5751,22 +5751,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5782,22 +5782,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5813,22 +5813,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5844,22 +5844,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5875,22 +5875,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5906,22 +5906,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5937,22 +5937,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5968,22 +5968,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -5999,22 +5999,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6030,22 +6030,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6061,22 +6061,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6092,22 +6092,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6123,22 +6123,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6154,22 +6154,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6185,22 +6185,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6216,22 +6216,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6247,22 +6247,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6278,22 +6278,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6309,22 +6309,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6340,22 +6340,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6371,22 +6371,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6402,22 +6402,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6433,22 +6433,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6464,22 +6464,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6495,22 +6495,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6526,22 +6526,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6557,22 +6557,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6588,22 +6588,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6619,22 +6619,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6650,22 +6650,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6681,22 +6681,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6712,22 +6712,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6743,22 +6743,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6774,22 +6774,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6805,22 +6805,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6836,22 +6836,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6867,22 +6867,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6898,22 +6898,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6929,22 +6929,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6960,22 +6960,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -6991,22 +6991,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7022,22 +7022,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7053,22 +7053,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7084,22 +7084,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7115,22 +7115,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7146,22 +7146,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7177,22 +7177,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7208,22 +7208,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7239,22 +7239,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7270,22 +7270,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7301,22 +7301,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7332,22 +7332,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7363,22 +7363,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7394,22 +7394,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7425,22 +7425,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7456,22 +7456,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7487,22 +7487,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7518,22 +7518,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7549,22 +7549,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7580,22 +7580,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7611,22 +7611,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7642,22 +7642,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7673,22 +7673,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7704,22 +7704,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7735,22 +7735,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7766,22 +7766,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7797,22 +7797,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7828,22 +7828,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7859,22 +7859,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7890,22 +7890,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7921,22 +7921,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7952,22 +7952,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -7983,22 +7983,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8014,22 +8014,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8045,22 +8045,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8076,22 +8076,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8107,22 +8107,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8138,22 +8138,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8169,22 +8169,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8200,22 +8200,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8231,22 +8231,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8262,22 +8262,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8293,22 +8293,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8324,22 +8324,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8355,22 +8355,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8386,22 +8386,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8417,22 +8417,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8448,22 +8448,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8479,22 +8479,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8510,22 +8510,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8541,22 +8541,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8572,22 +8572,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8603,22 +8603,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8634,22 +8634,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8665,22 +8665,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8696,22 +8696,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8727,22 +8727,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8758,22 +8758,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8789,22 +8789,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8820,22 +8820,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8851,22 +8851,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8882,22 +8882,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8913,22 +8913,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8944,22 +8944,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -8975,22 +8975,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9006,22 +9006,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9130,22 +9130,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9161,22 +9161,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9192,22 +9192,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9223,22 +9223,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9254,22 +9254,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9285,22 +9285,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9316,22 +9316,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9347,22 +9347,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9409,22 +9409,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9626,22 +9626,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9657,22 +9657,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9688,22 +9688,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9719,22 +9719,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9750,22 +9750,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9781,22 +9781,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9812,22 +9812,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9843,22 +9843,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9874,22 +9874,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9905,22 +9905,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9936,22 +9936,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9967,22 +9967,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -9998,22 +9998,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10029,22 +10029,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10060,22 +10060,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10153,22 +10153,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10277,22 +10277,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10401,22 +10401,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10432,22 +10432,22 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10463,22 +10463,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10494,22 +10494,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10525,22 +10525,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
@@ -10556,28 +10556,28 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
   {
    "uid": "swe-2-high-lightning",
-   "label": "SWE-2 High Lightning",
+   "label": "SWE-2 High Ultrafast",
    "input": 1.0,
    "output": 5.0,
    "cache_write": 0.0,
@@ -10587,17 +10587,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -10655,28 +10655,28 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
   {
    "uid": "swe-2-max-lightning",
-   "label": "SWE-2 Max Lightning",
+   "label": "SWE-2 Max Ultrafast",
    "input": 1.0,
    "output": 5.0,
    "cache_write": 0.0,
@@ -10686,17 +10686,17 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
@@ -10716,28 +10716,28 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
   {
    "uid": "swe-2-medium-lightning",
-   "label": "SWE-2 Medium Lightning",
+   "label": "SWE-2 Medium Ultrafast",
    "input": 1.0,
    "output": 5.0,
    "cache_write": 0.0,
@@ -10747,21 +10747,393 @@
     "input": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "catalog",
      "src": "GetCliModelConfigs",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "manual",
      "date": "2026-10-15"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1",
+   "label": "SWE-2.1",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Self-serve",
+   "rate_sources": {
+    "input": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-high",
+   "label": "SWE-2.1 High",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Self-serve",
+   "rate_sources": {
+    "input": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-low",
+   "label": "SWE-2.1 Low",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Self-serve",
+   "rate_sources": {
+    "input": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-max",
+   "label": "SWE-2.1 Max",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Self-serve",
+   "rate_sources": {
+    "input": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-medium",
+   "label": "SWE-2.1 Medium",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Self-serve",
+   "rate_sources": {
+    "input": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-lightning",
+   "label": "SWE-2.1 Ultrafast",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Live",
+   "rate_sources": {
+    "input": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-high-lightning",
+   "label": "SWE-2.1 Ultrafast High",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Live",
+   "rate_sources": {
+    "input": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-low-lightning",
+   "label": "SWE-2.1 Ultrafast Low",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Live",
+   "rate_sources": {
+    "input": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-max-lightning",
+   "label": "SWE-2.1 Ultrafast Max",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Live",
+   "rate_sources": {
+    "input": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-medium-lightning",
+   "label": "SWE-2.1 Ultrafast Medium",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Live",
+   "rate_sources": {
+    "input": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-xhigh-lightning",
+   "label": "SWE-2.1 Ultrafast XHigh",
+   "input": 5.0,
+   "output": 25.0,
+   "cache_write": 0.0,
+   "cache_read": 0.5,
+   "tier": "Live",
+   "rate_sources": {
+    "input": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "catalog",
+     "src": "GetCliModelConfigs",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    }
+   }
+  },
+  {
+   "uid": "swe-2-1-xhigh",
+   "label": "SWE-2.1 XHigh",
+   "input": 0.0,
+   "output": 0.0,
+   "cache_write": 0.0,
+   "cache_read": 0.0,
+   "tier": "Self-serve",
+   "rate_sources": {
+    "input": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "output": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_write": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
+    },
+    "cache_read": {
+     "kind": "docs",
+     "tier": "Self-serve",
+     "date": "2026-11-26"
     }
    }
   },
@@ -10777,22 +11149,22 @@
     "input": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "output": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_write": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     },
     "cache_read": {
      "kind": "docs",
      "tier": "Self-serve",
-     "date": "2026-11-23"
+     "date": "2026-11-26"
     }
    }
   },
