@@ -86,6 +86,7 @@
                 <th class="num">Cache write*</th>
                 <th class="num">Output</th>
                 <th class="num" title="Output tokens ÷ generation time (token-weighted)">TPS</th>
+                <th class="num" title="Avg time to first token">TTFT</th>
                 <th class="num">Cached</th>
                 <th class="num">Est. cost</th>
                 <th>First response</th>
@@ -99,7 +100,7 @@
     </div>
     <div class="prices-foot">
       <p id="session-cost-note"></p>
-      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks. TPS = output tokens ÷ generation time. Quota = account quota remaining at the session's last activity.</p>
+      <p>*Cache write is included in Input. Cached = cache read. Responses are deduplicated across forks. TPS = output tokens ÷ generation time. TTFT = avg time to first token. Quota = account quota remaining at the session's last activity.</p>
     </div>
   </dialog>
 
@@ -166,7 +167,7 @@
       <p class="empty" id="report-hint">Pick filters, then Run report.</p>
       <p class="empty" id="allowance-note" hidden></p>
     </div>
-    <p class="prices-foot">Response dates use your local timezone · deduplicated across forks · unpriced models excluded from cost · TPS = output tokens ÷ generation time</p>
+    <p class="prices-foot">Response dates use your local timezone · deduplicated across forks · unpriced models excluded from cost · TPS = output tokens ÷ generation time · TTFT = avg time to first token</p>
   </dialog>
 
   <section class="totals" id="totals"></section>
@@ -207,6 +208,7 @@
           <th data-k="model">Model</th>
           <th data-k="messages" class="num">Msgs</th>
           <th data-k="tps" class="num" title="Output tokens ÷ generation time (token-weighted)">TPS</th>
+          <th data-k="ttft" class="num" title="Avg time to first token">TTFT</th>
           <th data-k="input" class="num">Input</th>
           <th data-k="output" class="num">Output</th>
           <th data-k="cached" class="num">Cached</th>

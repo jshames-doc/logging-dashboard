@@ -49,7 +49,7 @@ DB_PATHS = _configured_dbs()
 DB_SOURCES = [(_db_label(p, DB_PATHS), p) for p in DB_PATHS]
 CACHE_PATH = ROOT / ".cache" / "sessions_cache.json"
 HOST, PORT = "127.0.0.1", int(os.environ.get("DASHBOARD_PORT", "8765"))
-CACHE_VERSION = 12  # 12: track output with measurable generation time separately for TPS
+CACHE_VERSION = 13  # 13: track ttft_sum/ttft_n for avg time-to-first-token
 
 ASSISTANT_SQL = """
 SELECT json_extract(chat_message, '$.metadata.request_id'),
@@ -79,7 +79,7 @@ def parse_ts(iso, fallback):
 
 def _empty_day(day, name):
     return {"day": day, "model": name, "messages": 0, "input": 0, "output": 0, "cached": 0,
-            "cache_write": 0, "gen_ms": 0, "tps_output": 0, "usage": [],
+            "cache_write": 0, "gen_ms": 0, "tps_output": 0, "ttft_sum": 0, "ttft_n": 0, "usage": [],
             "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}}
 
 
@@ -109,7 +109,7 @@ def aggregate_session(conn, session_id, fallback_model=""):
         name = gm or fallback_model or "unknown"
         agg = models.setdefault(name, {"model": name, "first": created, "last": created, "messages": 0,
                                        "input": 0, "output": 0, "cached": 0, "cache_write": 0,
-                                       "gen_ms": 0, "tps_output": 0,
+                                       "gen_ms": 0, "tps_output": 0, "ttft_sum": 0, "ttft_n": 0,
                                        "long": {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}})
         agg["first"], agg["last"] = min(agg["first"], created), max(agg["last"], created)
         agg["messages"] += 1
@@ -132,6 +132,12 @@ def aggregate_session(conn, session_id, fallback_model=""):
             d["gen_ms"] += gen_ms
             agg["tps_output"] += out
             d["tps_output"] += out
+        ttft = m.get("ttft_ms")  # time to first token; null on ~⅓ of rows
+        if isinstance(ttft, (int, float)) and ttft > 0:
+            agg["ttft_sum"] += ttft
+            agg["ttft_n"] += 1
+            d["ttft_sum"] += ttft
+            d["ttft_n"] += 1
         if inp + cw + cr > LONG_PROMPT_TOKENS:  # long-prompt requests, for models with prompt-size price tiers
             usage["long"] = {k: usage[k] for k in ("input", "output", "cache_write", "cache_read")}
             for k, v in (("input", inp), ("output", out), ("cache_write", cw), ("cache_read", cr)):
@@ -147,8 +153,10 @@ def with_price(m):
     parts = {"input": m["input"] - cw, "output": m["output"], "cache_write": cw, "cache_read": m["cached"]}
     label, price = cost(m["model"], parts, m.get("long"))
     gen_ms = m.get("gen_ms") or 0
+    ttft_n = m.get("ttft_n") or 0
     return {**m, "price": price, "price_model": label,
-            "tps": round(m["tps_output"] * 1000.0 / gen_ms, 1) if gen_ms else None}
+            "tps": round(m["tps_output"] * 1000.0 / gen_ms, 1) if gen_ms else None,
+            "ttft": round(m["ttft_sum"] / ttft_n) if ttft_n else None}
 
 
 def load_cache(path=CACHE_PATH):
@@ -199,7 +207,7 @@ def flatten(sessions):
                     quota_t=qs[0] if qs else None)
         for m in s["models"] or [{"model": "—", "first": s["created"], "last": s["last_activity"],
                                    "messages": 0, "input": 0, "output": 0, "cached": 0,
-                                   "cache_write": 0, "gen_ms": 0, "tps_output": 0}]:
+                                   "cache_write": 0, "gen_ms": 0, "tps_output": 0, "ttft_sum": 0, "ttft_n": 0}]:
             rows.append({**base, **with_price(m)})
     return rows
 
@@ -249,14 +257,16 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
                 key, label = _period(b["day"], group)
             g = meta.setdefault(key, {"key": key, "label": label, "sessions": set(), "models": set(),
                                       "messages": 0, "input": 0, "output": 0, "cached": 0,
-                                      "cache_write": 0, "gen_ms": 0, "tps_output": 0, "price": 0.0, "priced": 0,
+                                      "cache_write": 0, "gen_ms": 0, "tps_output": 0,
+                                      "ttft_sum": 0, "ttft_n": 0, "price": 0.0, "priced": 0,
                                       "unpriced": 0, "series": []})
             session_key = (s.get("src", ""), s["id"])
             g["sessions"].add(session_key)
             g["models"].add(b["model"])
             all_sessions.add(session_key)
             all_models.add(b["model"])
-            for f in ("messages", "input", "output", "cached", "cache_write", "gen_ms", "tps_output"):
+            for f in ("messages", "input", "output", "cached", "cache_write", "gen_ms", "tps_output",
+                      "ttft_sum", "ttft_n"):
                 g[f] += b[f]
             c = cells.setdefault((key, b["model"]),
                                  {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0,
@@ -282,6 +292,7 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
              "models": len(g["models"]), "messages": g["messages"], "input": g["input"],
              "output": g["output"], "cached": g["cached"], "cache_write": g["cache_write"],
              "tps": round(g["tps_output"] * 1000.0 / g["gen_ms"], 1) if g["gen_ms"] else None,
+             "ttft": round(g["ttft_sum"] / g["ttft_n"]) if g["ttft_n"] else None,
              "price": g["price"] if g["priced"] else None, "unpriced": g["unpriced"],
              "price_model": g.get("price_model"),
              "series": sorted(g["series"], key=lambda s: s["model"])} for g in meta.values()]
@@ -293,6 +304,8 @@ def report(sessions, exclude=(), from_day=None, to_day=None, group="model", hidd
               "input": sum(r["input"] for r in rows), "output": sum(r["output"] for r in rows),
               "cached": sum(r["cached"] for r in rows), "cache_write": sum(r["cache_write"] for r in rows),
               "tps": round(sum(g["tps_output"] for g in meta.values()) * 1000.0 / tot_gen, 1) if tot_gen else None,
+              "ttft": round(sum(g["ttft_sum"] for g in meta.values()) / sum(g["ttft_n"] for g in meta.values()))
+                      if sum(g["ttft_n"] for g in meta.values()) else None,
               "price": sum(priced) if priced else None,
               "unpriced": sum(r["unpriced"] for r in rows)}
     return {"group": group, "rows": rows, "totals": totals, "generated": int(time.time())}

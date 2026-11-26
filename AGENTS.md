@@ -37,9 +37,12 @@
   (`tps_output`) and denominator; overall output totals still include unmeasured responses.
   TPS is computed at serve time in `with_price` and per report group; shown as a table column (after Output), an
   "Avg TPS" totals card, and a report column.
+  TTFT = mean `ttft_ms` over requests that recorded one (~⅔ of rows), accumulated as `ttft_sum`/`ttft_n` in model,
+  daily, and report-group totals and averaged at serve time; shown as a TTFT table column, "Avg TTFT" totals cards,
+  a details stat + per-model column, and a report column.
 - `message_nodes.created_at` is rewritten on save; use `$.metadata.created_at` for real message times.
 - Aggregates cached in `.cache/sessions_cache.json`, keyed by `src:session-id` and invalidated on `last_activity_at` change; bump `CACHE_VERSION` when the aggregate shape changes.
-  Cache version 12 adds `tps_output` alongside `gen_ms` in model and daily totals.
+  Cache version 12 adds `tps_output` alongside `gen_ms` in model and daily totals; version 13 adds `ttft_sum`/`ttft_n`.
   Each session stores `models` (per-model totals) and `daily` (per-(model, local server day) totals, same fields plus `long`
   and `usage`: deduplicated request timestamps and token parts, including long-prompt parts when applicable).
 - Report maker: **Report** button -> dialog backed by `GET /api/report?group=model|workspace|day|week|month&from=YYYY-MM-DD&to=YYYY-MM-DD&exc=slug,slug&hidden=1`.

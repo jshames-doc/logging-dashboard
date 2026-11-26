@@ -1,7 +1,7 @@
 const $ = (id) => document.getElementById(id);
 const COLS = [
   ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
-  ["src", "Source"], ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["input", "Input"], ["output", "Output"],
+  ["src", "Source"], ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["ttft", "TTFT"], ["input", "Input"], ["output", "Output"],
   ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
   ["quota_day", "Daily %"], ["quota_week", "Weekly %"],
 ];
@@ -27,6 +27,7 @@ const dt = (s) => {
 };
 const dayStart = (v) => (v ? new Date(v + "T00:00:00").getTime() / 1000 : null);
 const sessionKey = (r) => JSON.stringify([r.src || "", r.id]);
+const fmtTtft = (ms) => ms == null ? "—" : ms >= 10000 ? (ms / 1000).toFixed(1) + "s" : ms >= 1000 ? (ms / 1000).toFixed(2) + "s" : Math.round(ms) + "ms";
 
 function filtered() {
   const q = $("q").value.trim().toLowerCase();
@@ -54,8 +55,8 @@ const card = (lbl, val, sub, sw = "", i = 0) =>
   `<div class="card" style="animation-delay:${i * 60}ms"><div class="lbl">${sw ? `<i class="sw ${sw}"></i>` : ""}${lbl}</div><div class="val">${val}</div>${sub ? `<div class="sub">${sub}</div>` : ""}</div>`;
 
 function renderTotals(rows) {
-  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0), gen_ms: a.gen_ms + (r.gen_ms || 0), tps_output: a.tps_output + (r.tps_output || 0) }),
-    { input: 0, output: 0, cached: 0, messages: 0, price: 0, gen_ms: 0, tps_output: 0 });
+  const t = rows.reduce((a, r) => ({ input: a.input + r.input, output: a.output + r.output, cached: a.cached + r.cached, messages: a.messages + r.messages, price: a.price + (r.price || 0), gen_ms: a.gen_ms + (r.gen_ms || 0), tps_output: a.tps_output + (r.tps_output || 0), ttft_sum: a.ttft_sum + (r.ttft_sum || 0), ttft_n: a.ttft_n + (r.ttft_n || 0) }),
+    { input: 0, output: 0, cached: 0, messages: 0, price: 0, gen_ms: 0, tps_output: 0, ttft_sum: 0, ttft_n: 0 });
   const sessions = new Set(rows.map(sessionKey)).size;
   const hit = t.input + t.cached ? (t.cached / (t.input + t.cached)) * 100 : 0;
   $("totals").innerHTML = [
@@ -64,6 +65,7 @@ function renderTotals(rows) {
     card("Input", compact.format(t.input), "", "in", 2),
     card("Output", compact.format(t.output), "", "out", 3),
     card("Avg TPS", t.gen_ms ? (t.tps_output * 1000 / t.gen_ms).toFixed(1) : "—", "", "", 4),
+    card("Avg TTFT", t.ttft_n ? fmtTtft(t.ttft_sum / t.ttft_n) : "—", "", "", 4),
     card("Cached", compact.format(t.cached), "", "ca", 5),
     card("Cache hit", `${hit.toFixed(1)}%`, "", "", 6),
     card("Est. cost", t.price ? fmtPrice(t.price) : "—", "", "", 7),
@@ -83,6 +85,7 @@ const CELLS = {
   input: (r) => `<td class="num in">${fmt.format(r.input)}</td>`,
   output: (r) => `<td class="num out">${fmt.format(r.output)}</td>`,
   tps: (r) => `<td class="num" title="Output tokens ÷ generation time (token-weighted)">${r.tps == null ? "—" : r.tps.toFixed(1)}</td>`,
+  ttft: (r) => `<td class="num" title="Avg time to first token over ${fmt.format(r.ttft_n || 0)} measured request${(r.ttft_n || 0) === 1 ? "" : "s"}">${fmtTtft(r.ttft)}</td>`,
   cached: (r) => `<td class="num ca">${fmt.format(r.cached)}</td>`,
   price: (r) => `<td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>`,
   hit: (r) => `<td class="num">${r.hit == null ? "—" : r.hit.toFixed(1) + "%"}</td>`,
@@ -282,9 +285,10 @@ function showSession(id, src = "", opener = null) {
   const totals = models.reduce((a, r) => ({
     messages: a.messages + r.messages, input: a.input + r.input,
     output: a.output + r.output, cached: a.cached + r.cached, gen_ms: a.gen_ms + (r.gen_ms || 0),
-    tps_output: a.tps_output + (r.tps_output || 0),
+    tps_output: a.tps_output + (r.tps_output || 0), ttft_sum: a.ttft_sum + (r.ttft_sum || 0),
+    ttft_n: a.ttft_n + (r.ttft_n || 0),
     price: a.price + (r.price ?? 0), priced: a.priced + (r.price != null ? 1 : 0),
-  }), { messages: 0, input: 0, output: 0, cached: 0, gen_ms: 0, tps_output: 0, price: 0, priced: 0 });
+  }), { messages: 0, input: 0, output: 0, cached: 0, gen_ms: 0, tps_output: 0, ttft_sum: 0, ttft_n: 0, price: 0, priced: 0 });
   const hit = totals.input + totals.cached ? totals.cached / (totals.input + totals.cached) * 100 : 0;
   const unpriced = models.length - totals.priced;
   const detail = (label, value, cls = "") => `<div class="${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
@@ -304,6 +308,7 @@ function showSession(id, src = "", opener = null) {
     stat("Input · includes cache write", fmt.format(totals.input), "in"),
     stat("Output", fmt.format(totals.output), "out"),
     stat("Avg TPS", totals.gen_ms ? (totals.tps_output * 1000 / totals.gen_ms).toFixed(1) : "—"),
+    stat("Avg TTFT", totals.ttft_n ? fmtTtft(totals.ttft_sum / totals.ttft_n) : "—"),
     stat("Cached", fmt.format(totals.cached), "ca"),
     stat("Cache hit", `${hit.toFixed(1)}%`),
     stat("Daily quota", session.quota_day != null ? session.quota_day + "%" : "—", "", quotaTitle(session, "daily")),
@@ -318,6 +323,7 @@ function showSession(id, src = "", opener = null) {
       <td class="num">${fmt.format(r.cache_write || 0)}</td>
       <td class="num out">${fmt.format(r.output)}</td>
       <td class="num" title="Output tokens ÷ generation time (token-weighted)">${r.tps == null ? "—" : r.tps.toFixed(1)}</td>
+      <td class="num" title="Avg time to first token">${fmtTtft(r.ttft)}</td>
       <td class="num ca">${fmt.format(r.cached)}</td>
       <td class="num price" title="${esc(r.price_model || "no published rate")}">${r.price == null ? "—" : fmtPrice(r.price)}</td>
       <td class="dt">${dt(r.first)}</td>
@@ -724,7 +730,7 @@ function updateReportModels() {
 function reportCols() {
   const cols = [["key", GROUP_LABEL[report.group]], ["sessions", "Sessions"]];
   if (report.group !== "model") cols.push(["models", "Models"]);
-  return cols.concat([["messages", "Responses"], ["input", "Input"], ["output", "Output"], ["tps", "TPS"], ["cached", "Cached"], ["price", "Est. cost"]]);
+  return cols.concat([["messages", "Responses"], ["input", "Input"], ["output", "Output"], ["tps", "TPS"], ["ttft", "TTFT"], ["cached", "Cached"], ["price", "Est. cost"]]);
 }
 
 function sortedReport() {
@@ -756,6 +762,7 @@ function renderReport() {
       <td class="num in">${fmt.format(r.input)}</td>
       <td class="num out">${fmt.format(r.output)}</td>
       <td class="num" title="Output tokens ÷ generation time (token-weighted)">${r.tps == null ? "—" : r.tps.toFixed(1)}</td>
+      <td class="num" title="Avg time to first token">${fmtTtft(r.ttft)}</td>
       <td class="num ca">${fmt.format(r.cached)}</td>
       <td class="num price"${r.unpriced ? ` title="excludes ${r.unpriced} unpriced model${r.unpriced === 1 ? "" : "s"}"` : ""}>${r.price == null ? "—" : fmtPrice(r.price)}</td>
     </tr>`).join("");
@@ -769,6 +776,7 @@ function renderReport() {
       card("Input", compact.format(t.input), fmt.format(t.input), "in", 2),
       card("Output", compact.format(t.output), fmt.format(t.output), "out", 3),
       card("Avg TPS", t.tps == null ? "—" : t.tps.toFixed(1), "output ÷ generation time", "", 4),
+      card("Avg TTFT", t.ttft == null ? "—" : fmtTtft(t.ttft), "time to first token", "", 4),
       card("Cached", compact.format(t.cached), fmt.format(t.cached), "ca", 5),
       card("Cache hit", `${hit.toFixed(1)}%`, "", "", 6),
       card("Est. cost", t.price ? fmtPrice(t.price) : "—", t.unpriced ? `${t.unpriced} unpriced model${t.unpriced === 1 ? "" : "s"}` : "", "", 7),

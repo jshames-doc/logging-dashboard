@@ -357,13 +357,13 @@ assert.equal(element("f-cols-label").textContent, "Columns");
 element("f-cols-options").listeners.change({ target: { type: "checkbox", value: "model", checked: false } });
 assert.ok(!element("rows").innerHTML.includes('class="model"'));
 assert.ok(element("rows").innerHTML.includes('class="ws"'));
-assert.equal(element("f-cols-label").textContent, "14 of 15 columns");
+assert.equal(element("f-cols-label").textContent, "15 of 16 columns");
 const target = { type: "checkbox", value: "hit", checked: false };
-for (const k of ["created", "last_activity", "title", "workspace", "src", "messages", "input", "output", "tps", "cached", "price", "quota_day", "quota_week"])
+for (const k of ["created", "last_activity", "title", "workspace", "src", "messages", "input", "output", "tps", "ttft", "cached", "price", "quota_day", "quota_week"])
   element("f-cols-options").listeners.change({ target: { type: "checkbox", value: k, checked: false } });
 element("f-cols-options").listeners.change({ target });
 assert.equal(target.checked, true);  // last visible column can't be hidden
-assert.equal(vm.runInContext("state.hiddenCols.size", context), 14);
+assert.equal(vm.runInContext("state.hiddenCols.size", context), 15);
 element("f-cols-all").listeners.click();
 assert.equal(element("f-cols-label").textContent, "Columns");
 assert.ok(element("rows").innerHTML.includes('class="model"'));
