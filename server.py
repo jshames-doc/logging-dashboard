@@ -197,18 +197,24 @@ def refresh_sessions(conn, cache, progress=lambda done, total: None, src=""):
 
 
 def flatten(sessions):
-    """One row per (session, model). Sessions without any metrics get a single empty row.
-    Quota columns show the account sample in effect at the session's last activity."""
+    """One row per (session, model) usage segment, dated by the segment's own span
+    (created = model first, last_activity = model last) so a resumed session's earlier
+    segments stay put instead of all jumping to the latest activity date. Session-level
+    dates survive as sess_created/sess_last for the details dialog. Sessions without any
+    metrics get a single empty row. Quota columns show the account sample in effect at
+    the segment's end."""
     rows = []
     for s in sessions.values():
-        base = {k: s[k] for k in ("id", "src", "title", "workspace", "created", "last_activity", "hidden")}
-        qs = _sample_at(_quota_hist, s["last_activity"])
-        base.update(quota_day=qs[1] if qs else None, quota_week=qs[2] if qs else None,
-                    quota_t=qs[0] if qs else None)
+        base = {k: s[k] for k in ("id", "src", "title", "workspace", "hidden")}
+        base.update(sess_created=s["created"], sess_last=s["last_activity"])
         for m in s["models"] or [{"model": "—", "first": s["created"], "last": s["last_activity"],
                                    "messages": 0, "input": 0, "output": 0, "cached": 0,
                                    "cache_write": 0, "gen_ms": 0, "tps_output": 0, "ttft_sum": 0, "ttft_n": 0}]:
-            rows.append({**base, **with_price(m)})
+            seg = with_price(m)
+            qs = _sample_at(_quota_hist, seg["last"])
+            rows.append({**base, **seg, "created": seg["first"], "last_activity": seg["last"],
+                         "quota_day": qs[1] if qs else None, "quota_week": qs[2] if qs else None,
+                         "quota_t": qs[0] if qs else None})
     return rows
 
 

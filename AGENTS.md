@@ -59,6 +59,12 @@
   so filtered views survive reload and can be bookmarked. The sort also persists in localStorage `ledger.sort`
   (`{k, asc}`, written by `saveView`); `applyView` falls back to it whenever the hash carries no explicit `sort`,
   so a chosen sort sticks across fresh launches. Column visibility stays in localStorage `ledger.cols`.
+  The table is one row per (session, model) **usage segment** (`server.flatten`): a row's `created`/`last_activity` are
+  the model's own `first`/`last`, so a resumed session's earlier segments keep their original dates while the new
+  segment appears as a fresh listing. Session-level dates survive as `sess_created`/`sess_last` (details dialog,
+  continuation tag); quota samples stamp at the segment's `last`. A model whose `first` falls on a later local day than
+  `sess_created` gets a teal `.tag.cont` badge ("cont. from Nov 4"). The "Started" column shows segment start;
+  from/to date filters match on segment overlap (last_activity >= from AND created < to).
   **Allowance value** button -> `GET /api/allowance?from&to&hidden`: `server.allowance` pairs consecutive quota
   samples inside the range that share a known, unexpired `weekly_reset` into windows where `weekly` didn't rise (flat windows count: whole-percent
   quantization means their usage shows up in a later drop; top-ups are skipped), sums priced
@@ -133,8 +139,8 @@
   records immediately. `python server.py --sample-only` records one sample and exits (the "Session Ledger quota sampler"
   scheduled task runs it every 15 min via `register_sampler.bat`; `unregister_sampler.bat` removes it, `sample_quota.bat`
   runs it manually; each run appends one line to `.cache/sampler.log`). It never opens sessions.db or starts the server.
-  `flatten` stamps each row with the latest sample at or before `last_activity` (bisect on sample time only — values may be
-  None), so columns show quota in effect when the session ended. A value is only valid until that sample's reset for its
+  `flatten` stamps each row with the latest sample at or before the segment's `last` (bisect on sample time only — values may be
+  None), so columns show quota in effect when that usage segment ended. A value is only valid until that sample's reset for its
   counter; past the reset the cell shows "—" (tooltip explains), and identical percents re-record when a reset advances.
   Legacy 3-field samples load padded with unbounded resets. Percent fields only exist on quota-billed plans.
   `server.quota_runway()` projects per-counter burn rate and exhaustion from same-cycle samples (status unknown|exhausted|

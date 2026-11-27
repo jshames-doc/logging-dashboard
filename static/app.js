@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
 const COLS = [
-  ["created", "Created"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
+  ["created", "Started"], ["last_activity", "Last activity"], ["title", "Session"], ["workspace", "Workspace"],
   ["src", "Source"], ["model", "Model"], ["messages", "Msgs"], ["tps", "TPS"], ["ttft", "TTFT"], ["input", "Input"], ["output", "Output"],
   ["cached", "Cached"], ["price", "Est. cost"], ["hit", "Cache hit"],
   ["quota_day", "Daily %"], ["quota_week", "Weekly %"],
@@ -20,6 +20,8 @@ const compact = new Intl.NumberFormat(undefined, { notation: "compact", maximumF
 const fmtPrice = (p) => p >= 1000 ? "$" + compact.format(p) : p >= 1 ? "$" + p.toFixed(2) : p >= 0.0001 ? "$" + p.toFixed(4) : p > 0 ? "<$0.0001" : "$0";
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const base = (p) => (p || "").split(/[\\/]/).filter(Boolean).pop() || p || "—";
+const sameDay = (a, b) => new Date(a * 1000).toDateString() === new Date(b * 1000).toDateString();
+const mdShort = (d) => d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 const dt = (s) => {
   const d = new Date(s * 1000);
   const p = (n) => String(n).padStart(2, "0");
@@ -37,7 +39,7 @@ function filtered() {
     (hidden || !r.hidden) &&
     (!state.models.size || state.models.has(r.model)) &&
     (!ws || r.workspace === ws) &&
-    (from == null || r.created >= from) &&
+    (from == null || r.last_activity >= from) &&
     (to == null || r.created < to + 86400) &&
     (!q || `${r.title} ${r.id} ${r.workspace} ${r.src} ${r.model}`.toLowerCase().includes(q)));
 }
@@ -80,7 +82,14 @@ const CELLS = {
   title: (r) => `<td class="sess"><div class="t">${esc(r.title || "Untitled")}${r.hidden ? '<span class="tag">hidden</span>' : ""}</div></td>`,
   workspace: (r) => `<td class="ws" title="${esc(r.workspace)}">${esc(base(r.workspace))}</td>`,
   src: (r) => `<td class="src">${esc(r.src || "—")}</td>`,
-  model: (r) => `<td class="model" title="Used ${esc(new Date(r.first * 1000).toLocaleString())} → ${esc(new Date(r.last * 1000).toLocaleString())}">${esc(r.model)}</td>`,
+  model: (r) => {
+    const sessCreated = r.sess_created ?? r.created;
+    let tag = "";
+    if (r.model !== "—" && !sameDay(r.first, sessCreated)) {
+      tag = `<span class="tag cont" title="Continued activity — this session began ${esc(new Date(sessCreated * 1000).toLocaleString())}">cont. from ${mdShort(new Date(sessCreated * 1000))}</span>`;
+    }
+    return `<td class="model" title="Used ${esc(new Date(r.first * 1000).toLocaleString())} → ${esc(new Date(r.last * 1000).toLocaleString())}">${esc(r.model)}${tag}</td>`;
+  },
   messages: (r) => `<td class="num">${fmt.format(r.messages)}</td>`,
   input: (r) => `<td class="num in">${fmt.format(r.input)}</td>`,
   output: (r) => `<td class="num out">${fmt.format(r.output)}</td>`,
@@ -99,10 +108,10 @@ function quotaTitle(r, which) {
   if (v != null && r.quota_t != null)
     return `${label} quota remaining · sampled ${new Date(r.quota_t * 1000).toLocaleString()}`;
   if (r.quota_t != null)
-    return `${label} quota unknown · the last sample before this session ended (${new Date(r.quota_t * 1000).toLocaleString()}) predates a quota reset`;
+    return `${label} quota unknown · the last sample before this listing ended (${new Date(r.quota_t * 1000).toLocaleString()}) predates a quota reset`;
   const q = state.quota;
   if (q && q.error) return `Quota unavailable: ${q.error}`;
-  return `No ${label.toLowerCase()} quota sample at or before this session's last activity`;
+  return `No ${label.toLowerCase()} quota sample at or before this listing's end`;
 }
 
 /* quota runway widget: countdowns use the server's `generated` clock plus
@@ -282,6 +291,7 @@ function showSession(id, src = "", opener = null) {
   const models = state.rows.filter((r) => r.id === id && (r.src || "") === src).sort((a, b) => a.first - b.first);
   if (!models.length) return;
   const session = models[0];
+  const latest = models.reduce((a, b) => (b.last > a.last ? b : a), models[0]);
   const totals = models.reduce((a, r) => ({
     messages: a.messages + r.messages, input: a.input + r.input,
     output: a.output + r.output, cached: a.cached + r.cached, gen_ms: a.gen_ms + (r.gen_ms || 0),
@@ -300,8 +310,8 @@ function showSession(id, src = "", opener = null) {
     detail("Visibility", session.hidden ? "Hidden" : "Visible"),
     detail("Workspace", esc(session.workspace || "—"), "wide"),
     detail("Source", esc(session.src || "—")),
-    detail("Created", dt(session.created), "dt"),
-    detail("Last activity", dt(session.last_activity), "dt"),
+    detail("Created", dt(session.sess_created ?? session.created), "dt"),
+    detail("Last activity", dt(session.sess_last ?? session.last_activity), "dt"),
   ].join("");
   $("session-stats").innerHTML = [
     stat("Responses", fmt.format(totals.messages)),
@@ -311,8 +321,8 @@ function showSession(id, src = "", opener = null) {
     stat("Avg TTFT", totals.ttft_n ? fmtTtft(totals.ttft_sum / totals.ttft_n) : "—"),
     stat("Cached", fmt.format(totals.cached), "ca"),
     stat("Cache hit", `${hit.toFixed(1)}%`),
-    stat("Daily quota", session.quota_day != null ? session.quota_day + "%" : "—", "", quotaTitle(session, "daily")),
-    stat("Weekly quota", session.quota_week != null ? session.quota_week + "%" : "—", "", quotaTitle(session, "weekly")),
+    stat("Daily quota", latest.quota_day != null ? latest.quota_day + "%" : "—", "", quotaTitle(latest, "daily")),
+    stat("Weekly quota", latest.quota_week != null ? latest.quota_week + "%" : "—", "", quotaTitle(latest, "weekly")),
     stat(unpriced && totals.priced ? "Est. cost · partial" : "Est. cost", totals.priced ? fmtPrice(totals.price) : "—"),
   ].join("");
   $("session-models").innerHTML = models.map((r) => `
