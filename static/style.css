@@ -170,7 +170,7 @@ td { padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: to
 tbody tr { animation: fade .35s ease-out both; }
 tbody tr:hover td { background: rgba(236,228,212,.035); }
 tr.hidden-row td { opacity: .45; }
-tr.multi td:first-child { box-shadow: inset 2px 0 0 var(--line-2); }
+tr.multi td:first-child { box-shadow: inset 3px 0 0 var(--ca); }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
 td.num.in { color: var(--in); } td.num.out { color: var(--out); } td.num.ca { color: var(--ca); }
 .dt { color: var(--ink-2); }

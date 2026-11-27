@@ -10,7 +10,7 @@ const savedObj = (key) => { try { const v = JSON.parse(localStorage.getItem(key)
 const COL_KEYS = new Set(COLS.map(([k]) => k));
 const initOrder = savedArr("ledger.colOrder").filter((k) => COL_KEYS.has(k));
 initOrder.push(...COLS.map(([k]) => k).filter((k) => !initOrder.includes(k)));
-const state = { rows: [], sortKey: "created", asc: false, multi: new Set(), models: new Set(), limit: 2000,
+const state = { rows: [], sortKey: "created", asc: false, multi: new Map(), models: new Set(), limit: 2000,
   quota: null, runway: null, runwayReceivedAt: 0, runwaySig: "",
   hiddenCols: new Set(savedArr("ledger.cols").filter((k) => COL_KEYS.has(k))), colOrder: initOrder,
   colWidths: Object.fromEntries(Object.entries(savedObj("ledger.colWidths")).filter(([k, v]) => COL_KEYS.has(k) && +v > 0)),
@@ -203,8 +203,11 @@ function render() {
   const shown = rows.slice(0, state.limit);
   const cols = state.colOrder.filter((k) => !state.hiddenCols.has(k));
   stampCols();
-  $("rows").innerHTML = shown.map((r, i) => `
-    <tr data-session-id="${esc(r.id)}" data-session-src="${esc(r.src || "")}" tabindex="0" aria-haspopup="dialog" title="Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${state.multi.has(sessionKey(r)) ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map((k) => CELLS[k](r)).join("")}</tr>`).join("");
+  $("rows").innerHTML = shown.map((r, i) => {
+    const n = state.multi.get(sessionKey(r));
+    return `
+    <tr data-session-id="${esc(r.id)}" data-session-src="${esc(r.src || "")}" tabindex="0" aria-haspopup="dialog" title="${n ? `One of ${n} listings for this session — ` : ""}Double-click or press Enter to view session details" class="${r.hidden ? "hidden-row" : ""} ${n ? "multi" : ""}" style="animation-delay:${Math.min(i, 30) * 12}ms">${cols.map((k) => CELLS[k](r)).join("")}</tr>`;
+  }).join("");
   const rest = rows.length - shown.length;
   $("more").hidden = !rest;
   if (rest)
@@ -475,7 +478,7 @@ function setData(data) {
   state.limit = 2000;
   const counts = {};
   data.rows.forEach((r) => { const k = sessionKey(r); counts[k] = (counts[k] || 0) + 1; });
-  state.multi = new Set(Object.keys(counts).filter((k) => counts[k] > 1));
+  state.multi = new Map(Object.entries(counts).filter(([, c]) => c > 1));
   $("dbpath").textContent = data.db;
   $("appver").textContent = data.version ? `v${data.version}` : "";
   fillModels([...new Set(data.rows.map((r) => r.model))].sort());

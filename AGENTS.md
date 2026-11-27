@@ -26,7 +26,9 @@
 - Data source: every existing `sessions.db` under `%APPDATA%\devin\cli` (CLI) and `%APPDATA%\devin\cli-next` (IDE),
   opened read-only and merged; override with `SESSIONS_DB` (accepts an `os.pathsep`-joined list). Port override: `DASHBOARD_PORT`.
   Each session is tagged `src` = the DB's parent folder name (the **Source** column); cache keys are `src:session-id` so
-  identical session ids across DBs can't collide. UI session counts, multi-model markers, details, and report counts
+  identical session ids across DBs can't collide. UI session counts, multi-model markers (a teal left rail `tr.multi`
+  on every row of a multi-listing session; `state.multi` is a sessionKey -> count Map surfaced in the row tooltip),
+  details, and report counts
   also use (src, id), while the raw id stays available for display and search.
 - Tokens come from `message_nodes.chat_message -> $.metadata.metrics` on assistant messages, deduped by `request_id`
   (forked branches duplicate nodes; falls back to `message_id`, and rows with neither are all counted — only non-null keys dedupe).
